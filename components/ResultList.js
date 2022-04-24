@@ -1,19 +1,28 @@
 import Link from "next/link";
+import { forwardRef } from "react";
 
-function Entry({ result }) {
+// eslint-disable-next-line react/display-name
+const Entry = forwardRef(({ result, onClick, href }, ref) => {
   return (
-    <ul className="mb-5 border-b w-full border-gray-300 p-2 shadow-md hover:cursor-pointer hover:shadow-xl">
-      <li>
-        Ime: {result.ime} {result.prezime} : {result.rodjenje} - {result.smrt}
-      </li>
-      <li>Groblje: {result.groblje}</li>
-    </ul>
+    <a href={href} onClick={onClick} ref={ref}>
+      <ul className="mb-5 w-full border-b border-gray-300 p-2 hover:cursor-pointer hover:shadow-xl">
+        <li>
+          Ime: {result.ime} {result.prezime} : {result.rodjenje} - {result.smrt}
+        </li>
+        <li>Groblje: {result.groblje}</li>
+      </ul>
+    </a>
   );
-}
+});
 
 export default function ResultList({ results }) {
+  if (results !== null && results.length === 0) {
+    return (
+      <div className="m-auto text-center">Nema rezultata za ovu pretragu</div>
+    );
+  }
   return (
-    <div className="space-y-5">
+    <div className="m-auto space-y-5">
       {results &&
         results.map((result) => (
           <Link

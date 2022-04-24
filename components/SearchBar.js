@@ -24,7 +24,7 @@ export default function SearchBar({ setResults }) {
   }
 
   return (
-    <div className="bg-white border border-gray-300 w-full lg:w-1/3 h-16 flex items-center space-x-8 rounded-md shadow-md text-gray-950">
+    <div className="text-gray-950 flex h-16 w-full items-center space-x-8 rounded-md border border-gray-300 bg-white shadow-md lg:w-1/3">
       <div className="ml-8">{searching ? <Spinner /> : <Magnifier />}</div>
       <input
         type="text"
@@ -33,7 +33,7 @@ export default function SearchBar({ setResults }) {
         onChange={searchChange}
         onKeyUp={(e) => (e.code = "Enter" && searchChange(e))}
         placeholder="Pretraga..."
-        className="flex-grow focus:outline-none  text-grey-950"
+        className="text-grey-950 flex-grow  focus:outline-none"
       />
     </div>
   );
