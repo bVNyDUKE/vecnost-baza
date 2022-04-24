@@ -13,7 +13,7 @@ export default function Home() {
         <Section title="Mapa" subtitle="U izradi">
           <h2>Mapa</h2>
         </Section>
-        <Section title="Pretraga" subtitle="U izradi">
+        <Section title="Pretraga" color="dark" subtitle="U izradi">
           <h2>Mapa</h2>
         </Section>
         <Section title="Indeks" subtitle="U izradi" />
