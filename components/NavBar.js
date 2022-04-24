@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const NavBar = () => (
-  <nav className="sticky bg-white mb-10 top-0 w-full flex justify-center items-center after:block after:absolute after:-bottom-[2px] after:w-[70px] after:h-[5px] after:bg-[#c9c9c9]">
+  <nav className="bg-white mb-10 relative w-full flex justify-center items-center after:block after:absolute after:-bottom-[2px] after:w-[70px] after:h-[5px] after:bg-[#c9c9c9]">
     <div className="w-2/3 h-32 flex justify-center items-center border-b border-[#c9c9c9]">
       <Image
         src="/vecna-logo-solo-100.png"
