@@ -1,28 +1,29 @@
 import Link from "next/link";
 
-export default function ResultList(results) {
+function Entry({ result }) {
   return (
-    <>
-      {results !== null && results.length > 0 && (
-        <div className="grid grid-cols-4 gap-8">
-          {results.map((result) => (
-            <Link
-              passHref
-              key={result.id}
-              href={{ pathname: "/entries/[id]", query: { id: result.id } }}
-            >
-              <ul className="mb-5 border border-gray-300 p-2 w-32 h-44 shadow-md hover:cursor-pointer hover:shadow-xl">
-                <li>
-                  Ime: {result.ime} {result.prezime}
-                </li>
-                <li>Rodjenje: {result.rodjenje}</li>
-                <li>Smrt: {result.smrt}</li>
-                <li>Groblje: {result.groblje}</li>
-              </ul>
-            </Link>
-          ))}
-        </div>
-      )}
-    </>
+    <ul className="mb-5 border-b w-full border-gray-300 p-2 shadow-md hover:cursor-pointer hover:shadow-xl">
+      <li>
+        Ime: {result.ime} {result.prezime} : {result.rodjenje} - {result.smrt}
+      </li>
+      <li>Groblje: {result.groblje}</li>
+    </ul>
+  );
+}
+
+export default function ResultList({ results }) {
+  return (
+    <div className="space-y-5">
+      {results &&
+        results.map((result) => (
+          <Link
+            passHref
+            key={result.id}
+            href={{ pathname: "/entries/[id]", query: { id: result.id } }}
+          >
+            <Entry result={result} />
+          </Link>
+        ))}
+    </div>
   );
 }
