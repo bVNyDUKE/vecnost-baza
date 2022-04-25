@@ -23,9 +23,11 @@ const Section = ({
   };
 
   return (
-    <section className={`md:flex md:h-[33vh] ${styles[color].text}`}>
-      <div className={`py-5 text-center md:w-1/5 ${styles[color].header}`}>
-        <div className="md:origin-bottom md:-rotate-90 md:transform md:font-bold">
+    <section className={`md:flex md:h-96 ${styles[color].text}`}>
+      <div
+        className={`py-5 md:flex md:w-1/5 md:items-center md:justify-center ${styles[color].header}`}
+      >
+        <div className="text-center md:origin-center md:-rotate-90 md:transform md:font-bold">
           <h2 className="font-serif text-3xl font-[400]">{title}</h2>
           <div className="text-sm font-thin uppercase tracking-wide">
             {subtitle}
