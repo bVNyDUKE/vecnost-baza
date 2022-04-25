@@ -28,8 +28,10 @@ const Section = ({
         className={`py-5 md:flex md:w-1/5 md:items-center md:justify-center ${styles[color].header}`}
       >
         <div className="text-center md:origin-center md:-rotate-90 md:transform md:font-bold">
-          <h2 className="font-serif text-3xl font-[400]">{title}</h2>
-          <div className="text-sm font-thin uppercase tracking-wide">
+          <h2 className="font-serif text-3xl font-[400] md:text-5xl">
+            {title}
+          </h2>
+          <div className="text-sm font-thin uppercase tracking-wide md:text-xl">
             {subtitle}
           </div>
         </div>
@@ -37,7 +39,9 @@ const Section = ({
       <div
         className={`md:a flex min-h-[175px] flex-col items-center space-y-10 p-5 md:grow md:flex-row md:justify-center md:space-y-0  ${styles[color].content}`}
       >
-        <div className="w-1/2 max-w-md text-center text-lg">{content}</div>
+        <div className="w-1/2 max-w-md text-center text-lg md:text-2xl">
+          {content}
+        </div>
         <div className="flex w-1/2 max-w-md justify-center text-sm">
           <Button>
             <Link href={href}>{linkLabel}</Link>
