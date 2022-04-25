@@ -17,9 +17,7 @@ const Entry = forwardRef(({ result, onClick, href }, ref) => {
 
 export default function ResultList({ results }) {
   if (results !== null && results.length === 0) {
-    return (
-      <div className="m-auto text-center">Nema rezultata za ovu pretragu</div>
-    );
+    return <div className="m-auto">Nema rezultata za ovu pretragu</div>;
   }
   return (
     <div className="m-auto space-y-5">

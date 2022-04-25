@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="px-5">
+      <div className="container mx-auto px-5">
         <SearchBar setResults={setResults} />
       </div>
       <div className="mt-5 flex justify-start">
