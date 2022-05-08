@@ -7,8 +7,8 @@ TODO Clean up 1300 kaplara (van groblja)
 def idFromName(row, df):
   return df[df['name'] == row].index.values[0]
 
-def idFromId(row, column, val):
-  return  persons[persons[column] == row.name][val].iat[0]
+def idFromId(row,df, column, val):
+  return  df[df[column] == row.name][val].iat[0]
 
 org = pd.read_excel('spreadsheets/organizacija.xlsx', sheet_name='Opštine u Srbiji', names=['region', 'okrug', 'opstina'], usecols=[0, 1, 2])
 
@@ -30,16 +30,12 @@ org['region_id'] = org['region'].apply(idFromName, args=(regioni, ))
 org['okrug_id'] = org['okrug'].apply(idFromName, args=(okruzi, ))
 org['opstina_id'] = org['opstina'].apply(idFromName, args=(opstine, ))
 
+groblja['opstina_id'] = groblja.apply(idFromId, args=(persons, 'groblje','opstina',), axis=1)
+opstine['okrug_id'] = opstine.apply(idFromId, args=(org,'opstina_id','okrug_id',), axis=1)
+okruzi['region_id'] = okruzi.apply(idFromId, args=(org,'okrug_id', 'region_id',), axis=1)
 
-groblja['opstina_id'] = groblja.apply(idFromId, args=('groblje', 'opstina',), axis=1)
-opstine['okrug_id'] = groblja.apply(idFromId, args=('opstina', 'okrug',), axis=1)
-okruzi['region_id'] = groblja.apply(idFromId, args=('okrug', 'region',), axis=1)
-print(groblja.head())
-print(opstine.head())
-print(okruzi.head())
-
-# persons.to_csv('spreadsheets/persons.csv', index_label='id')
-# groblja.to_csv('spreadsheets/groblja.csv', index_label='id')
-# opstine.to_csv('spreadsheets/opstine.csv', index_label='id')
-# regioni.to_csv('spreadsheets/regioni.csv', index_label='id')
-# okruzi.to_csv('spreadsheets/okruzi.csv', index_label='id')
+persons.to_csv('spreadsheets/persons.csv', index_label='id')
+groblja.to_csv('spreadsheets/groblja.csv', index_label='id')
+opstine.to_csv('spreadsheets/opstine.csv', index_label='id')
+regioni.to_csv('spreadsheets/regioni.csv', index_label='id')
+okruzi.to_csv('spreadsheets/okruzi.csv', index_label='id')
