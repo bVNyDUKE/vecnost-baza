@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Magnifier, Spinner } from "./Icons";
+import Icon from "./Icons";
 import { supabase } from "../utils/supabaseClient";
 
 var timeout;
@@ -25,7 +25,9 @@ export default function SearchBar({ setResults }) {
 
   return (
     <div className="m-auto flex h-16 w-full max-w-3xl items-center space-x-8 rounded-md border border-gray-300 bg-white shadow-md">
-      <div className="ml-8">{searching ? <Spinner /> : <Magnifier />}</div>
+      <div className="ml-8">
+        {searching ? <Icon.Spinner /> : <Icon.Magnifier />}
+      </div>
       <input
         type="text"
         name="search"
