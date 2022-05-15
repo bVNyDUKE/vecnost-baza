@@ -38,9 +38,14 @@ const Magnifier = () => (
   </svg>
 );
 
+const RightArrow = () => <span>&#9654;</span>;
+const DownArrow = () => <span>&#9660;</span>;
+
 const Icons = {
   Spinner,
   Magnifier,
+  RightArrow,
+  DownArrow,
 };
 
 export default Icons;
