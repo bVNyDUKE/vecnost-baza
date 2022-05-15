@@ -19,7 +19,7 @@ const data = [
     title: "Indeks",
     subtitle: "U izradi",
     content: "Indeks svih arhiviranih lokacija",
-    href: "",
+    href: "/indexMesta",
     linkLabel: "Idi na indeks",
   },
 ];
