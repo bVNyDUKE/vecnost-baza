@@ -1,14 +1,16 @@
+from csv import QUOTE_NONNUMERIC
 import pandas as pd
 
-'''
-TODO Clean up 1300 kaplara (van groblja)
-'''
   
 def idFromName(row, df):
   return df[df['name'] == row].index.values[0]
 
 def idFromId(row,df, column, val):
   return  df[df[column] == row.name][val].iat[0]
+
+def incrementIndex(df):
+  df.index += 1
+  df.index.name = 'name'
 
 org = pd.read_excel('spreadsheets/organizacija.xlsx', sheet_name='Opštine u Srbiji', names=['region', 'okrug', 'opstina'], usecols=[0, 1, 2])
 
@@ -34,8 +36,14 @@ groblja['opstina_id'] = groblja.apply(idFromId, args=(persons, 'groblje','opstin
 opstine['okrug_id'] = opstine.apply(idFromId, args=(org,'opstina_id','okrug_id',), axis=1)
 okruzi['region_id'] = okruzi.apply(idFromId, args=(org,'okrug_id', 'region_id',), axis=1)
 
-persons.to_csv('spreadsheets/persons.csv', index_label='id')
-groblja.to_csv('spreadsheets/groblja.csv', index_label='id')
-opstine.to_csv('spreadsheets/opstine.csv', index_label='id')
-regioni.to_csv('spreadsheets/regioni.csv', index_label='id')
-okruzi.to_csv('spreadsheets/okruzi.csv', index_label='id')
+incrementIndex(persons)
+incrementIndex(groblja)
+incrementIndex(opstine)
+incrementIndex(okruzi)
+incrementIndex(regioni)
+
+persons.to_csv('spreadsheets/persons.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
+groblja.to_csv('spreadsheets/groblja.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
+opstine.to_csv('spreadsheets/opstine.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
+regioni.to_csv('spreadsheets/regioni.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
+okruzi.to_csv('spreadsheets/okruzi.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
