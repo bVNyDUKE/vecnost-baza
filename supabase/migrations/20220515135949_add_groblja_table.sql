@@ -21,6 +21,9 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.groblje
     OWNER to postgres;
 
+ALTER TABLE IF EXISTS public.groblje
+    ENABLE ROW LEVEL SECURITY;
+
 GRANT ALL ON TABLE public.groblje TO anon;
 
 GRANT ALL ON TABLE public.groblje TO authenticated;
@@ -31,3 +34,10 @@ GRANT ALL ON TABLE public.groblje TO service_role;
 
 COMMENT ON TABLE public.groblje
     IS 'Groblja';
+
+CREATE POLICY "Enable access to all users"
+    ON public.groblje
+    AS PERMISSIVE
+    FOR SELECT
+    TO public
+    USING (true);

@@ -24,10 +24,6 @@ CREATE TABLE IF NOT EXISTS public.persons
     "rođenje" character varying COLLATE pg_catalog."default",
     smrt character varying COLLATE pg_catalog."default",
     groblje character varying COLLATE pg_catalog."default",
-    mesto character varying COLLATE pg_catalog."default",
-    "opština" character varying COLLATE pg_catalog."default",
-    upravni_okrug character varying COLLATE pg_catalog."default",
-    region character varying COLLATE pg_catalog."default",
     fts tsvector GENERATED ALWAYS AS (to_tsvector('sr'::regconfig, (((ime)::text || ' '::text) || (prezime)::text))) STORED,
     CONSTRAINT persons_pkey PRIMARY KEY (id),
     CONSTRAINT persons_id_key UNIQUE (id)
@@ -52,3 +48,10 @@ CREATE INDEX IF NOT EXISTS persons_fts
     ON public.persons USING gin
     (fts)
     TABLESPACE pg_default;
+
+CREATE POLICY "Enable access to all users"
+    ON public.persons
+    AS PERMISSIVE
+    FOR SELECT
+    TO public
+    USING (true);

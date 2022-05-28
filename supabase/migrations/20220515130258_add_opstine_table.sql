@@ -21,6 +21,9 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.opstina
     OWNER to postgres;
 
+ALTER TABLE IF EXISTS public.opstina
+    ENABLE ROW LEVEL SECURITY;
+
 GRANT ALL ON TABLE public.opstina TO anon;
 
 GRANT ALL ON TABLE public.opstina TO authenticated;
@@ -31,3 +34,10 @@ GRANT ALL ON TABLE public.opstina TO service_role;
 
 COMMENT ON TABLE public.opstina
     IS 'Opstine';
+
+CREATE POLICY "Enable access to all users"
+    ON public.opstina
+    AS PERMISSIVE
+    FOR SELECT
+    TO public
+    USING (true);
