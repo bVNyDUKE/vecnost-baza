@@ -16,8 +16,7 @@ org = pd.read_excel('spreadsheets/organizacija.xlsx', sheet_name='Opštine u Srb
 
 persons = pd.read_excel('spreadsheets/spisak.xlsx', sheet_name='Spisak').drop(['Spojnica', 'Godina', 'Mesto'], axis=1)
 persons.columns = 'pol,srpsko_prezime,srpsko_ime,srpski_nadimak,prezime,ime,srednje_slovo,nadimak,rodjenje,smrt,groblje,opstina,okrug,region'.split(',')
-persons = persons.replace('x', None)
-persons = persons.replace('1300 kaplara (van groblja)', '1300 kaplara')
+persons = persons.replace('x', None).replace('1300 kaplara (van groblja)', '1300 kaplara')
 
 groblja = pd.DataFrame(persons['groblje'].unique(), columns=['name'] )
 opstine = pd.DataFrame(org['opstina'].unique(), columns=['name'] )
@@ -42,7 +41,7 @@ org['opstina_id'] = org['opstina'].apply(idFromName, args=(opstine, ))
 groblja['opstina_id'] = groblja.apply(idFromId, args=(persons, 'groblje','opstina',), axis=1)
 opstine['okrug_id'] = opstine.apply(idFromId, args=(org,'opstina_id','okrug_id',), axis=1)
 okruzi['region_id'] = okruzi.apply(idFromId, args=(org,'okrug_id', 'region_id',), axis=1)
-
+persons = persons.drop(['opstina','okrug','region'], axis=1)
 
 persons.to_csv('spreadsheets/persons.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
 groblja.to_csv('spreadsheets/groblja.csv', index_label='id', quoting=QUOTE_NONNUMERIC)
