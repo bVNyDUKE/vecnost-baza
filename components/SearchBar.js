@@ -16,7 +16,7 @@ export default function SearchBar({ setResults }) {
         .replace(/Dj/g, "Đ");
       const { data } = await supabase
         .from("persons")
-        .select()
+        .select("id, ime, prezime, rodjenje, smrt, groblje (name)")
         .textSearch("fts", cleanedInput, { config: "sr", type: "websearch" });
       setResults(data);
       console.log(data);

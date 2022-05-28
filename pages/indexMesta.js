@@ -6,7 +6,7 @@ export async function getServerSideProps() {
   const { data } = await supabase
     .from("region")
     .select(
-      "id, name, okrug!okrug_region_id_fkey ( id, name, opstina!opstina_okrug_id_fkey (id, name, groblje!groblje_opstina_id_fkey (id, name) ) )"
+      "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
     );
   return { props: { data } };
 }

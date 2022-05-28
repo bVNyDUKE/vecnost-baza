@@ -9,7 +9,7 @@ const Entry = forwardRef(({ result, onClick, href }, ref) => {
         <li>
           Ime: {result.ime} {result.prezime} : {result.rodjenje} - {result.smrt}
         </li>
-        <li>Groblje: {result.groblje}</li>
+        <li>Groblje: {result.groblje.name}</li>
       </ul>
     </a>
   );
