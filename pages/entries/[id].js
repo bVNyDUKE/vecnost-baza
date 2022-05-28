@@ -1,7 +1,6 @@
 import { supabase } from "../../utils/supabaseClient";
 
-export async function getServerSideProps(context) {
-  const { id } = context.params;
+export async function getServerSideProps({ params: { id } }) {
   const { data } = await supabase
     .from("persons")
     .select(
