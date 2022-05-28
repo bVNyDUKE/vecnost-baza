@@ -10,3 +10,4 @@
 - [ ] Link search params to the index links
 - [*] Entry CSS
 - [ ] Add user authentication with Gmail
+- [ ] Add map of places
