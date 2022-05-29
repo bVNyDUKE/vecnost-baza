@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Button from "./Button";
 
 const Section = ({
@@ -43,9 +42,7 @@ const Section = ({
           {content}
         </div>
         <div className="flex w-1/2 max-w-md justify-center text-sm">
-          <Link href={href} passHref>
-            <Button label={linkLabel} />
-          </Link>
+          <Button label={linkLabel} href={href} />
         </div>
       </div>
     </section>
