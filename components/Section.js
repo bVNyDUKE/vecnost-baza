@@ -43,9 +43,9 @@ const Section = ({
           {content}
         </div>
         <div className="flex w-1/2 max-w-md justify-center text-sm">
-          <Button>
-            <Link href={href}>{linkLabel}</Link>
-          </Button>
+          <Link href={href} passHref>
+            <Button label={linkLabel} />
+          </Link>
         </div>
       </div>
     </section>
