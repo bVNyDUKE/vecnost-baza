@@ -1,42 +1,41 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import Icon from "./Icons";
-import { supabase } from "../utils/supabaseClient";
+import { useRouter } from "next/router";
 
-var timeout;
-export default function SearchBar({ setResults }) {
-  const [searching, setSearching] = useState(false);
+export default function SearchBar() {
+  const router = useRouter();
+  const [search, setSearch] = useState(router.query.ime);
 
-  const onSearch = useCallback(
-    (e) => {
-      clearTimeout(timeout);
-      setSearching(true);
-      timeout = setTimeout(async () => {
-        setSearching(false);
-        const cleanedInput = e.target.value
-          .replace(/dj/g, "đ")
-          .replace(/Dj/g, "Đ");
-        const { data } = await supabase
-          .from("persons")
-          .select("id, ime, prezime, rodjenje, smrt, groblje (name)")
-          .textSearch("fts", cleanedInput, { config: "sr", type: "websearch" });
-        setResults(data);
-        console.log(data);
-      }, 1000);
+  const handleChange = useCallback(
+    (e) => setSearch(e.target.value),
+    [setSearch]
+  );
+
+  const handleSearch = useCallback(
+    (searchInput) => {
+      const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
+      router.push({ pathname: "/search", query: { ime: cleanedInput } });
     },
-    [setResults]
+    [router]
+  );
+
+  const handleKeyUp = useCallback(
+    (e) => e.key == "Enter" && handleSearch(e.target.value),
+    [handleSearch]
   );
 
   return (
     <div className="m-auto flex h-16 w-full max-w-3xl items-center space-x-8 rounded-md border border-gray-300 bg-white shadow-md">
       <div className="ml-8">
-        {searching ? <Icon.Spinner /> : <Icon.Magnifier />}
+        <Icon.Magnifier />
       </div>
       <input
         type="text"
         name="search"
         id="search"
-        onChange={onSearch}
-        onKeyUp={(e) => (e.code = "Enter" && onSearch(e))}
+        value={search}
+        onChange={handleChange}
+        onKeyUp={handleKeyUp}
         placeholder="Pretraga..."
         className="flex-grow focus:outline-none"
       />
