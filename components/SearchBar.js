@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 
 export default function SearchBar() {
   const router = useRouter();
-  const [search, setSearch] = useState(router.query.ime);
+  const [search, setSearch] = useState("");
+
+  if (router.query.ime !== undefined) {
+    setSearch(router.query.ime);
+  }
 
   const handleChange = useCallback(
     (e) => setSearch(e.target.value),
