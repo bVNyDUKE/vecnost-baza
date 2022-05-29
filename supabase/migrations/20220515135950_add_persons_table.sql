@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.persons
     ime character varying COLLATE pg_catalog."default",
     srednje_slovo character varying COLLATE pg_catalog."default",
     nadimak character varying COLLATE pg_catalog."default",
-    "rođenje" character varying COLLATE pg_catalog."default",
+    rodjenje character varying COLLATE pg_catalog."default",
     smrt character varying COLLATE pg_catalog."default",
     groblje character varying COLLATE pg_catalog."default",
     fts tsvector GENERATED ALWAYS AS (to_tsvector('sr'::regconfig, (((ime)::text || ' '::text) || (prezime)::text))) STORED,
