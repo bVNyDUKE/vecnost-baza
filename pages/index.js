@@ -13,7 +13,7 @@ const data = [
     subtitle: "U izradi",
     content: "Pronađite arhivirane lokacija na mapi",
     href: "",
-    linkLabel: "Idi na mapu",
+    linkLabel: "U izradi",
   },
   {
     title: "Indeks",
