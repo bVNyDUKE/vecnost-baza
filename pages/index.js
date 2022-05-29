@@ -3,6 +3,7 @@ import Section from "../components/Section";
 export default function Home() {
   const data = [
     {
+      id: 1,
       title: "Pretraga",
       subtitle: "U izradi",
       content: "Pretražite sahranjena lica po imenu",
@@ -10,13 +11,15 @@ export default function Home() {
       linkLabel: "Idi na pretragu",
     },
     {
+      id: 2,
       title: "Mapa",
       subtitle: "U izradi",
       content: "Pronađite arhivirane lokacija na mapi",
-      href: "",
+      href: "/", //need to prefix this to avoid server/client mismatch
       linkLabel: "U izradi",
     },
     {
+      id: 3,
       title: "Indeks",
       subtitle: "U izradi",
       content: "Indeks svih arhiviranih lokacija",
@@ -27,11 +30,15 @@ export default function Home() {
 
   return (
     <>
-      {data.map((section, index) => (
+      {data.map(({ id, title, subtitle, content, href, linkLabel }) => (
         <Section
-          key={index}
-          {...section}
-          color={index % 2 === 0 ? "light" : "dark"}
+          key={id}
+          title={title}
+          subtitle={subtitle}
+          content={content}
+          href={href}
+          linkLabel={linkLabel}
+          color={id % 2 === 0 ? "light" : "dark"}
         />
       ))}
     </>
