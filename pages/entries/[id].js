@@ -1,28 +1,34 @@
-import { supabase } from "../../utils/supabaseClient";
+import {
+  withPageAuth,
+  supabaseServerClient,
+} from "@supabase/supabase-auth-helpers/nextjs";
 
-export async function getServerSideProps({ params: { id } }) {
-  const { data } = await supabase
-    .from("persons")
-    .select(
-      "ime, prezime, nadimak, pol, rodjenje, smrt, groblje (name, opstina (name, okrug (name, region (name ))))"
-    )
-    .eq("id", id);
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/login",
+  async getServerSideProps(ctx) {
+    const { data } = await supabaseServerClient(ctx)
+      .from("persons")
+      .select(
+        "ime, prezime, nadimak, pol, rodjenje, smrt, groblje (name, opstina (name, okrug (name, region (name ))))"
+      )
+      .eq("id", ctx.params.id);
 
-  const result = {
-    ime: data[0].ime,
-    prezime: data[0].prezime,
-    rodjenje: data[0].rodjenje ?? null,
-    smrt: data[0].smrt ?? null,
-    nadimak: data[0].nadimak ?? null,
-    pol: data[0].pol ?? null,
-    groblje: data[0].groblje.name,
-    opstina: data[0].groblje.opstina.name,
-    okrug: data[0].groblje.opstina.okrug.name,
-    region: data[0].groblje.opstina.okrug.region.name,
-  };
+    const result = {
+      ime: data[0].ime,
+      prezime: data[0].prezime,
+      rodjenje: data[0].rodjenje ?? null,
+      smrt: data[0].smrt ?? null,
+      nadimak: data[0].nadimak ?? null,
+      pol: data[0].pol ?? null,
+      groblje: data[0].groblje.name,
+      opstina: data[0].groblje.opstina.name,
+      okrug: data[0].groblje.opstina.okrug.name,
+      region: data[0].groblje.opstina.okrug.region.name,
+    };
 
-  return { props: { result } };
-}
+    return { props: { result } };
+  },
+});
 
 export default function Entry({ result }) {
   return (

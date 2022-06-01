@@ -1,15 +1,21 @@
 import { useState, useCallback, useMemo } from "react";
+import {
+  withPageAuth,
+  supabaseServerClient,
+} from "@supabase/supabase-auth-helpers/nextjs";
 import Icons from "../components/Icons";
-import { supabase } from "../utils/supabaseClient";
 
-export async function getServerSideProps() {
-  const { data } = await supabase
-    .from("region")
-    .select(
-      "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
-    );
-  return { props: { data } };
-}
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/login",
+  async getServerSideProps(ctx) {
+    const { data } = await supabaseServerClient(ctx)
+      .from("region")
+      .select(
+        "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
+      );
+    return { props: { data } };
+  },
+});
 
 const indexData = { okrug: "Okruzi", opstina: "Opštine", groblje: "Groblja" };
 

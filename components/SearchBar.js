@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import Icon from "./Icons";
 import { useRouter } from "next/router";
 
@@ -6,9 +6,11 @@ export default function SearchBar() {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
-  if (router.query.ime !== undefined) {
-    setSearch(router.query.ime);
-  }
+  useEffect(() => {
+    if (router.query.ime !== undefined) {
+      setSearch(router.query.ime);
+    }
+  }, [router.query.ime]);
 
   const handleChange = useCallback(
     (e) => setSearch(e.target.value),
