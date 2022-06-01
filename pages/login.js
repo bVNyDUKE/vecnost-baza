@@ -1,11 +1,13 @@
+import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { Auth } from "@supabase/supabase-auth-helpers/react";
 import Button from "../components/Button";
-import { supabase } from "../utils/supabaseClient";
 
 export default function Login() {
   async function signInWithGoogle() {
-    const { user, session, error } = await supabase.auth.signIn({
-      provider: "google",
-    });
+    await supabaseClient.auth.signIn(
+      { provider: "google" },
+      { redirectTo: "localhost:3000" }
+    );
   }
 
   return (
