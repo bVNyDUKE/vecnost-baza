@@ -7,8 +7,10 @@ export default function Layout({ children }) {
       <Head>
         <title>Vecnost - Baza</title>
       </Head>
-      <NavBar />
-      <main>{children}</main>
+      <main className="h-screen">
+        <NavBar />
+        {children}
+      </main>
     </>
   );
 }
