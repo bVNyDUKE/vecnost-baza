@@ -10,8 +10,8 @@ export default function Redirect() {
   const handleRedirect = () => router.push("/");
 
   useEffect(() => {
-    setSession(supabaseClient.auth.session());
     supabaseClient.auth.onAuthStateChange((_event, session) => {
+      console.log(session);
       setSession(session);
     });
   }, []);
