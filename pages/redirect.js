@@ -1,13 +1,11 @@
 import Button from "../components/Button";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function Redirect() {
-  const router = useRouter();
   const [session, setSession] = useState(null);
 
-  const handleRedirect = () => router.push("/");
+  const handleRedirect = () => window.push("/");
 
   useEffect(() => {
     setSession(supabaseClient.auth.session());
