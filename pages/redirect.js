@@ -3,6 +3,7 @@ import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+let timeout;
 export default function Redirect() {
   const router = useRouter();
   const [session, setSession] = useState(null);
@@ -11,9 +12,12 @@ export default function Redirect() {
 
   useEffect(() => {
     supabaseClient.auth.onAuthStateChange((_event, session) => {
-      console.log(session);
-      setSession(session);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setSession(session), 2000);
     });
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   if (session) {
@@ -33,7 +37,7 @@ export default function Redirect() {
           </div>
           <div className="flex h-72 flex-col items-center justify-center space-y-10 bg-secondary-dark p-5">
             <div className="w-1/2 max-w-md text-center text-lg md:text-2xl">
-              Hvala na prijavi!
+              Hvala na prijavi! Bićete preusmereni na bazu za {timeout} sekundi.
             </div>
             <div className="flex w-1/2 max-w-md justify-center text-sm">
               <Button onClick={handleRedirect} label="Idi na bazu" />
