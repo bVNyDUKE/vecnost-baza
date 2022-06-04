@@ -1,5 +1,4 @@
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
-import { Auth } from "@supabase/supabase-auth-helpers/react";
 import Button from "../components/Button";
 
 export default function Login() {
