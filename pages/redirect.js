@@ -1,5 +1,5 @@
 import Button from "../components/Button";
-import Spinner from "../components/Spinner";
+import Icons from "../components/Icons";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useEffect, useState } from "react";
 
@@ -35,7 +35,7 @@ export default function Redirect() {
             </div>
           </div>
           <div className="flex flex-col items-center justify-center space-y-10 bg-secondary-dark p-5">
-            <Spinner />
+            <Icons.Spinner width="h-10" height="h-10" />
             <div className="flex w-1/2 max-w-md justify-center text-sm">
               <Button onClick={handleRedirect} label="Idi na bazu" />
             </div>
