@@ -1,4 +1,4 @@
-const Spinner = ({ width = "w-5", height = "h-5" }) => (
+export const Spinner = ({ width = "w-5", height = "h-5" }) => (
   <svg
     className={`${width} ${height} animate-spin`}
     xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@ const Spinner = ({ width = "w-5", height = "h-5" }) => (
   </svg>
 );
 
-const Magnifier = () => (
+export const Magnifier = () => (
   <svg
     className="h-5 w-5 "
     xmlns="http://www.w3.org/2000/svg"
@@ -38,8 +38,8 @@ const Magnifier = () => (
   </svg>
 );
 
-const RightArrow = () => <span>&#9654;</span>;
-const DownArrow = () => <span>&#9660;</span>;
+export const RightArrow = () => <span>&#9654;</span>;
+export const DownArrow = () => <span>&#9660;</span>;
 
 const Icons = {
   Spinner,

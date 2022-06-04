@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import Icon from "./Icons";
+import { Spinner, Magnifier } from "./Icons";
 import { useRouter } from "next/router";
 
 export default function SearchBar() {
@@ -36,9 +36,7 @@ export default function SearchBar() {
   return (
     <div className="m-auto flex w-full max-w-3xl items-center justify-center rounded-md border border-gray-300">
       <div className="flex h-16 w-full max-w-3xl flex-shrink items-center space-x-8 hover:shadow-md">
-        <div className="ml-8">
-          {isSearching ? <Icon.Spinner /> : <Icon.Magnifier />}
-        </div>
+        <div className="ml-8">{isSearching ? <Spinner /> : <Magnifier />}</div>
         <input
           type="text"
           name="search"

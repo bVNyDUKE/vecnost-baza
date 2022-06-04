@@ -3,7 +3,7 @@ import {
   withPageAuth,
   supabaseServerClient,
 } from "@supabase/supabase-auth-helpers/nextjs";
-import Icons from "../components/Icons";
+import { RightArrow, DownArrow } from "../components/Icons";
 
 export const getServerSideProps = withPageAuth({
   redirectTo: "/login",
