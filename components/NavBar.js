@@ -10,9 +10,10 @@ const NavBar = () => (
             src="/vecna-logo-solo-100.png"
             alt="Vecnost logo"
             className="hover:pointer"
-            width={90}
-            height={100}
+            width={"90px"}
+            height={"100px"}
             objectFit={"contain"}
+            priority
           />
           <div className="font-serif text-3xl sm:text-5xl">Baza Podataka</div>
         </div>
