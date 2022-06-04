@@ -5,7 +5,7 @@ export default function Login() {
   async function signInWithGoogle() {
     await supabaseClient.auth.signIn(
       { provider: "google" },
-      { redirectTo: "https://vecnost-baza.vercel.app/" }
+      { redirectTo: "https://vecnost-baza.vercel.app" }
     );
   }
 
