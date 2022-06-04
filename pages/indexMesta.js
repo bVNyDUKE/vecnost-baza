@@ -44,9 +44,9 @@ const IndexEntry = ({ entry }) => {
   if (subListName) {
     return (
       <li>
-        {open ? <Icons.DownArrow /> : <Icons.RightArrow />}{" "}
-        <span className="ml-2 hover:cursor-pointer" onClick={handleClick}>
-          {entry.name}
+        <span className="hover:cursor-pointer" onClick={handleClick}>
+          {open ? <DownArrow /> : <RightArrow />}{" "}
+          <span className="ml-2">{entry.name}</span>
         </span>
         {open && (
           <div>
