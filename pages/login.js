@@ -22,9 +22,7 @@ export default function Login() {
               </h2>
             </div>
           </div>
-          <div
-            className={`flex min-h-[175px] flex-col items-center space-y-10 bg-secondary-dark p-5`}
-          >
+          <div className="flex min-h-[175px] flex-col items-center space-y-10 bg-secondary-dark p-5">
             <div className="w-1/2 max-w-md text-center text-lg md:text-2xl">
               Ulogujte se Gmail nalogom
             </div>
