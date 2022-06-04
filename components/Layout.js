@@ -8,11 +8,11 @@ export default function Layout({ children }) {
       <Head>
         <title>Vecnost - Baza</title>
       </Head>
-      <main className="h-screen">
+      <div className="flex h-screen flex-col justify-between">
         <NavBar />
-        {children}
-      </main>
-      <Footer />
+        <main className="mb-auto">{children}</main>
+        <Footer />
+      </div>
     </>
   );
 }
