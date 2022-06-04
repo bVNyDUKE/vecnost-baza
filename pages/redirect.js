@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function Redirect() {
   const [session, setSession] = useState(null);
 
-  const handleRedirect = () => window.push("/");
+  const handleRedirect = () => window.location.replace("/");
 
   useEffect(() => {
     setSession(supabaseClient.auth.session());
