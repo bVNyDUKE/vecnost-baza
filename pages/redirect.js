@@ -1,17 +1,22 @@
 import Button from "../components/Button";
+import Spinner from "../components/Spinner";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useEffect, useState } from "react";
 
+let timeout;
 export default function Redirect() {
   const [session, setSession] = useState(null);
 
   const handleRedirect = () => window.location.replace("/");
 
   useEffect(() => {
-    setSession(supabaseClient.auth.session());
     supabaseClient.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setSession(session), 2000);
     });
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   if (session) {
@@ -24,15 +29,13 @@ export default function Redirect() {
         <section className="w-64 text-white">
           <div className="bg-primary-dark py-5">
             <div className="text-center ">
-              <h2 className="font-serif text-3xl font-[400] md:text-5xl">
-                Login
+              <h2 className="font-serif text-lg font-[400] md:text-2xl">
+                Preusmeravanje
               </h2>
             </div>
           </div>
-          <div className="flex h-72 flex-col items-center justify-center space-y-10 bg-secondary-dark p-5">
-            <div className="w-1/2 max-w-md text-center text-lg md:text-2xl">
-              Hvala na prijavi!
-            </div>
+          <div className="flex flex-col items-center justify-center space-y-10 bg-secondary-dark p-5">
+            <Spinner />
             <div className="flex w-1/2 max-w-md justify-center text-sm">
               <Button onClick={handleRedirect} label="Idi na bazu" />
             </div>
