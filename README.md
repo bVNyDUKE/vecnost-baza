@@ -14,3 +14,4 @@
   - [*] Test out the Auth components for the login
   - [ ] Handle the login redirection
 - [ ] Add map of graveyards
+- [*] Add footer
