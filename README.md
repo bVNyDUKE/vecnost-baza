@@ -10,7 +10,7 @@
 - [ ] Link search params to the index links
 - [*] Entry CSS
 - [*] Add user authentication with Gmail
-  - [ ] Handle the displaying of the user information, or just remove it?
-  - [ ] Test out the Auth components for the login
+  - [*] Handle the displaying of the user information, or just remove it?
+  - [*] Test out the Auth components for the login
   - [ ] Handle the login redirection
-- [ ] Add map of places
+- [ ] Add map of graveyards
