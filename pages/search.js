@@ -90,8 +90,7 @@ export default function Search() {
         .limit(10)
         .range(rangeFrom, rangeTo)
         .textSearch("fts", ime, { config: "sr", type: "websearch" });
-      console.log("data", data);
-      console.log("count", count);
+
       setResults(data);
       setCount(count);
     }
@@ -106,7 +105,7 @@ export default function Search() {
       <div className="px-5">
         <SearchBar />
       </div>
-      <div className="mt-5 flex justify-start">
+      <div className="mt-5 flex justify-center">
         <ResultList results={results} />
       </div>
       {results && results.length > 10 && (
