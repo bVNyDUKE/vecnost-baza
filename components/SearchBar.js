@@ -14,16 +14,6 @@ export default function SearchBar() {
     }
   }, [router.query.ime]);
 
-  const handleChange = useCallback(
-    (e) => setSearch(e.target.value),
-    [setSearch]
-  );
-
-  const handleKeyUp = useCallback(
-    (e) => e.key == "Enter" && handleSearch(e.target.value),
-    [handleSearch]
-  );
-
   const handleSearch = useCallback(
     (searchInput) => {
       const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
@@ -33,6 +23,16 @@ export default function SearchBar() {
       }
     },
     [router]
+  );
+
+  const handleChange = useCallback(
+    (e) => setSearch(e.target.value),
+    [setSearch]
+  );
+
+  const handleKeyUp = useCallback(
+    (e) => e.key == "Enter" && handleSearch(e.target.value),
+    [handleSearch]
   );
 
   return (
@@ -49,14 +49,14 @@ export default function SearchBar() {
           className="h-full flex-grow p-5 focus:outline-none"
         />
       </div>
-      <button
-        className="h-16 w-20 flex-grow border-l hover:shadow-md"
-        onClick={() => handleSearch(search)}
-      >
-        <div className="flex justify-center">
+      <div className="h-16 w-20 flex-grow border-l hover:shadow-md">
+        <button
+          className="flex h-full w-full items-center justify-center"
+          onClick={() => handleSearch(search)}
+        >
           {isSearching ? <Spinner /> : <Magnifier />}
-        </div>
-      </button>
+        </button>
+      </div>
     </div>
   );
 }
