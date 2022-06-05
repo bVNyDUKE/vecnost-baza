@@ -70,7 +70,7 @@ const Paginator = ({ count, perPage }) => {
 };
 
 export default function Search() {
-  const { user, error } = useUser();
+  const { user } = useUser();
   const [results, setResults] = useState(null);
   const [count, setCount] = useState(0);
   const {
