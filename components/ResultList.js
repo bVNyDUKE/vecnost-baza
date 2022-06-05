@@ -7,9 +7,16 @@ const Entry = forwardRef(({ result, onClick, href }, ref) => {
     <a href={href} onClick={onClick} ref={ref}>
       <ul className="mb-5 w-full border-b border-gray-300 p-2 hover:cursor-pointer hover:shadow-xl">
         <li>
-          Ime: {result.ime} {result.prezime} : {result.rodjenje} - {result.smrt}
+          <span className="text-gray-500">Ime: </span>
+          {result.ime} {result.prezime}
         </li>
-        <li>Groblje: {result.groblje.name}</li>
+        <li>
+          {result.rodjenje} - {result.smrt}
+        </li>
+        <li>
+          <span className="text-gray-500">Groblje: </span>
+          {result.groblje.name}
+        </li>
       </ul>
     </a>
   );
