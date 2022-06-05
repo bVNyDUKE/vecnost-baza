@@ -1,26 +1,25 @@
 import SearchBar from "../components/SearchBar";
 import ResultList from "../components/ResultList";
 import { useRouter } from "next/router";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import {
   withPageAuth,
   supabaseClient,
 } from "@supabase/supabase-auth-helpers/nextjs";
+import { useUser } from "@supabase/supabase-auth-helpers/react";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
 
 const Paginator = ({ count, perPage }) => {
   const router = useRouter();
-  const [page, setPage] = useState(router.query.page || 1);
-  const [pages, setPages] = useState(Math.ceil(count / perPage));
-
-  useEffect(() => {
-    setPages(Math.ceil(count / perPage));
-  }, [count, perPage]);
+  const page = useMemo(
+    () => parseInt(router.query.page) || 1,
+    [router.query.page]
+  );
+  const pages = useMemo(() => Math.ceil(count / perPage), [count, perPage]);
 
   const handlePageChange = useCallback(
     (page) => {
-      setPage(page);
       router.push({
         pathname: "/search",
         query: { ...router.query, page: page },
@@ -46,6 +45,11 @@ const Paginator = ({ count, perPage }) => {
         >
           &lt;
         </button>
+        <div className="flex items-center">
+          <span className="text-sm font-medium">
+            Strana {page} od {pages}
+          </span>
+        </div>
         <button
           className="flex items-center justify-center  px-4 py-2 text-sm font-medium hover:shadow-md disabled:text-gray-300 disabled:hover:shadow-none"
           onClick={() => handlePageChange(page + 1)}
@@ -66,6 +70,7 @@ const Paginator = ({ count, perPage }) => {
 };
 
 export default function Search() {
+  const { user, error } = useUser();
   const [results, setResults] = useState(null);
   const [count, setCount] = useState(0);
   const {
@@ -73,8 +78,8 @@ export default function Search() {
   } = useRouter();
 
   useEffect(() => {
-    const rangeFrom = (page - 1) * 10;
-    const rangeTo = page * 10;
+    const rangeFrom = (page - 1) * 10 || 0;
+    const rangeTo = page * 10 || 10;
 
     async function search() {
       const { data, count } = await supabaseClient
@@ -91,20 +96,22 @@ export default function Search() {
       setCount(count);
     }
 
-    if (ime !== undefined) {
+    if (user && ime !== undefined) {
       search();
     }
-  }, [ime, page]);
+  }, [ime, page, user]);
 
   return (
-    <>
-      <div className="container mx-auto px-5">
+    <div className="container mx-auto">
+      <div className="px-5">
         <SearchBar />
       </div>
       <div className="mt-5 flex justify-start">
         <ResultList results={results} />
       </div>
-      <Paginator count={count} perPage={10} />
-    </>
+      {results && results.length > 10 && (
+        <Paginator count={count} perPage={10} />
+      )}
+    </div>
   );
 }
