@@ -19,24 +19,25 @@ export default function SearchBar() {
     [setSearch]
   );
 
-  const handleSearch = useCallback(
-    (searchInput) => {
-      const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
-      setIsSearching(true);
-      router.push({ pathname: "/search", query: { ime: cleanedInput } });
-    },
-    [router]
-  );
-
   const handleKeyUp = useCallback(
     (e) => e.key == "Enter" && handleSearch(e.target.value),
     [handleSearch]
   );
 
+  const handleSearch = useCallback(
+    (searchInput) => {
+      const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
+      if (router.query.ime !== cleanedInput) {
+        setIsSearching(true);
+        router.push({ pathname: "/search", query: { ime: cleanedInput } });
+      }
+    },
+    [router]
+  );
+
   return (
     <div className="m-auto flex w-full max-w-3xl items-center justify-center rounded-md border border-gray-300">
       <div className="flex h-16 w-full max-w-3xl flex-shrink items-center space-x-8 hover:shadow-md">
-        <div className="ml-8">{isSearching ? <Spinner /> : <Magnifier />}</div>
         <input
           type="text"
           name="search"
@@ -45,14 +46,16 @@ export default function SearchBar() {
           onChange={handleChange}
           onKeyUp={handleKeyUp}
           placeholder="Pretraga..."
-          className="h-full flex-grow focus:outline-none"
+          className="h-full flex-grow p-5 focus:outline-none"
         />
       </div>
       <button
         className="h-16 w-20 flex-grow border-l hover:shadow-md"
         onClick={() => handleSearch(search)}
       >
-        Traži
+        <div className="flex justify-center">
+          {isSearching ? <Spinner /> : <Magnifier />}
+        </div>
       </button>
     </div>
   );
