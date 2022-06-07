@@ -70,7 +70,7 @@ const Paginator = ({ count, perPage }) => {
 };
 
 export default function Search() {
-  const { user } = useUser();
+  const { user } = useUser(); //TODO: use the user from the serverSideProps instead
   const [results, setResults] = useState(null);
   const [count, setCount] = useState(0);
   const {
