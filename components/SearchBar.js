@@ -1,20 +1,78 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Spinner, Magnifier, AdjustmentsIcon } from "./Icons";
+import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import uniqBy from "lodash.uniqby";
 
-const OptionDropdown = ({ def }) => (
-  <select className="bg-white p-2">
-    <option value="">{def}</option>
+//TODO use state management for this page
+
+const OptionDropdown = ({ def, options, setter }) => (
+  <select className="w-1/3 bg-white p-2 text-center text-sm">
+    <option className="text-xs" disabled value="">
+      {def}
+    </option>
+    {options.map((option) => (
+      <option className="text-clip text-xs" key={option.id} value={option.id}>
+        {option.name}
+      </option>
+    ))}
   </select>
 );
 
+const AdvancedOptions = ({ regionData }) => {
+  const [okrug, setOkrug] = useState(null);
+  const [opstina, setOpstina] = useState(null);
+  const [groblje, setGroblje] = useState(null);
+
+  const groblja = useMemo(() => {
+    if (!regionData) return [];
+    return regionData.map((groblje) => ({
+      name: groblje.name,
+      id: groblje.id,
+    }));
+  }, [regionData]);
+
+  const opstine = useMemo(() => {
+    if (!regionData) return [];
+    return uniqBy(
+      regionData.map((groblje) => ({
+        name: groblje.opstina.name,
+        id: groblje.opstina.id,
+      })),
+      "id"
+    );
+  }, [regionData]);
+
+  const okruzi = useMemo(() => {
+    if (!regionData) return [];
+    return uniqBy(
+      regionData.map((groblje) => ({
+        name: groblje.opstina.okrug.name,
+        id: groblje.opstina.okrug.id,
+      })),
+      "id"
+    );
+  }, [regionData]);
+
+  return (
+    <div className="mb-10">
+      <div className="flex items-center justify-between text-sm">
+        <OptionDropdown def="Okrug" options={okruzi} setter={setOkrug} />
+        <OptionDropdown def="Opstina" options={opstine} setter={setOpstina} />
+        <OptionDropdown def="Groblje" options={groblja} setter={setGroblje} />
+      </div>
+    </div>
+  );
+};
+
 export default function SearchBar() {
   const router = useRouter();
+  const [parent] = useAutoAnimate();
   const [search, setSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [optionsShown, setOptionsShown] = useState(false);
-  const [parent] = useAutoAnimate();
+  const [regionData, setRegionData] = useState(null);
 
   useEffect(() => {
     setIsSearching(false);
@@ -23,9 +81,15 @@ export default function SearchBar() {
     }
   }, [router.query.ime]);
 
-  const handleOptionsShown = useCallback(() => {
+  const handleOptionsShown = useCallback(async () => {
     setOptionsShown(!optionsShown);
-  }, [optionsShown]);
+    if (!regionData) {
+      const { data } = await supabaseClient
+        .from("groblje")
+        .select("id, name, opstina (id, name, okrug (id, name)) ");
+      setRegionData(data);
+    }
+  }, [optionsShown, regionData]);
 
   const handleSearch = useCallback(
     (searchInput) => {
@@ -80,15 +144,7 @@ export default function SearchBar() {
           </button>
         </div>
       </div>
-      {optionsShown && (
-        <div className="mb-10">
-          <div className="flex items-center justify-between text-sm">
-            <OptionDropdown def="Mesto" />
-            <OptionDropdown def="Opstina" />
-            <OptionDropdown def="Groblje" />
-          </div>
-        </div>
-      )}
+      {optionsShown && <AdvancedOptions regionData={regionData} />}
     </div>
   );
 }
