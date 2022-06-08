@@ -15,7 +15,8 @@
     "lodash.uniqby": "^4.7.0",
     "next": "12.1.5",
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-dom": "18.0.0",
+    "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",

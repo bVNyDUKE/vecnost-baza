@@ -4,26 +4,68 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Spinner, Magnifier, AdjustmentsIcon } from "./Icons";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import uniqBy from "lodash.uniqby";
+import create from "zustand";
+import shallow from "zustand/shallow";
 
 //TODO use state management for this page
 
-const OptionDropdown = ({ def, options, setter }) => (
-  <select className="w-1/3 bg-white p-2 text-center text-sm">
-    <option className="text-xs" disabled value="">
+const useStore = create((set, get) => ({
+  optionsShown: false,
+  regionData: null,
+  opstina: null,
+  groblje: null,
+  okrug: null,
+  setOpstina: (opstina) => set((state) => ({ ...state, opstina })),
+  setGroblje: (groblje) => set((state) => ({ ...state, groblje })),
+  setOkrug: (okrug) => set((state) => ({ ...state, okrug })),
+  showOptions: async () => {
+    if (!get().regionData) {
+      const { data } = await supabaseClient
+        .from("groblje")
+        .select("id, name, opstina (id, name, okrug (id, name)) ");
+      return set((state) => ({
+        ...state,
+        optionsShown: !state.optionsShown,
+        regionData: data,
+      }));
+    }
+    set((state) => ({ ...state, optionsShown: !state.optionsShown }));
+  },
+  setRegionData: (val) => set({ regionData: val }),
+}));
+
+const OptionDropdown = ({ def, options, choice, setChoice }) => (
+  <select
+    onChange={(e) => setChoice(e.target.value)}
+    className="w-1/3 bg-white p-2 text-center text-sm"
+  >
+    <option selected={choice === null} className="text-xs" disabled value="">
       {def}
     </option>
     {options.map((option) => (
-      <option className="text-clip text-xs" key={option.id} value={option.id}>
+      <option
+        selected={choice == option.id}
+        className="text-clip text-xs"
+        key={option.id}
+        value={option.id}
+      >
         {option.name}
       </option>
     ))}
   </select>
 );
 
-const AdvancedOptions = ({ regionData }) => {
-  const [okrug, setOkrug] = useState(null);
-  const [opstina, setOpstina] = useState(null);
-  const [groblje, setGroblje] = useState(null);
+const AdvancedOptions = () => {
+  const [okrug, setOkrug] = useStore((state) => [state.okrug, state.setOkrug]);
+  const [opstina, setOpstina] = useStore((state) => [
+    state.opstina,
+    state.setOpstina,
+  ]);
+  const [groblje, setGroblje] = useStore((state) => [
+    state.groblje,
+    state.setGroblje,
+  ]);
+  const regionData = useStore((state) => state.regionData);
 
   const groblja = useMemo(() => {
     if (!regionData) return [];
@@ -58,9 +100,24 @@ const AdvancedOptions = ({ regionData }) => {
   return (
     <div className="mb-10">
       <div className="flex items-center justify-between text-sm">
-        <OptionDropdown def="Okrug" options={okruzi} setter={setOkrug} />
-        <OptionDropdown def="Opstina" options={opstine} setter={setOpstina} />
-        <OptionDropdown def="Groblje" options={groblja} setter={setGroblje} />
+        <OptionDropdown
+          def="Okrug"
+          choice={okrug}
+          options={okruzi}
+          setChoice={setOkrug}
+        />
+        <OptionDropdown
+          def="Opstina"
+          options={opstine}
+          choice={opstina}
+          setChoice={setOpstina}
+        />
+        <OptionDropdown
+          def="Groblje"
+          options={groblja}
+          choice={groblje}
+          setChoice={setGroblje}
+        />
       </div>
     </div>
   );
@@ -71,8 +128,13 @@ export default function SearchBar() {
   const [parent] = useAutoAnimate();
   const [search, setSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [optionsShown, setOptionsShown] = useState(false);
-  const [regionData, setRegionData] = useState(null);
+  const { optionsShown, showOptions } = useStore(
+    (state) => ({
+      optionsShown: state.optionsShown,
+      showOptions: state.showOptions,
+    }),
+    shallow
+  );
 
   useEffect(() => {
     setIsSearching(false);
@@ -80,16 +142,6 @@ export default function SearchBar() {
       setSearch(router.query.ime);
     }
   }, [router.query.ime]);
-
-  const handleOptionsShown = useCallback(async () => {
-    setOptionsShown(!optionsShown);
-    if (!regionData) {
-      const { data } = await supabaseClient
-        .from("groblje")
-        .select("id, name, opstina (id, name, okrug (id, name)) ");
-      setRegionData(data);
-    }
-  }, [optionsShown, regionData]);
 
   const handleSearch = useCallback(
     (searchInput) => {
@@ -136,7 +188,7 @@ export default function SearchBar() {
           </button>
           <button
             className="flex h-full w-10 items-center justify-center hover:shadow-md"
-            onClick={handleOptionsShown}
+            onClick={showOptions}
           >
             <AdjustmentsIcon
               className={`h-5 w-5 ${optionsShown ? "text-gray-400" : ""}`}
@@ -144,7 +196,7 @@ export default function SearchBar() {
           </button>
         </div>
       </div>
-      {optionsShown && <AdvancedOptions regionData={regionData} />}
+      {optionsShown && <AdvancedOptions />}
     </div>
   );
 }
