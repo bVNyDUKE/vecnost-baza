@@ -7,49 +7,88 @@ import uniqBy from "lodash.uniqby";
 import create from "zustand";
 import shallow from "zustand/shallow";
 
+// TODO: Generalize the functions below
+
+const filterByGroup = (data, options = {}) => {
+  if (options?.groblje && options?.groblje !== "0") {
+    data = data.filter((row) => row.grobljeid == options.groblje);
+  }
+  if (options?.opstina && options?.opstina !== "0") {
+    data = data.filter((row) => row.opstinaid == options.opstina);
+  }
+  if (options?.okrug && options?.okrug !== "0") {
+    data = data.filter((row) => row.okrugid == options.okrug);
+  }
+
+  const allGroblja = data.map((row) => ({
+    name: row.grobljename,
+    id: row.grobljeid,
+  }));
+
+  const allOpstine = uniqBy(
+    data.map((row) => ({
+      name: row.opstinaname,
+      id: row.opstinaid,
+    })),
+    "id"
+  );
+
+  const allOkruzi = uniqBy(
+    data.map((row) => ({
+      name: row.okrugname,
+      id: row.okrugid,
+    })),
+    "id"
+  );
+
+  return [allOkruzi, allOpstine, allGroblja];
+};
+
+// TODO: Extract the options into their own state object
 const useStore = create((set, get) => ({
   optionsShown: false,
-  allOpstine: null,
-  allOkruzi: null,
-  allGroblja: null,
+  allRegionData: [],
+  allOpstine: [],
+  allOkruzi: [],
+  allGroblja: [],
   opstina: null,
   groblje: null,
   okrug: null,
-  setOpstina: (opstina) => set(() => ({ opstina })),
-  setGroblje: (groblje) => set(() => ({ groblje })),
-  setOkrug: (okrug) => set(() => ({ okrug })),
+  setOpstina: (opstina) => {
+    const [allOkruzi, _allOpstine, allGroblja] = filterByGroup(
+      get().allRegionData,
+      { opstina }
+    );
+    set(() => ({ opstina, allOkruzi, allGroblja }));
+  },
+  setGroblje: (groblje) => {
+    const [allOkruzi, allOpstine] = filterByGroup(get().allRegionData, {
+      groblje,
+    });
+    set(() => ({ groblje, allOkruzi, allOpstine }));
+  },
+  setOkrug: (okrug) => {
+    const [_allOkruzi, allOpstine, allGroblja] = filterByGroup(
+      get().allRegionData,
+      { okrug }
+    );
+    set(() => ({ okrug, allOpstine, allGroblja }));
+  },
   showOptions: async () => {
-    if (!get().allOpstine || !get().allOkruzi || !get().allGroblja) {
-      const { data } = await supabaseClient
-        .from("groblje")
-        .select("id, name, opstina (id, name, okrug (id, name)) ");
-
-      const allGroblja = data.map((groblje) => ({
-        name: groblje.name,
-        id: groblje.id,
-      }));
-
-      const allOpstine = uniqBy(
-        data.map((groblje) => ({
-          name: groblje.opstina.name,
-          id: groblje.opstina.id,
-        })),
-        "id"
-      );
-
-      const allOkruzi = uniqBy(
-        data.map((groblje) => ({
-          name: groblje.opstina.okrug.name,
-          id: groblje.opstina.okrug.id,
-        })),
-        "id"
-      );
+    if (
+      get().allOpstine.length === 0 ||
+      get().allOkruzi.length === 0 ||
+      get().allGroblja.length === 0
+    ) {
+      const { data } = await supabaseClient.rpc("region_data");
+      const [allOkruzi, allOpstine, allGroblja] = filterByGroup(data);
 
       set((state) => ({
         optionsShown: !state.optionsShown,
         allOkruzi,
         allGroblja,
         allOpstine,
+        allRegionData: data,
       }));
       return;
     }
@@ -67,12 +106,7 @@ const OptionDropdown = ({ def, options, choice, setChoice }) => (
       {def}
     </option>
     {options.map((option) => (
-      <option
-        selected={choice == option.id}
-        className="text-clip text-xs"
-        key={option.id}
-        value={option.id}
-      >
+      <option className="text-clip text-xs" key={option.id} value={option.id}>
         {option.name}
       </option>
     ))}
