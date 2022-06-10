@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Spinner, Magnifier, AdjustmentsIcon } from "./Icons";
@@ -7,39 +7,63 @@ import uniqBy from "lodash.uniqby";
 import create from "zustand";
 import shallow from "zustand/shallow";
 
-//TODO use state management for this page
-
 const useStore = create((set, get) => ({
   optionsShown: false,
-  regionData: null,
+  allOpstine: null,
+  allOkruzi: null,
+  allGroblja: null,
   opstina: null,
   groblje: null,
   okrug: null,
-  setOpstina: (opstina) => set((state) => ({ ...state, opstina })),
-  setGroblje: (groblje) => set((state) => ({ ...state, groblje })),
-  setOkrug: (okrug) => set((state) => ({ ...state, okrug })),
+  setOpstina: (opstina) => set(() => ({ opstina })),
+  setGroblje: (groblje) => set(() => ({ groblje })),
+  setOkrug: (okrug) => set(() => ({ okrug })),
   showOptions: async () => {
-    if (!get().regionData) {
+    if (!get().allOpstine || !get().allOkruzi || !get().allGroblja) {
       const { data } = await supabaseClient
         .from("groblje")
         .select("id, name, opstina (id, name, okrug (id, name)) ");
-      return set((state) => ({
-        ...state,
-        optionsShown: !state.optionsShown,
-        regionData: data,
+
+      const allGroblja = data.map((groblje) => ({
+        name: groblje.name,
+        id: groblje.id,
       }));
+
+      const allOpstine = uniqBy(
+        data.map((groblje) => ({
+          name: groblje.opstina.name,
+          id: groblje.opstina.id,
+        })),
+        "id"
+      );
+
+      const allOkruzi = uniqBy(
+        data.map((groblje) => ({
+          name: groblje.opstina.okrug.name,
+          id: groblje.opstina.okrug.id,
+        })),
+        "id"
+      );
+
+      set((state) => ({
+        optionsShown: !state.optionsShown,
+        allOkruzi,
+        allGroblja,
+        allOpstine,
+      }));
+      return;
     }
-    set((state) => ({ ...state, optionsShown: !state.optionsShown }));
+    set((state) => ({ optionsShown: !state.optionsShown }));
   },
-  setRegionData: (val) => set({ regionData: val }),
 }));
 
 const OptionDropdown = ({ def, options, choice, setChoice }) => (
   <select
     onChange={(e) => setChoice(e.target.value)}
+    defaultValue={choice === null ? def : choice}
     className="w-1/3 bg-white p-2 text-center text-sm"
   >
-    <option selected={choice === null} className="text-xs" disabled value="">
+    <option className="text-xs" value="0">
       {def}
     </option>
     {options.map((option) => (
@@ -56,46 +80,30 @@ const OptionDropdown = ({ def, options, choice, setChoice }) => (
 );
 
 const AdvancedOptions = () => {
-  const [okrug, setOkrug] = useStore((state) => [state.okrug, state.setOkrug]);
-  const [opstina, setOpstina] = useStore((state) => [
-    state.opstina,
-    state.setOpstina,
-  ]);
-  const [groblje, setGroblje] = useStore((state) => [
-    state.groblje,
-    state.setGroblje,
-  ]);
-  const regionData = useStore((state) => state.regionData);
-
-  const groblja = useMemo(() => {
-    if (!regionData) return [];
-    return regionData.map((groblje) => ({
-      name: groblje.name,
-      id: groblje.id,
-    }));
-  }, [regionData]);
-
-  const opstine = useMemo(() => {
-    if (!regionData) return [];
-    return uniqBy(
-      regionData.map((groblje) => ({
-        name: groblje.opstina.name,
-        id: groblje.opstina.id,
-      })),
-      "id"
-    );
-  }, [regionData]);
-
-  const okruzi = useMemo(() => {
-    if (!regionData) return [];
-    return uniqBy(
-      regionData.map((groblje) => ({
-        name: groblje.opstina.okrug.name,
-        id: groblje.opstina.okrug.id,
-      })),
-      "id"
-    );
-  }, [regionData]);
+  const [
+    okrug,
+    setOkrug,
+    opstina,
+    setOpstina,
+    groblje,
+    setGroblje,
+    okruzi,
+    opstine,
+    groblja,
+  ] = useStore(
+    (state) => [
+      state.okrug,
+      state.setOkrug,
+      state.opstina,
+      state.setOpstina,
+      state.groblje,
+      state.setGroblje,
+      state.allOkruzi,
+      state.allOpstine,
+      state.allGroblja,
+    ],
+    shallow
+  );
 
   return (
     <div className="mb-10">
