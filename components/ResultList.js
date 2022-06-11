@@ -15,7 +15,7 @@ const Entry = forwardRef(({ result, onClick, href }, ref) => {
         </li>
         <li>
           <span className="text-gray-500">Groblje: </span>
-          {result.groblje.name}
+          {result?.groblje?.name}
         </li>
       </ul>
     </a>

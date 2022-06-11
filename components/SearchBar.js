@@ -71,15 +71,19 @@ const OptionDropdown = ({ def, options, choice, setChoice, clearChoice }) => {
   if (choice !== null) {
     return (
       <div
-        className="flex w-1/3 items-center justify-between bg-white p-2 text-center text-sm capitalize hover:cursor-pointer"
+        className="flex w-1/3 flex-grow items-center justify-between bg-white p-2 text-center text-sm capitalize hover:cursor-pointer"
         onClick={clearChoice}
       >
-        <span>{options.find((option) => option.id == choice).name}</span>
+        <div>{options.find((option) => option.id == choice).name}</div>
         <div>
           <Cross />
         </div>
       </div>
     );
+  }
+
+  if (options.length === 0) {
+    return null;
   }
 
   return (
@@ -112,8 +116,8 @@ const AdvancedOptions = () => {
   );
 
   return (
-    <div className="mb-10 flex h-10 items-center">
-      <div className="flex items-center justify-between text-sm">
+    <div className="mb-10">
+      <div className="flex h-10 items-center justify-between">
         <OptionDropdown
           def="okrug"
           choice={filter.okrug}
@@ -140,35 +144,36 @@ const AdvancedOptions = () => {
   );
 };
 
-export default function SearchBar() {
+export default function SearchBar({ searching }) {
   const router = useRouter();
   const [parent] = useAutoAnimate();
   const [search, setSearch] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-  const { optionsShown, showOptions } = useStore(
-    (state) => ({
-      optionsShown: state.optionsShown,
-      showOptions: state.showOptions,
-    }),
+  const [optionsShown, showOptions, filters] = useStore(
+    (state) => [state.optionsShown, state.showOptions, state.filter],
     shallow
   );
 
   useEffect(() => {
-    setIsSearching(false);
-    if (router.query.ime !== undefined) {
-      setSearch(router.query.ime);
-    }
+    setSearch(router.query.ime || "");
   }, [router.query.ime]);
 
   const handleSearch = useCallback(
     (searchInput) => {
       const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
-      if (router.query.ime !== cleanedInput) {
-        setIsSearching(true);
-        router.push({ pathname: "/search", query: { ime: cleanedInput } });
-      }
+
+      const query = { ime: cleanedInput };
+      Object.keys(filters).forEach((key) => {
+        if (filters[key] !== null) {
+          query[key] = filters[key];
+        }
+      });
+
+      router.push({
+        pathname: "/search",
+        query,
+      });
     },
-    [router]
+    [router, filters]
   );
 
   const handleChange = useCallback(
@@ -201,7 +206,7 @@ export default function SearchBar() {
             className="flex h-full w-full flex-grow items-center justify-center border-r hover:shadow-md"
             onClick={() => handleSearch(search)}
           >
-            {isSearching ? <Spinner /> : <Magnifier />}
+            {searching ? <Spinner /> : <Magnifier />}
           </button>
           <button
             className="flex h-full w-10 items-center justify-center hover:shadow-md"
