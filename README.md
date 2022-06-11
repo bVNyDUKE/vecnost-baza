@@ -3,6 +3,7 @@
 - [ ] Advanced search parameters
   - [ ] Test how to filter by opstina, okrug (groblje is easy)
   - [ ] Implement Typescript?
+- [ ] Fix navbar navigation anchor
 - [ ] Hide footer under main screen
 - [ ] Add map of graveyards
 - [ ] Fix Google auth domain name

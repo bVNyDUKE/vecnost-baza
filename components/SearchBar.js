@@ -85,16 +85,16 @@ const OptionDropdown = ({ def, options, choice, setChoice, clearChoice }) => {
   return (
     <select
       onChange={(e) => setChoice(def, e.target.value)}
-      defaultValue={choice === null ? def : choice}
       className="w-1/3 bg-white p-2 text-center text-sm capitalize"
     >
-      <option className="text-xs capitalize" value="0">
-        {def}
-      </option>
+      <option className="text-clip text-xs" value="0" label={def} />
       {options.map((option) => (
-        <option className="text-clip text-xs" key={option.id} value={option.id}>
-          {option.name}
-        </option>
+        <option
+          className="text-clip text-xs"
+          key={option.id}
+          value={option.id}
+          label={option.name}
+        />
       ))}
     </select>
   );
@@ -112,7 +112,7 @@ const AdvancedOptions = () => {
   );
 
   return (
-    <div className="mb-10">
+    <div className="mb-10 flex h-10 items-center">
       <div className="flex items-center justify-between text-sm">
         <OptionDropdown
           def="okrug"

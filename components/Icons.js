@@ -44,7 +44,7 @@ export const DownArrow = () => <span>&#9660;</span>;
 export const Cross = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="h-4 w-4"
+    className="h-3 w-3"
     viewBox="0 0 20 20"
     fill="currentColor"
   >
