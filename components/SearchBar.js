@@ -7,9 +7,10 @@ import uniqBy from "lodash.uniqby";
 import create from "zustand";
 import shallow from "zustand/shallow";
 
-// TODO: Generalize the functions below
+// TODO: Generalize the filtering functions below
+// TODO: Handle cases where an unsupported matching of params?
 
-const filterByGroup = (data, options = {}) => {
+const generateOptions = (data, options = {}) => {
   if (options?.groblje && options?.groblje !== "0") {
     data = data.filter((row) => row.grobljeid == options.groblje);
   }
@@ -20,12 +21,12 @@ const filterByGroup = (data, options = {}) => {
     data = data.filter((row) => row.okrugid == options.okrug);
   }
 
-  const allGroblja = data.map((row) => ({
+  const groblje = data.map((row) => ({
     name: row.grobljename,
     id: row.grobljeid,
   }));
 
-  const allOpstine = uniqBy(
+  const opstina = uniqBy(
     data.map((row) => ({
       name: row.opstinaname,
       id: row.opstinaid,
@@ -33,7 +34,7 @@ const filterByGroup = (data, options = {}) => {
     "id"
   );
 
-  const allOkruzi = uniqBy(
+  const okrug = uniqBy(
     data.map((row) => ({
       name: row.okrugname,
       id: row.okrugid,
@@ -41,54 +42,40 @@ const filterByGroup = (data, options = {}) => {
     "id"
   );
 
-  return [allOkruzi, allOpstine, allGroblja];
+  return {
+    groblje,
+    opstina,
+    okrug,
+  };
 };
 
-// TODO: Extract the options into their own state object
 const useStore = create((set, get) => ({
   optionsShown: false,
-  allRegionData: [],
-  allOpstine: [],
-  allOkruzi: [],
-  allGroblja: [],
-  opstina: null,
-  groblje: null,
-  okrug: null,
-  setOpstina: (opstina) => {
-    const [allOkruzi, _allOpstine, allGroblja] = filterByGroup(
-      get().allRegionData,
-      { opstina }
-    );
-    set(() => ({ opstina, allOkruzi, allGroblja }));
+  allOptions: [],
+  options: {
+    okrug: [],
+    opstina: [],
+    groblje: [],
   },
-  setGroblje: (groblje) => {
-    const [allOkruzi, allOpstine] = filterByGroup(get().allRegionData, {
-      groblje,
-    });
-    set(() => ({ groblje, allOkruzi, allOpstine }));
+  filter: {
+    opstina: null,
+    groblje: null,
+    okrug: null,
   },
-  setOkrug: (okrug) => {
-    const [_allOkruzi, allOpstine, allGroblja] = filterByGroup(
-      get().allRegionData,
-      { okrug }
-    );
-    set(() => ({ okrug, allOpstine, allGroblja }));
+  setOption: (name, value) => {
+    const options = generateOptions(get().allOptions, { [name]: value });
+    options[name] = get().options[name];
+    set(() => ({ filter: { [name]: value }, options }));
   },
   showOptions: async () => {
-    if (
-      get().allOpstine.length === 0 ||
-      get().allOkruzi.length === 0 ||
-      get().allGroblja.length === 0
-    ) {
+    if (get().allOptions.length === 0) {
       const { data } = await supabaseClient.rpc("region_data");
-      const [allOkruzi, allOpstine, allGroblja] = filterByGroup(data);
+      const options = generateOptions(data);
 
       set((state) => ({
         optionsShown: !state.optionsShown,
-        allOkruzi,
-        allGroblja,
-        allOpstine,
-        allRegionData: data,
+        allOptions: data,
+        options,
       }));
       return;
     }
@@ -98,11 +85,11 @@ const useStore = create((set, get) => ({
 
 const OptionDropdown = ({ def, options, choice, setChoice }) => (
   <select
-    onChange={(e) => setChoice(e.target.value)}
+    onChange={(e) => setChoice(def, e.target.value)}
     defaultValue={choice === null ? def : choice}
-    className="w-1/3 bg-white p-2 text-center text-sm"
+    className="w-1/3 bg-white p-2 text-center text-sm capitalize"
   >
-    <option className="text-xs" value="0">
+    <option className="text-xs capitalize" value="0">
       {def}
     </option>
     {options.map((option) => (
@@ -114,28 +101,8 @@ const OptionDropdown = ({ def, options, choice, setChoice }) => (
 );
 
 const AdvancedOptions = () => {
-  const [
-    okrug,
-    setOkrug,
-    opstina,
-    setOpstina,
-    groblje,
-    setGroblje,
-    okruzi,
-    opstine,
-    groblja,
-  ] = useStore(
-    (state) => [
-      state.okrug,
-      state.setOkrug,
-      state.opstina,
-      state.setOpstina,
-      state.groblje,
-      state.setGroblje,
-      state.allOkruzi,
-      state.allOpstine,
-      state.allGroblja,
-    ],
+  const [filter, options, setOption] = useStore(
+    (state) => [state.filter, state.options, state.setOption],
     shallow
   );
 
@@ -143,22 +110,22 @@ const AdvancedOptions = () => {
     <div className="mb-10">
       <div className="flex items-center justify-between text-sm">
         <OptionDropdown
-          def="Okrug"
-          choice={okrug}
-          options={okruzi}
-          setChoice={setOkrug}
+          def="okrug"
+          choice={filter.okrug}
+          options={options.okrug}
+          setChoice={setOption}
         />
         <OptionDropdown
-          def="Opstina"
-          options={opstine}
-          choice={opstina}
-          setChoice={setOpstina}
+          def="opstina"
+          choice={filter.opstina}
+          options={options.opstina}
+          setChoice={setOption}
         />
         <OptionDropdown
-          def="Groblje"
-          options={groblja}
-          choice={groblje}
-          setChoice={setGroblje}
+          def="groblje"
+          choice={filter.groblje}
+          options={options.groblje}
+          setChoice={setOption}
         />
       </div>
     </div>
