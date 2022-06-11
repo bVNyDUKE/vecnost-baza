@@ -7,46 +7,26 @@ import uniqBy from "lodash.uniqby";
 import create from "zustand";
 import shallow from "zustand/shallow";
 
-// TODO: Generalize the filtering functions below
-// TODO: Handle cases where an unsupported matching of params?
+const generateOptions = (data, filters = {}) => {
+  Object.keys(filters).forEach((key) => {
+    if (filters[key] !== "0") {
+      data = data.filter((row) => row[`${key}id`] == filters[key]);
+    }
+  });
 
-const generateOptions = (data, options = {}) => {
-  if (options?.groblje && options?.groblje !== "0") {
-    data = data.filter((row) => row.grobljeid == options.groblje);
-  }
-  if (options?.opstina && options?.opstina !== "0") {
-    data = data.filter((row) => row.opstinaid == options.opstina);
-  }
-  if (options?.okrug && options?.okrug !== "0") {
-    data = data.filter((row) => row.okrugid == options.okrug);
-  }
+  const options = { groblje: [], opstina: [], okrug: [] };
 
-  const groblje = data.map((row) => ({
-    name: row.grobljename,
-    id: row.grobljeid,
-  }));
+  Object.keys(options).forEach((key) => {
+    options[key] = uniqBy(
+      data.map((row) => ({
+        name: row[`${key}name`],
+        id: row[`${key}id`],
+      })),
+      "id"
+    );
+  });
 
-  const opstina = uniqBy(
-    data.map((row) => ({
-      name: row.opstinaname,
-      id: row.opstinaid,
-    })),
-    "id"
-  );
-
-  const okrug = uniqBy(
-    data.map((row) => ({
-      name: row.okrugname,
-      id: row.okrugid,
-    })),
-    "id"
-  );
-
-  return {
-    groblje,
-    opstina,
-    okrug,
-  };
+  return options;
 };
 
 const useStore = create((set, get) => ({
