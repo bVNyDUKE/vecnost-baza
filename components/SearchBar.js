@@ -1,7 +1,7 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Spinner, Magnifier, AdjustmentsIcon } from "./Icons";
+import { Spinner, Magnifier, AdjustmentsIcon, Cross } from "./Icons";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import uniqBy from "lodash.uniqby";
 import create from "zustand";
@@ -45,7 +45,11 @@ const useStore = create((set, get) => ({
   setOption: (name, value) => {
     const options = generateOptions(get().allOptions, { [name]: value });
     options[name] = get().options[name];
-    set(() => ({ filter: { [name]: value }, options }));
+    set(() => ({ filter: { ...get().filter, [name]: value }, options }));
+  },
+  clearOption: (name) => {
+    const options = generateOptions(get().allOptions, { [name]: "0" });
+    set(() => ({ filter: { ...get().filter, [name]: null }, options }));
   },
   showOptions: async () => {
     if (get().allOptions.length === 0) {
@@ -63,26 +67,47 @@ const useStore = create((set, get) => ({
   },
 }));
 
-const OptionDropdown = ({ def, options, choice, setChoice }) => (
-  <select
-    onChange={(e) => setChoice(def, e.target.value)}
-    defaultValue={choice === null ? def : choice}
-    className="w-1/3 bg-white p-2 text-center text-sm capitalize"
-  >
-    <option className="text-xs capitalize" value="0">
-      {def}
-    </option>
-    {options.map((option) => (
-      <option className="text-clip text-xs" key={option.id} value={option.id}>
-        {option.name}
+const OptionDropdown = ({ def, options, choice, setChoice, clearChoice }) => {
+  if (choice !== null) {
+    return (
+      <div
+        className="flex w-1/3 items-center justify-between bg-white p-2 text-center text-sm capitalize hover:cursor-pointer"
+        onClick={clearChoice}
+      >
+        <span>{options.find((option) => option.id == choice).name}</span>
+        <div>
+          <Cross />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <select
+      onChange={(e) => setChoice(def, e.target.value)}
+      defaultValue={choice === null ? def : choice}
+      className="w-1/3 bg-white p-2 text-center text-sm capitalize"
+    >
+      <option className="text-xs capitalize" value="0">
+        {def}
       </option>
-    ))}
-  </select>
-);
+      {options.map((option) => (
+        <option className="text-clip text-xs" key={option.id} value={option.id}>
+          {option.name}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 const AdvancedOptions = () => {
-  const [filter, options, setOption] = useStore(
-    (state) => [state.filter, state.options, state.setOption],
+  const [filter, options, setOption, clearOption] = useStore(
+    (state) => [
+      state.filter,
+      state.options,
+      state.setOption,
+      state.clearOption,
+    ],
     shallow
   );
 
@@ -94,18 +119,21 @@ const AdvancedOptions = () => {
           choice={filter.okrug}
           options={options.okrug}
           setChoice={setOption}
+          clearChoice={() => clearOption("okrug")}
         />
         <OptionDropdown
           def="opstina"
           choice={filter.opstina}
           options={options.opstina}
           setChoice={setOption}
+          clearChoice={() => clearOption("opstina")}
         />
         <OptionDropdown
           def="groblje"
           choice={filter.groblje}
           options={options.groblje}
           setChoice={setOption}
+          clearChoice={() => clearOption("groblje")}
         />
       </div>
     </div>
