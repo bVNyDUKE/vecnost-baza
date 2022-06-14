@@ -12,10 +12,10 @@ interface Option {
   id: string;
 }
 
-interface Filters {
-  okrug?: string;
-  opstina?: string;
-  groblje?: string;
+enum Regions {
+  opstina = "opstina",
+  okrug = "okrug",
+  groblje = "groblje",
 }
 
 interface Result {
@@ -31,51 +31,61 @@ interface SearchState {
   optionsShown: boolean;
   allOptions: Result[];
   options: {
-    okrug: Option[];
-    opstina: Option[];
-    groblje: Option[];
+    [key in Regions]: Option[];
   };
   filter: {
-    opstina: null | string;
-    okrug: null | string;
-    groblje: null | string;
+    [key in Regions]: string | null;
   };
-  setOption: (name: string, value: string) => void;
+  setOption: (name: keyof typeof Regions, value: string) => void;
   clearOption: (name: string) => void;
   showOptions: () => void;
 }
 
 interface OptionDropdownProps {
-  def: string;
+  def: keyof typeof Regions;
   options: Option[];
-  choice: string;
+  choice: string | null;
   setChoice: SearchState["setOption"];
   clearChoice: () => void;
 }
 
 const generateOptions = (
-  data: Result[] | [],
-  filters: Filters | {} = {}
+  data: Result[],
+  filters: { [key in Regions]?: string }
 ): SearchState["options"] => {
-  Object.keys(filters).forEach((key) => {
-    if (filters[key] !== "0") {
-      data = data.filter((row: Result) => row[`${key}id`] == filters[key]);
-    }
-  });
+  if (filters?.opstina && filters.opstina !== "0") {
+    data = data.filter((row: Result) => row.opstinaid === filters.opstina);
+  }
+  if (filters?.okrug && filters.okrug !== "0") {
+    data = data.filter((row: Result) => row.okrugid === filters.okrug);
+  }
+  if (filters?.groblje && filters.groblje !== "0") {
+    data = data.filter((row: Result) => row.grobljeid === filters.groblje);
+  }
 
-  const options = { groblje: [], opstina: [], okrug: [] };
-
-  Object.keys(options).forEach((key) => {
-    options[key] = uniqBy(
+  return {
+    okrug: uniqBy(
       data.map((row: Result) => ({
-        name: row[`${key}name`],
-        id: row[`${key}id`],
+        name: row.okrugname,
+        id: row.okrugid,
       })),
       "id"
-    );
-  });
-
-  return options;
+    ),
+    opstina: uniqBy(
+      data.map((row: Result) => ({
+        name: row.opstinaname,
+        id: row.opstinaid,
+      })),
+      "id"
+    ),
+    groblje: uniqBy(
+      data.map((row: Result) => ({
+        name: row.grobljename,
+        id: row.grobljeid,
+      })),
+      "id"
+    ),
+  };
 };
 
 const useStore = create<SearchState>((set, get) => ({
@@ -102,12 +112,12 @@ const useStore = create<SearchState>((set, get) => ({
   },
   showOptions: async () => {
     if (get().allOptions.length === 0) {
-      const { data } = await supabaseClient.rpc("region_data");
-      const options = generateOptions(data);
+      const { data } = await supabaseClient.rpc<Result>("region_data");
+      const options = generateOptions(data || [], {});
 
       set((state) => ({
         optionsShown: !state.optionsShown,
-        allOptions: data,
+        allOptions: data || [],
         options,
       }));
       return;
@@ -218,12 +228,12 @@ export default function SearchBar({ searching }: { searching: boolean }) {
     (searchInput: string) => {
       const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
 
-      const query = { ime: cleanedInput };
-      Object.keys(filters).forEach((key) => {
-        if (filters[key] !== null) {
-          query[key] = filters[key];
-        }
-      });
+      const query = {
+        ime: cleanedInput,
+        opstina: filters.opstina,
+        groblje: filters.groblje,
+        okrug: filters.okrug,
+      };
 
       router.push({
         pathname: "/search",
