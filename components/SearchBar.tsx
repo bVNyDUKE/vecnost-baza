@@ -228,16 +228,14 @@ export default function SearchBar({ searching }: { searching: boolean }) {
     (searchInput: string) => {
       const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
 
-      const query = {
-        ime: cleanedInput,
-        opstina: filters.opstina,
-        groblje: filters.groblje,
-        okrug: filters.okrug,
-      };
-
       router.push({
         pathname: "/search",
-        query,
+        query: {
+          ime: cleanedInput,
+          ...(filters.groblje && { groblje: filters.groblje }),
+          ...(filters.opstina && { opstina: filters.opstina }),
+          ...(filters.okrug && { okrug: filters.okrug }),
+        },
       });
     },
     [router, filters]
