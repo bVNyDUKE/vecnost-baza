@@ -1,4 +1,4 @@
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/SearchBar.tsx";
 import ResultList from "../components/ResultList";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useMemo } from "react";

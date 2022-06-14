@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Spinner, Magnifier, AdjustmentsIcon, Cross } from "./Icons";
@@ -7,10 +7,59 @@ import uniqBy from "lodash.uniqby";
 import create from "zustand";
 import shallow from "zustand/shallow";
 
-const generateOptions = (data, filters = {}) => {
+interface Option {
+  name: string;
+  id: string;
+}
+
+interface Filters {
+  okrug?: string;
+  opstina?: string;
+  groblje?: string;
+}
+
+interface Result {
+  grobljeid: string;
+  grobljename: string;
+  opstinaid: string;
+  opstinaname: string;
+  okrugid: string;
+  okrugname: string;
+}
+
+interface SearchState {
+  optionsShown: boolean;
+  allOptions: Result[];
+  options: {
+    okrug: Option[];
+    opstina: Option[];
+    groblje: Option[];
+  };
+  filter: {
+    opstina: null | string;
+    okrug: null | string;
+    groblje: null | string;
+  };
+  setOption: (name: string, value: string) => void;
+  clearOption: (name: string) => void;
+  showOptions: () => void;
+}
+
+interface OptionDropdownProps {
+  def: string;
+  options: Option[];
+  choice: string;
+  setChoice: SearchState["setOption"];
+  clearChoice: () => void;
+}
+
+const generateOptions = (
+  data: Result[] | [],
+  filters: Filters | {} = {}
+): SearchState["options"] => {
   Object.keys(filters).forEach((key) => {
     if (filters[key] !== "0") {
-      data = data.filter((row) => row[`${key}id`] == filters[key]);
+      data = data.filter((row: Result) => row[`${key}id`] == filters[key]);
     }
   });
 
@@ -18,7 +67,7 @@ const generateOptions = (data, filters = {}) => {
 
   Object.keys(options).forEach((key) => {
     options[key] = uniqBy(
-      data.map((row) => ({
+      data.map((row: Result) => ({
         name: row[`${key}name`],
         id: row[`${key}id`],
       })),
@@ -29,7 +78,7 @@ const generateOptions = (data, filters = {}) => {
   return options;
 };
 
-const useStore = create((set, get) => ({
+const useStore = create<SearchState>((set, get) => ({
   optionsShown: false,
   allOptions: [],
   options: {
@@ -67,7 +116,13 @@ const useStore = create((set, get) => ({
   },
 }));
 
-const OptionDropdown = ({ def, options, choice, setChoice, clearChoice }) => {
+const OptionDropdown = ({
+  def,
+  options,
+  choice,
+  setChoice,
+  clearChoice,
+}: OptionDropdownProps) => {
   if (choice !== null) {
     return (
       <div
@@ -75,7 +130,7 @@ const OptionDropdown = ({ def, options, choice, setChoice, clearChoice }) => {
         onClick={clearChoice}
       >
         <div className="flex w-full justify-center text-center">
-          <span>{options.find((option) => option.id == choice).name}</span>
+          <span>{options.find((option) => option.id == choice)?.name}</span>
         </div>
         <div>
           <Cross />
@@ -146,21 +201,21 @@ const AdvancedOptions = () => {
   );
 };
 
-export default function SearchBar({ searching }) {
+export default function SearchBar({ searching }: { searching: boolean }) {
   const router = useRouter();
-  const [parent] = useAutoAnimate();
-  const [search, setSearch] = useState("");
+  const [parent] = useAutoAnimate<HTMLDivElement>();
+  const [search, setSearch] = useState<string>("");
   const [optionsShown, showOptions, filters] = useStore(
     (state) => [state.optionsShown, state.showOptions, state.filter],
     shallow
   );
 
   useEffect(() => {
-    setSearch(router.query.ime || "");
+    setSearch((router.query.ime as string) || "");
   }, [router.query.ime]);
 
   const handleSearch = useCallback(
-    (searchInput) => {
+    (searchInput: string) => {
       const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
 
       const query = { ime: cleanedInput };
@@ -179,12 +234,13 @@ export default function SearchBar({ searching }) {
   );
 
   const handleChange = useCallback(
-    (e) => setSearch(e.target.value),
+    (e: React.FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value),
     [setSearch]
   );
 
   const handleKeyUp = useCallback(
-    (e) => e.key == "Enter" && handleSearch(e.target.value),
+    (e: React.KeyboardEvent<HTMLInputElement>) =>
+      e.key == "Enter" && handleSearch(e.currentTarget.value),
     [handleSearch]
   );
 
