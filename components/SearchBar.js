@@ -74,7 +74,9 @@ const OptionDropdown = ({ def, options, choice, setChoice, clearChoice }) => {
         className="flex w-1/3 flex-grow items-center justify-between bg-white p-2 text-center text-sm capitalize hover:cursor-pointer"
         onClick={clearChoice}
       >
-        <div>{options.find((option) => option.id == choice).name}</div>
+        <div className="flex w-full justify-center text-center">
+          <span>{options.find((option) => option.id == choice).name}</span>
+        </div>
         <div>
           <Cross />
         </div>
