@@ -119,7 +119,7 @@ export default function Search() {
   return (
     <div className="container mx-auto">
       <div className="px-5">
-        <SearchBar searching={searching} />
+        <SearchBar searching={searching} user={user} />
       </div>
       <div className="mt-5 flex justify-center">
         <ResultList results={results} />

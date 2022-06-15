@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Spinner, Magnifier, AdjustmentsIcon, Cross } from "./Icons";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { User } from "@supabase/supabase-js";
 import uniqBy from "lodash.uniqby";
 import create from "zustand";
 import shallow from "zustand/shallow";
@@ -115,8 +116,8 @@ const useStore = create<SearchState>((set, get) => ({
       const { data } = await supabaseClient.rpc<Result>("region_data");
       const options = generateOptions(data || [], {});
 
-      set((state) => ({
-        optionsShown: !state.optionsShown,
+      set(() => ({
+        optionsShown: true,
         allOptions: data || [],
         options,
       }));
@@ -211,21 +212,51 @@ const AdvancedOptions = () => {
   );
 };
 
-export default function SearchBar({ searching }: { searching: boolean }) {
+export default function SearchBar({
+  searching,
+  user,
+}: {
+  searching: boolean;
+  user: User;
+}) {
   const router = useRouter();
+  const { opstina, groblje, okrug, ime } = router.query;
   const [parent] = useAutoAnimate<HTMLDivElement>();
-  const [search, setSearch] = useState<string>("");
-  const [optionsShown, showOptions, filters] = useStore(
-    (state) => [state.optionsShown, state.showOptions, state.filter],
+  const [search, setSearch] = useState<string | string[]>("");
+  const [optionsShown, showOptions, filters, setOption] = useStore(
+    (state) => [
+      state.optionsShown,
+      state.showOptions,
+      state.filter,
+      state.setOption,
+    ],
     shallow
   );
 
   useEffect(() => {
-    setSearch((router.query.ime as string) || "");
-  }, [router.query.ime]);
+    setSearch(ime || "");
+    if (opstina || groblje || okrug) {
+      if (!optionsShown && user) {
+        showOptions();
+      }
+
+      if (opstina && typeof opstina === "string") {
+        setOption("opstina", opstina);
+      }
+      if (groblje && typeof groblje === "string") {
+        setOption("groblje", groblje);
+      }
+      if (okrug && typeof okrug === "string") {
+        setOption("okrug", okrug);
+      }
+    }
+  }, [ime, opstina, groblje, okrug, user]);
 
   const handleSearch = useCallback(
-    (searchInput: string) => {
+    (searchInput: string | string[]) => {
+      if (typeof searchInput !== "string") {
+        searchInput = searchInput.join(" ");
+      }
       const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
 
       router.push({
