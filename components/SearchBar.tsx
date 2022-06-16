@@ -239,18 +239,26 @@ export default function SearchBar({
       if (!optionsShown && user) {
         showOptions();
       }
-
-      if (opstina && typeof opstina === "string") {
-        setOption("opstina", opstina);
-      }
-      if (groblje && typeof groblje === "string") {
-        setOption("groblje", groblje);
-      }
-      if (okrug && typeof okrug === "string") {
-        setOption("okrug", okrug);
-      }
     }
-  }, [ime, opstina, groblje, okrug, user]);
+    if (opstina && typeof opstina === "string") {
+      setOption("opstina", opstina);
+    }
+    if (groblje && typeof groblje === "string") {
+      setOption("groblje", groblje);
+    }
+    if (okrug && typeof okrug === "string") {
+      setOption("okrug", okrug);
+    }
+  }, [
+    ime,
+    opstina,
+    groblje,
+    okrug,
+    user,
+    setOption,
+    showOptions,
+    optionsShown,
+  ]);
 
   const handleSearch = useCallback(
     (searchInput: string | string[]) => {
