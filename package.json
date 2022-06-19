@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-types": "npx openapi-typescript \"$(grep NEXT_PUBLIC_SUPABASE_URL  .env.local | cut -d '=' -f2)/rest/v1/?apikey=$(grep NEXT_PUBLIC_SUPABASE_ANON_KEY .env.local | cut -d '=' -f2)\" --version=2 --output types/database/index.ts"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.1",

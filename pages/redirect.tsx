@@ -2,10 +2,11 @@ import Button from "../components/Button";
 import Icons from "../components/Icons";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import { useEffect, useState } from "react";
+import { Session } from "@supabase/supabase-js";
 
-let timeout;
+let timeout: ReturnType<typeof setTimeout>;
 export default function Redirect() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   const handleRedirect = () => window.location.replace("/");
 

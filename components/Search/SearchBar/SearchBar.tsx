@@ -11,7 +11,7 @@ export const SearchBar = ({
   user,
 }: {
   searching: boolean;
-  user: User;
+  user: User | null;
 }) => {
   const router = useRouter();
   const { opstina, groblje, okrug, ime } = router.query;

@@ -1,4 +1,14 @@
-export const Paginator = ({ count, page, perPage, handlePageChange }) => {
+export const Paginator = ({
+  count,
+  page,
+  perPage,
+  handlePageChange,
+}: {
+  count: number;
+  page: number;
+  perPage: number;
+  handlePageChange: (page: number) => void;
+}) => {
   const pages = Math.ceil(count / perPage);
 
   return (
