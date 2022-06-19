@@ -41,7 +41,6 @@ export default function Home() {
           content={content}
           href={href}
           linkLabel={linkLabel}
-          color={id % 2 === 0 ? "light" : "dark"}
         />
       ))}
     </>

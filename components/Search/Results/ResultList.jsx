@@ -22,7 +22,7 @@ const Entry = forwardRef(({ result, onClick, href }, ref) => {
   );
 });
 
-export default function ResultList({ results }) {
+export const ResultList = ({ results }) => {
   if (results !== null && results.length === 0) {
     return <div className="m-auto">Nema rezultata za ovu pretragu</div>;
   }
@@ -40,4 +40,4 @@ export default function ResultList({ results }) {
         ))}
     </div>
   );
-}
+};

@@ -56,11 +56,10 @@ export const Cross = () => (
   </svg>
 );
 
-export const AdjustmentsIcon = ({ className = "h-6 w-6" }, props) => (
+export const AdjustmentsIcon = ({ className = "h-6 w-6" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}
-    {...props}
     viewBox="0 0 20 20"
     fill="currentColor"
   >

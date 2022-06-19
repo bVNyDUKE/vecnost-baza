@@ -1,15 +1,32 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   withPageAuth,
   supabaseServerClient,
 } from "@supabase/supabase-auth-helpers/nextjs";
 import { RightArrow, DownArrow } from "../components/Icons";
 
+interface Result {
+  id: string;
+  name: string;
+}
+
+interface Opstina extends Result {
+  groblje: Result[];
+}
+
+interface Okrug extends Result {
+  opstina: Opstina[];
+}
+
+interface Region extends Result {
+  okrug: Okrug[];
+}
+
 export const getServerSideProps = withPageAuth({
   redirectTo: "/login",
   async getServerSideProps(ctx) {
     const { data } = await supabaseServerClient(ctx)
-      .from("region")
+      .from<Region>("region")
       .select(
         "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
       );
@@ -17,9 +34,13 @@ export const getServerSideProps = withPageAuth({
   },
 });
 
-const indexData = { okrug: "Okruzi", opstina: "Opštine", groblje: "Groblja" };
-
-const IndexList = ({ data, title }) => {
+const IndexList = ({
+  data,
+  title,
+}: {
+  data: Region[] | Okrug[] | Opstina[] | Result[] | null;
+  title: string;
+}) => {
   return (
     <div className="mt-5 mb-5 font-serif">
       <h2 className="ml-5 text-3xl">{title}</h2>
@@ -31,15 +52,39 @@ const IndexList = ({ data, title }) => {
   );
 };
 
-const IndexEntry = ({ entry }) => {
+const IndexEntry = ({
+  entry,
+}: {
+  entry: Region | Opstina | Okrug | Result;
+}) => {
   const [open, setOpen] = useState(false);
+  const handleClick = () => setOpen((open) => !open);
 
-  const handleClick = useCallback(() => setOpen((open) => !open), []);
-  const subListName = useMemo(
-    () =>
-      Object.keys(entry).find((key) => Object.keys(indexData).includes(key)),
-    [entry]
-  );
+  const subListData = useMemo(() => {
+    if ("okrug" in entry) {
+      return entry.okrug;
+    }
+    if ("opstina" in entry) {
+      return entry.opstina;
+    }
+    if ("groblje" in entry) {
+      return entry.groblje;
+    }
+    return false;
+  }, [entry]);
+
+  const subListName = useMemo(() => {
+    if ("okrug" in entry) {
+      return "Okruzi";
+    }
+    if ("opstina" in entry) {
+      return "Opštine";
+    }
+    if ("groblje" in entry) {
+      return "Groblja";
+    }
+    return false;
+  }, [entry]);
 
   if (subListName) {
     return (
@@ -50,11 +95,8 @@ const IndexEntry = ({ entry }) => {
         </span>
         {open && (
           <div>
-            {subListName && (
-              <IndexList
-                data={entry[subListName]}
-                title={indexData[subListName]}
-              />
+            {subListData && (
+              <IndexList data={subListData} title={subListName} />
             )}
           </div>
         )}
@@ -64,7 +106,7 @@ const IndexEntry = ({ entry }) => {
   return <li>{entry.name}</li>;
 };
 
-export default function Entry({ data = [] }) {
+export default function Entry({ data }: { data: Region[] | null }) {
   return (
     <div className="container mx-auto max-w-lg">
       <h1 className="text-center font-serif text-4xl">Index</h1>

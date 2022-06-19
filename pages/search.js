@@ -1,7 +1,8 @@
-import SearchBar from "../components/SearchBar.tsx";
-import ResultList from "../components/ResultList";
+import { SearchBar } from "../components/Search/SearchBar/SearchBar";
+import { ResultList } from "../components/Search/Results/ResultList";
+import { Paginator } from "../components/Search/Results/Paginator";
 import { useRouter } from "next/router";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   withPageAuth,
   supabaseClient,
@@ -10,73 +11,15 @@ import { useUser } from "@supabase/supabase-auth-helpers/react";
 
 export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
 
-const Paginator = ({ count, perPage }) => {
-  const router = useRouter();
-  const page = useMemo(
-    () => parseInt(router.query.page) || 1,
-    [router.query.page]
-  );
-  const pages = useMemo(() => Math.ceil(count / perPage), [count, perPage]);
-
-  const handlePageChange = useCallback(
-    (page) => {
-      router.push({
-        pathname: "/search",
-        query: { ...router.query, page: page },
-      });
-    },
-    [router]
-  );
-
-  return (
-    <div className="mb-5 flex justify-center">
-      <div className="flex justify-between">
-        <button
-          className="flex items-center justify-center px-4  py-2 text-sm font-medium hover:shadow-md disabled:text-gray-300 disabled:hover:shadow-none"
-          onClick={() => handlePageChange(1)}
-          disabled={page === 1}
-        >
-          &lt;&lt;
-        </button>
-        <button
-          className="flex items-center justify-center  px-4 py-2 text-sm font-medium hover:shadow-md disabled:text-gray-300 disabled:hover:shadow-none"
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page === 1}
-        >
-          &lt;
-        </button>
-        <div className="flex items-center">
-          <span className="text-sm font-medium">
-            Strana {page} od {pages}
-          </span>
-        </div>
-        <button
-          className="flex items-center justify-center  px-4 py-2 text-sm font-medium hover:shadow-md disabled:text-gray-300 disabled:hover:shadow-none"
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page === pages}
-        >
-          &gt;
-        </button>
-        <button
-          className="flex items-center justify-center  px-4 py-2 text-sm font-medium hover:shadow-md disabled:text-gray-300 disabled:hover:shadow-none"
-          onClick={() => handlePageChange(pages)}
-          disabled={page === pages}
-        >
-          &gt;&gt;
-        </button>
-      </div>
-    </div>
-  );
-};
-
 export default function Search() {
-  const { user } = useUser(); //TODO: use the user from the serverSideProps instead
+  const { user } = useUser();
   const [results, setResults] = useState(null);
   const [searching, setSearching] = useState(false);
   const [count, setCount] = useState(0);
+  const router = useRouter();
   const {
     query: { ime, page, okrug, opstina, groblje },
-  } = useRouter();
+  } = router;
 
   useEffect(() => {
     const rangeFrom = (page - 1) * 10 || 0;
@@ -116,16 +59,28 @@ export default function Search() {
     }
   }, [ime, page, user, groblje, opstina, okrug]);
 
+  const handlePageChange = (page) => {
+    router.push({
+      pathname: "/search",
+      query: { ...router.query, page: page },
+    });
+  };
+
   return (
     <div className="container mx-auto">
       <div className="px-5">
         <SearchBar searching={searching} user={user} />
       </div>
-      <div className="mt-5 flex justify-center">
+      <div className="my-5 flex justify-center">
         <ResultList results={results} />
       </div>
       {results && results.length > 10 && (
-        <Paginator count={count} perPage={10} />
+        <Paginator
+          count={count}
+          page={page || 1}
+          perPage={10}
+          handlePageChange={handlePageChange}
+        />
       )}
     </div>
   );

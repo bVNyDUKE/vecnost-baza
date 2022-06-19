@@ -1,6 +1,12 @@
 import Link from "next/link";
 
-const Button = ({ href, label, onClick = null }) => {
+type ButtonProps = {
+  href?: string;
+  label: string;
+  onClick?: () => void;
+};
+
+const Button = ({ href, label, onClick }: ButtonProps) => {
   if (href) {
     return (
       <Link href={href}>

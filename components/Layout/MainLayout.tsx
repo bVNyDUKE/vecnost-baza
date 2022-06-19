@@ -1,18 +1,19 @@
 import Head from "next/head";
-import NavBar from "../components/NavBar";
+import NavBar from "./NavBar";
 import Footer from "./Footer";
+import React from "react";
 
-export default function Layout({ children }) {
+export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Head>
         <title>Vecnost - Baza</title>
       </Head>
-      <div className="flex h-screen flex-col justify-between">
+      <div className="flex min-h-screen flex-col justify-between">
         <NavBar />
         <main className="mb-auto">{children}</main>
-        <Footer />
       </div>
+      <Footer />
     </>
   );
-}
+};

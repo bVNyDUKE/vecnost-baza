@@ -1,6 +1,18 @@
 import Button from "./Button";
 
-const Section = ({ title, subtitle, content, href, linkLabel }) => {
+const Section = ({
+  title,
+  subtitle,
+  content,
+  href,
+  linkLabel,
+}: {
+  title: string;
+  subtitle: string;
+  content: React.ReactNode;
+  href: string;
+  linkLabel: string;
+}) => {
   return (
     <div className="group">
       <section className="group-even:text-white md:flex md:h-96">
