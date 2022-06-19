@@ -3,15 +3,56 @@ import {
   supabaseServerClient,
 } from "@supabase/supabase-auth-helpers/nextjs";
 
+type Person = {
+  id: string;
+  ime: string;
+  prezime: string;
+  nadimak: string;
+  pol: string;
+  rodjenje: string;
+  smrt: string;
+  groblje: {
+    name: string;
+    opstina: {
+      name: string;
+      okrug: {
+        name: string;
+        region: {
+          name: string;
+        };
+      };
+    };
+  };
+};
+
+type Result = {
+  ime: string;
+  prezime: string;
+  rodjenje: string;
+  smrt: string;
+  nadimak: string;
+  pol: string;
+  groblje: string;
+  opstina: string;
+  okrug: string;
+  region: string;
+};
+
 export const getServerSideProps = withPageAuth({
   redirectTo: "/login",
   async getServerSideProps(ctx) {
+    const id = ctx.params?.id as string;
     const { data } = await supabaseServerClient(ctx)
-      .from("persons")
+      .from<Person>("persons")
       .select(
         "ime, prezime, nadimak, pol, rodjenje, smrt, groblje (name, opstina (name, okrug (name, region (name ))))"
       )
-      .eq("id", ctx.params.id);
+      .eq("id", id);
+
+    if (!data) {
+      ctx.res.statusCode = 404;
+      return { props: { data: null } };
+    }
 
     const result = {
       ime: data[0].ime,
@@ -30,7 +71,7 @@ export const getServerSideProps = withPageAuth({
   },
 });
 
-export default function Entry({ result }) {
+export default function Entry({ result }: { result: Result }) {
   return (
     <div className="container mx-auto max-w-lg space-y-2 p-2 font-serif">
       <h1 className="text-2xl">
