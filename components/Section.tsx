@@ -2,13 +2,11 @@ import Button from "./Button";
 
 const Section = ({
   title,
-  subtitle,
   content,
   href,
   linkLabel,
 }: {
   title: string;
-  subtitle: string;
   content: React.ReactNode;
   href: string;
   linkLabel: string;
@@ -24,9 +22,6 @@ const Section = ({
             <h2 className="font-serif text-3xl font-[400] md:text-5xl">
               {title}
             </h2>
-            <div className="text-sm font-thin uppercase tracking-wide md:text-xl">
-              {subtitle}
-            </div>
           </div>
         </div>
         <div

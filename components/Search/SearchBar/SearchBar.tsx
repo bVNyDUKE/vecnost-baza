@@ -29,7 +29,7 @@ export const SearchBar = ({
   }, [getOptions, user]);
 
   useEffect(() => {
-    setSearch(ime || "");
+    setSearch(ime !== "all" && ime || "");
     if (opstina && typeof opstina === "string") {
       setOption("opstina", opstina);
     }

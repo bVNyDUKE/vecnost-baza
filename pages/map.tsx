@@ -7,6 +7,7 @@ import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
 type GraveLocations = {
+  id: number;
   name: string;
   position: google.maps.LatLngLiteral;
 };
@@ -16,7 +17,7 @@ export const getServerSideProps = withPageAuth({
   async getServerSideProps(ctx) {
     const { data } = await supabaseServerClient(ctx)
       .from<GraveLocations>("groblje")
-      .select("name, position")
+      .select("id, name, position")
       .not("position", "is", null);
 
     return { props: { data } };
@@ -51,6 +52,7 @@ const Map = ({ children, ...props }: MapProps) => {
 
         const infoContent = `<div class="py-4 px-2">
           <h1 class="font-bold text-lg">${location.name}</h1>
+          <a class="underline hover:cursor-pointer" href="/search?ime=all&groblje=${location.id}">Pretrazi ovo groblje</h1>
             </div>`
 
         marker.addListener("click", () => {

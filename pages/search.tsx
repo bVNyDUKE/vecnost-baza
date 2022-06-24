@@ -54,11 +54,14 @@ export default function Search() {
         }
       )
       .limit(10)
-      .range(rangeFrom, rangeTo)
-      .textSearch("fts", ime as string, {
+      .range(rangeFrom, rangeTo);
+
+    if (ime && ime !== 'all') {
+      query = query.textSearch("fts", ime as string, {
         config: "sr",
         type: "websearch",
       });
+    }
 
     if (groblje) {
       query = query.eq("groblje.id", groblje);
