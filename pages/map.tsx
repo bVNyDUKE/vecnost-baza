@@ -40,18 +40,21 @@ const Map = ({ children, ...props }: MapProps) => {
 
       const infoWindow = new google.maps.InfoWindow({
         content: "",
-        disableAutoPan: true,
       })
 
       const markers = props.locations.map((location, i) => {
-        const label = i.toString();
+        const label = ++i;
         const marker = new google.maps.Marker({
           position: location.position,
-          label,
+          label: label.toString(),
         });
 
+        const infoContent = `<div class="py-4 px-2">
+          <h1 class="font-bold text-lg">${location.name}</h1>
+            </div>`
+
         marker.addListener("click", () => {
-          infoWindow.setContent(location.name)
+          infoWindow.setContent(infoContent)
           infoWindow.open(newMap, marker)
         });
 
