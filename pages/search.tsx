@@ -91,12 +91,12 @@ export default function Search() {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto max-w-3xl">
 
       <SearchBar searching={searching} user={user} />
 
-      <div className="my-5 flex justify-center">
-        {ime &&
+      <div className="my-5 flex justify-center relative">
+        {results &&
           <ResultList results={results} />
         }
       </div>
