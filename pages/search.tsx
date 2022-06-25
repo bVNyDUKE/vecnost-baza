@@ -101,7 +101,7 @@ export default function Search() {
         }
       </div>
 
-      {results && results.length > 10 && (
+      {results && count && count > 10 && (
         <Paginator
           count={count || 0}
           page={+page || 1}
