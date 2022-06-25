@@ -55,7 +55,7 @@ export const SearchBar = ({
         ...(filters.opstina && { opstina: filters.opstina }),
         ...(filters.okrug && { okrug: filters.okrug }),
       },
-    });
+    }, '', { shallow: true });
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) =>
@@ -65,7 +65,7 @@ export const SearchBar = ({
     e.key == "Enter" && handleSearch(e.currentTarget.value);
 
   return (
-    <div ref={parent} className="m-auto max-w-3xl">
+    <div ref={parent} className="px-5 m-auto max-w-3xl">
       <div className="flex items-center justify-center rounded-md border border-gray-300">
         <div className="flex h-16 w-full flex-shrink items-center space-x-8 hover:shadow-md">
           <input

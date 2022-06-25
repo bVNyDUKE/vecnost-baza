@@ -43,7 +43,7 @@ export default function Search() {
   const page = parseInt(router.query.page as string) || 1;
 
   useEffect(() => {
-    const rangeFrom = page - 1 * 10 || 0;
+    const rangeFrom = (page - 1) * 10 || 0;
     const rangeTo = page * 10 || 10;
     let query = supabaseClient
       .from("persons")
@@ -87,17 +87,20 @@ export default function Search() {
     router.push({
       pathname: "/search",
       query: { ...router.query, page: page },
-    });
+    }, '', { shallow: true, scroll: true });
   };
 
   return (
     <div className="container mx-auto">
-      <div className="px-5">
-        <SearchBar searching={searching} user={user} />
-      </div>
+
+      <SearchBar searching={searching} user={user} />
+
       <div className="my-5 flex justify-center">
-        <ResultList results={results} />
+        {ime &&
+          <ResultList results={results} />
+        }
       </div>
+
       {results && results.length > 10 && (
         <Paginator
           count={count || 0}
