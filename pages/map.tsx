@@ -81,6 +81,12 @@ const Map = ({ children, ...props }: MapProps) => {
   );
 };
 
+const LoadingScreen = ({ status }: { status: Status }) => (
+  <div className="h-full w-full bg-gray-200 flex justify-center items-center">
+    <p className="font-bold text-lg">{status}</p>
+  </div>
+)
+
 export default function MapPage({ data }: { data: GraveLocations[] }) {
   const center = { lat: 44.628924, lng: 20.643159 };
   const zoom = 7;
@@ -89,7 +95,7 @@ export default function MapPage({ data }: { data: GraveLocations[] }) {
     <div className="h-screen flex">
       <Wrapper
         apiKey={process.env.NEXT_PUBLIC_MAPS_KEY!}
-        render={(status: Status) => <h1>{status}</h1>}
+        render={(status: Status) => <LoadingScreen status={status} />}
       >
         <Map center={center} zoom={zoom} locations={data} />
       </Wrapper>
