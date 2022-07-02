@@ -9,10 +9,8 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <Head>
         <title>Vecnost - Baza</title>
       </Head>
-      <div className="flex min-h-screen flex-col justify-between">
-        <NavBar />
-        <main className="mb-auto">{children}</main>
-      </div>
+      <NavBar />
+      <main className="min-h-screen">{children}</main>
       <Footer />
     </>
   );
