@@ -17,7 +17,7 @@ export const MapRegion = ({
 }) => {
   const style = { strokeWidth };
   const [hovered, setHovered] = useState(false);
-  const fill = selected ? "#ff3301" : hovered ? fillColor : "#440000";
+  const fill = selected ? "#F79489" : hovered ? "#fadcd9" : fillColor;
 
   return (
     <path

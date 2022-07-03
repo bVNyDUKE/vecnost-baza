@@ -1,4 +1,14 @@
-import { Okrug, NameStat, GrobljeStat } from "../../pages/viz";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+} from "chart.js";
+import { NameStat, GrobljeStat } from "../../pages/viz";
+import { useMemo } from "react";
 
 const GraveyardStats = ({
   graveyardStats,
@@ -16,50 +26,66 @@ const GraveyardStats = ({
   </div>
 );
 
+const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
+  ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
+  const labels = useMemo(() => nameStats.map((x) => x.ime), [nameStats]);
+  const data = useMemo(() => {
+    return {
+      labels,
+      datasets: [
+        {
+          data: nameStats.map((x) => x.total),
+          borderColor: "rgb(0,0,0)",
+          backgroundColor: "",
+        },
+      ],
+    };
+  }, [labels, nameStats]);
+
+  const options = {
+    indexAxis: "y" as const,
+    elements: {
+      bar: { borderWidth: 1 },
+    },
+    responsive: true,
+    scales: {
+      x: { display: false },
+      y: {
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+
+  return (
+    <div className="p-5">
+      <Bar datasetIdKey="names" options={options} data={data} />
+    </div>
+  );
+};
+
 export const RegionStats = ({
-  loading,
-  selectedOkrug,
+  okrugName,
   grobljeStats,
   nameStats,
 }: {
-  loading: boolean;
-  selectedOkrug: Okrug | null;
+  okrugName: string;
   grobljeStats: GrobljeStat[];
   nameStats: NameStat[];
 }) => {
   return (
     <>
-      <p className="text-center text-2xl font-bold">{selectedOkrug?.name}</p>
-      {!loading && grobljeStats === null && nameStats === null && (
+      <p className="text-center text-2xl font-bold">{okrugName}</p>
+      {grobljeStats === null && nameStats === null && (
         <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
       )}
-      {!loading &&
-        grobljeStats !== null &&
-        grobljeStats?.length !== 0 &&
-        nameStats !== null &&
-        nameStats?.length !== 0 && (
-          <div className="space-x-10 sm:mt-10 md:flex md:justify-center">
-            <div>
-              <p className="pl-5 font-bold">Najčešća imena</p>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Ime</th>
-                    <th>Ukupno</th>
-                    <th>Procenat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {nameStats.map((stat) => (
-                    <tr key={stat.ime}>
-                      <td>{stat.ime}</td>
-                      <td>{stat.total}</td>
-                      <td>{stat.percent}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      {grobljeStats &&
+        nameStats &&
+        grobljeStats.length !== 0 &&
+        nameStats.length !== 0 && (
+          <div className="space-x-10 sm:mt-10 md:justify-center">
+            <NamesGraph nameStats={nameStats} />
             <GraveyardStats graveyardStats={grobljeStats} />
           </div>
         )}

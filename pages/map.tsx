@@ -37,11 +37,11 @@ const Map = ({ children, ...props }: MapProps) => {
       const newMap = new window.google.maps.Map(ref.current, {
         center: props.center,
         zoom: props.zoom,
-      })
+      });
 
       const infoWindow = new google.maps.InfoWindow({
         content: "",
-      })
+      });
 
       const markers = props.locations.map((location, i) => {
         const label = ++i;
@@ -53,18 +53,18 @@ const Map = ({ children, ...props }: MapProps) => {
         const infoContent = `<div class="py-4 px-2">
           <h1 class="font-bold text-lg">${location.name}</h1>
           <a class="underline hover:cursor-pointer" href="/search?ime=all&groblje=${location.id}">Pretrazi ovo groblje</h1>
-            </div>`
+            </div>`;
 
         marker.addListener("click", () => {
-          infoWindow.setContent(infoContent)
-          infoWindow.open(newMap, marker)
+          infoWindow.setContent(infoContent);
+          infoWindow.open(newMap, marker);
         });
 
         return marker;
-      })
+      });
 
-      new MarkerClusterer({ map: newMap, markers })
-      setMap(newMap)
+      new MarkerClusterer({ map: newMap, markers });
+      setMap(newMap);
     }
   }, [ref, map, props.center, props.zoom, props.locations]);
 
@@ -82,17 +82,17 @@ const Map = ({ children, ...props }: MapProps) => {
 };
 
 const LoadingScreen = ({ status }: { status: Status }) => (
-  <div className="h-full w-full bg-gray-200 flex justify-center items-center">
-    <p className="font-bold text-lg">{status}</p>
+  <div className="flex h-full w-full items-center justify-center bg-gray-200">
+    <p className="text-lg font-bold">{status}</p>
   </div>
-)
+);
 
 export default function MapPage({ data }: { data: GraveLocations[] }) {
   const center = { lat: 44.628924, lng: 20.643159 };
   const zoom = 7;
 
   return (
-    <div className="h-screen flex">
+    <div className="flex h-screen">
       <Wrapper
         apiKey={process.env.NEXT_PUBLIC_MAPS_KEY!}
         render={(status: Status) => <LoadingScreen status={status} />}

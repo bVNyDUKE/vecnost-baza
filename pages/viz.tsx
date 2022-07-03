@@ -23,48 +23,70 @@ export type GrobljeStat = {
   grobljename: string;
 };
 
+export type PersonsPerOkrugStat = {
+  count: number;
+  okrug_id: number;
+};
+
 type QueryReturn = { data: string };
 
 export const getServerSideProps = withPageAuth();
 
 export default function Viz() {
   const { user } = useUser();
+  // prettier-ignore
+  const [personsPerOkrug, setPersonsPerOkrug] = useState<PersonsPerOkrugStat[] | null>(null);
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [grobljeStats, setGrobljStats] = useState<[] | GrobljeStat[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    async function getPersonsPerOkrug() {
+      const { data } = await supabaseClient.rpc<PersonsPerOkrugStat>(
+        "persons_per_okrug"
+      );
+      console.log(data);
+      setPersonsPerOkrug(data);
+    }
+    if (user) {
+      getPersonsPerOkrug();
+    }
+  }, [user]);
+
+  useEffect(() => {
     async function search(id: number) {
+      setLoading(true);
       const res = await supabaseClient.rpc<QueryReturn>("okrug_stats", {
         i: id,
       });
       const data = res.data as QueryReturn[];
       setGrobljStats(JSON.parse(data[0].data));
       setNameStats(JSON.parse(data[1].data));
+      setLoading(false);
     }
 
     if (user && selectedOkrug?.id) {
-      setLoading(true);
       search(selectedOkrug.id);
-      setLoading(false);
     }
   }, [user, selectedOkrug?.id]);
 
   return (
-    <div className="mb-10 flex flex-col-reverse font-serif sm:flex-row sm:items-center sm:justify-center">
+    <div className="mb-10 flex flex-col-reverse font-serif sm:flex-row sm:justify-center">
       <div className="sm:w-1/2">
-        <RegionStats
-          nameStats={nameStats}
-          selectedOkrug={selectedOkrug}
-          grobljeStats={grobljeStats}
-          loading={loading}
-        />
+        {!loading && selectedOkrug !== null && (
+          <RegionStats
+            nameStats={nameStats}
+            okrugName={selectedOkrug?.name || ""}
+            grobljeStats={grobljeStats}
+          />
+        )}
       </div>
       <div className="relative sm:w-1/2">
         <MapContainer
-          selectedOkrug={selectedOkrug}
+          selectedOkrugId={selectedOkrug?.id || null}
           setSelectedOkrug={setSelectedOkrug}
+          personsPerOkrug={personsPerOkrug}
         />
       </div>
     </div>
