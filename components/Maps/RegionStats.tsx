@@ -5,8 +5,8 @@ import {
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { NameStat, GrobljeStat } from "../../pages/viz";
 import { useMemo } from "react";
 
@@ -27,7 +27,13 @@ const GraveyardStats = ({
 );
 
 const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
-  ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    ChartDataLabels
+  );
   const labels = useMemo(() => nameStats.map((x) => x.ime), [nameStats]);
   const data = useMemo(() => {
     return {
@@ -36,6 +42,26 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
         {
           data: nameStats.map((x) => x.total),
           borderColor: "rgb(0,0,0)",
+          datalabels: {
+            display: true,
+            color: "white",
+            anchor: "end",
+            align: "left",
+          },
+          backgroundColor: "",
+        },
+        {
+          data: nameStats.map((x) => x.percent),
+          borderColor: "rgb(0,0,0)",
+          datalabels: {
+            display: true,
+            color: "black",
+            anchor: "end",
+            align: "right",
+            formatter: function (value: string) {
+              return value + "%";
+            },
+          },
           backgroundColor: "",
         },
       ],
@@ -56,6 +82,7 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
         },
       },
     },
+    plugins: [ChartDataLabels],
   };
 
   return (
@@ -75,7 +102,7 @@ export const RegionStats = ({
   nameStats: NameStat[];
 }) => {
   return (
-    <>
+    <div className="py-14">
       <p className="text-center text-2xl font-bold">{okrugName}</p>
       {grobljeStats === null && nameStats === null && (
         <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
@@ -89,6 +116,6 @@ export const RegionStats = ({
             <GraveyardStats graveyardStats={grobljeStats} />
           </div>
         )}
-    </>
+    </div>
   );
 };
