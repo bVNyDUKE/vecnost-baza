@@ -45,8 +45,8 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
           datalabels: {
             display: true,
             color: "white",
-            anchor: "end",
-            align: "left",
+            anchor: "end" as const,
+            align: "left" as const,
           },
           backgroundColor: "",
         },
@@ -56,8 +56,8 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
           datalabels: {
             display: true,
             color: "black",
-            anchor: "end",
-            align: "right",
+            anchor: "end" as const,
+            align: "right" as const,
             formatter: function (value: string) {
               return value + "%";
             },
@@ -82,12 +82,23 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
         },
       },
     },
-    plugins: [ChartDataLabels],
+    plugins: {
+      title: {
+        display: true,
+        text: "Najčešća imena",
+        position: "top" as "top",
+      },
+    },
   };
 
   return (
     <div className="p-5">
-      <Bar datasetIdKey="names" options={options} data={data} />
+      <Bar
+        datasetIdKey="names"
+        options={options}
+        data={data}
+        plugins={[ChartDataLabels]}
+      />
     </div>
   );
 };
