@@ -72,8 +72,8 @@ export default function Viz() {
   }, [user, selectedOkrug?.id]);
 
   return (
-    <div className="mb-10 flex flex-col-reverse font-serif sm:flex-row sm:justify-center">
-      <div className="sm:w-1/2">
+    <div className="mb-10 flex flex-col-reverse font-serif md:flex-row md:justify-center">
+      <div className="md:w-1/2">
         {!loading && selectedOkrug !== null && (
           <RegionStats
             nameStats={nameStats}
@@ -82,7 +82,7 @@ export default function Viz() {
           />
         )}
       </div>
-      <div className="relative sm:w-1/2">
+      <div className="relative md:w-1/2">
         <MapContainer
           selectedOkrugId={selectedOkrug?.id || null}
           setSelectedOkrug={setSelectedOkrug}
