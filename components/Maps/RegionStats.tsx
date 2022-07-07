@@ -15,14 +15,16 @@ const GraveyardStats = ({
 }: {
   graveyardStats: GrobljeStat[];
 }) => (
-  <div>
-    <p className="font-bold">Groblja</p>
-    <ul className="list-disc">
-      {graveyardStats.map((graveyard, index) => (
-        //TODO add links to searches
-        <li key={index}>{graveyard.grobljename}</li>
-      ))}
-    </ul>
+  <div className="flex justify-center md:w-1/2">
+    <div>
+      <p className="font-bold">Groblja</p>
+      <ul className="list-disc">
+        {graveyardStats.map((graveyard, index) => (
+          //TODO add links to searches
+          <li key={index}>{graveyard.grobljename}</li>
+        ))}
+      </ul>
+    </div>
   </div>
 );
 
@@ -92,7 +94,7 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-1 sm:p-5 md:w-1/2">
       <Bar
         datasetIdKey="names"
         options={options}
@@ -113,7 +115,7 @@ export const RegionStats = ({
   nameStats: NameStat[];
 }) => {
   return (
-    <div className="py-14">
+    <div className="py-2">
       <p className="text-center text-2xl font-bold">{okrugName}</p>
       {grobljeStats === null && nameStats === null && (
         <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
@@ -122,7 +124,7 @@ export const RegionStats = ({
         nameStats &&
         grobljeStats.length !== 0 &&
         nameStats.length !== 0 && (
-          <div className="space-x-10 sm:mt-10 md:justify-center">
+          <div className="space-x-10 sm:mt-10 md:flex md:justify-center">
             <NamesGraph nameStats={nameStats} />
             <GraveyardStats graveyardStats={grobljeStats} />
           </div>

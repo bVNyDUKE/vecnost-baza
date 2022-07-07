@@ -6,6 +6,7 @@ import {
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import { RegionStats } from "../components/Maps/RegionStats";
 import { MapContainer } from "../components/Maps/MapContainer";
+import Icons from "../components/Icons";
 
 export type Okrug = {
   path: string;
@@ -34,8 +35,8 @@ export const getServerSideProps = withPageAuth();
 
 export default function Viz() {
   const { user } = useUser();
-  // prettier-ignore
-  const [personsPerOkrug, setPersonsPerOkrug] = useState<PersonsPerOkrugStat[] | null>(null);
+  //prettier-ignore
+  const [personsPerOkrug, setPersonsPerOkrug] = useState< PersonsPerOkrugStat[] | null>(null);
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [grobljeStats, setGrobljStats] = useState<[] | GrobljeStat[]>([]);
@@ -72,8 +73,18 @@ export default function Viz() {
   }, [user, selectedOkrug?.id]);
 
   return (
-    <div className="mb-10 flex flex-col-reverse font-serif md:flex-row md:justify-center">
-      <div className="md:w-1/2">
+    <div className="relative mb-10 flex flex-col-reverse overflow-hidden border-gray-200 font-serif md:flex-row md:justify-center">
+      <div
+        className={`absolute top-0 left-full z-50 h-[100vh] w-full border-t border-gray-600 bg-white transition delay-150 duration-500 ease-in-out ${
+          selectedOkrug ? "-translate-x-full" : ""
+        }`}
+      >
+        <div
+          className="relative top-2 left-2"
+          onClick={() => setSelectedOkrug(null)}
+        >
+          <Icons.Cross />
+        </div>
         {!loading && selectedOkrug !== null && (
           <RegionStats
             nameStats={nameStats}
@@ -82,6 +93,7 @@ export default function Viz() {
           />
         )}
       </div>
+      <div className="md:w-1/2"></div>
       <div className="relative md:w-1/2">
         <MapContainer
           selectedOkrugId={selectedOkrug?.id || null}
