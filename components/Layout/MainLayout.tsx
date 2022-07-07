@@ -10,7 +10,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <title>Vecnost - Baza</title>
       </Head>
       <NavBar />
-      <main className="min-h-screen">{children}</main>
+      <main className="min-h-screen antialiased">{children}</main>
       <Footer />
     </>
   );
