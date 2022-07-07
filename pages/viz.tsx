@@ -6,7 +6,9 @@ import {
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import { RegionStats } from "../components/Maps/RegionStats";
 import { MapContainer } from "../components/Maps/MapContainer";
+
 import Icons from "../components/Icons";
+import { Transition } from "@headlessui/react";
 
 export type Okrug = {
   path: string;
@@ -74,33 +76,44 @@ export default function Viz() {
 
   return (
     <div className="relative mb-10 flex flex-col-reverse overflow-hidden border-gray-200 font-serif md:flex-row md:justify-center">
-      <div
-        className={`absolute top-0 left-full z-50 h-[100vh] w-full border-t border-gray-600 bg-white transition delay-150 duration-500 ease-in-out ${
-          selectedOkrug ? "-translate-x-full" : ""
-        }`}
+      <Transition
+        appear={true}
+        show={!!personsPerOkrug}
+        enter="transition-opacity duration-700"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-150"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
       >
         <div
-          className="relative top-2 left-2"
-          onClick={() => setSelectedOkrug(null)}
+          className={`absolute top-0 left-full z-50 h-[100vh] w-full border-t border-gray-600 bg-white transition delay-150 duration-500 ease-in-out ${
+            selectedOkrug ? "-translate-x-full" : ""
+          }`}
         >
-          <Icons.Cross />
+          <div
+            className="relative top-2 left-2"
+            onClick={() => setSelectedOkrug(null)}
+          >
+            <Icons.Cross />
+          </div>
+          {!loading && selectedOkrug !== null && (
+            <RegionStats
+              nameStats={nameStats}
+              okrugName={selectedOkrug?.name || ""}
+              grobljeStats={grobljeStats}
+            />
+          )}
         </div>
-        {!loading && selectedOkrug !== null && (
-          <RegionStats
-            nameStats={nameStats}
-            okrugName={selectedOkrug?.name || ""}
-            grobljeStats={grobljeStats}
+        <div className="md:w-1/2"></div>
+        <div className="relative md:w-1/2">
+          <MapContainer
+            selectedOkrugId={selectedOkrug?.id || null}
+            setSelectedOkrug={setSelectedOkrug}
+            personsPerOkrug={personsPerOkrug}
           />
-        )}
-      </div>
-      <div className="md:w-1/2"></div>
-      <div className="relative md:w-1/2">
-        <MapContainer
-          selectedOkrugId={selectedOkrug?.id || null}
-          setSelectedOkrug={setSelectedOkrug}
-          personsPerOkrug={personsPerOkrug}
-        />
-      </div>
+        </div>
+      </Transition>
     </div>
   );
 }
