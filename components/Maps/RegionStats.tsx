@@ -9,7 +9,7 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { NameStat, GrobljeStat, Okrug } from "../../pages/viz";
 import { Dispatch, SetStateAction, useMemo } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import { Transition } from "@headlessui/react";
 import Icons from "../Icons";
 
 const GraveyardStats = ({
@@ -44,14 +44,14 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
       datasets: [
         {
           data: nameStats.map((x) => x.total),
-          borderColor: "rgb(0,0,0)",
+          borderColor: "rgb(55,65,70)",
           datalabels: {
             display: true,
             color: "white",
             anchor: "end" as const,
             align: "left" as const,
           },
-          backgroundColor: "",
+          backgroundColor: "rgb(55,65,70)",
         },
         {
           data: nameStats.map((x) => x.percent),
@@ -74,7 +74,7 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
   const options = {
     indexAxis: "y" as const,
     elements: {
-      bar: { borderWidth: 2, inflateAmount: 2 },
+      bar: { borderWidth: 2 },
     },
     responsive: true,
     maintainAspectRatio: false,
@@ -158,7 +158,7 @@ export const RegionStatsModal = ({
   return (
     <Transition
       show={showModal}
-      className="fixed top-5 bottom-5 left-0 right-5 z-50 min-h-screen w-full overflow-scroll border-t border-gray-600 bg-white shadow-lg"
+      className="fixed top-5 bottom-5 left-0 right-5 z-50 w-full overflow-scroll rounded-lg border-t bg-white text-gray-700 drop-shadow-lg"
       enter="transition delay-150 duration-500 ease-in-out"
       enterFrom="-translate-x-full"
       enterTo="translate-x-0"
@@ -171,12 +171,10 @@ export const RegionStatsModal = ({
         onClick={() => setShowModal(false)}
       >
         <div className="flex grow justify-end">
-          <p className="text-center text-2xl font-bold">
-            {selectedOkrug?.name || ""}
-          </p>
+          <p className="text-2xl font-bold">{selectedOkrug?.name || ""}</p>
         </div>
         <div className="flex w-1/3 justify-end">
-          <Icons.Cross className="mr-3 h-5 w-5 border border-gray-600" />
+          <Icons.Cross className="mr-3 h-5 w-5 border text-gray-500 shadow-sm" />
         </div>
       </div>
       <RegionStats nameStats={nameStats} grobljeStats={grobljeStats} />
