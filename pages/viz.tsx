@@ -87,7 +87,7 @@ export default function Viz() {
       leave="transition-opacity duration-150"
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
-      className="flex h-screen overflow-scroll border-gray-200 font-serif sm:flex-col"
+      className="flex h-screen justify-center overflow-scroll border-gray-200 font-serif sm:flex-col"
     >
       <RegionStatsModal
         nameStats={nameStats}

@@ -78,6 +78,8 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
       bar: { borderWidth: 1 },
     },
     normalized: true,
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: { display: false },
       y: {
@@ -130,7 +132,7 @@ const RegionStats = ({
         grobljeStats.length !== 0 &&
         nameStats.length !== 0 && (
           <div className="sm:mt-10 md:justify-center lg:flex">
-            <div className="h-[50vh] grow p-1">
+            <div className="relative h-[50vh] grow p-1">
               <NamesGraph nameStats={nameStats} />
             </div>
             <div className="flex justify-center lg:w-1/4">
