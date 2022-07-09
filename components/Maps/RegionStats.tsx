@@ -44,18 +44,19 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
       datasets: [
         {
           data: nameStats.map((x) => x.total),
-          borderColor: "rgb(55,65,70)",
+          borderColor: "white",
           datalabels: {
             display: true,
             color: "white",
             anchor: "end" as const,
             align: "left" as const,
+            font: { size: 15 },
           },
           backgroundColor: "rgb(55,65,70)",
         },
         {
           data: nameStats.map((x) => x.percent),
-          borderColor: "rgb(0,0,0)",
+          borderColor: "white",
           datalabels: {
             display: true,
             color: "black",
@@ -65,7 +66,7 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
               return value + "%";
             },
           },
-          backgroundColor: "",
+          backgroundColor: "rgb(55,65,70)",
         },
       ],
     };
@@ -74,7 +75,7 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
   const options = {
     indexAxis: "y" as const,
     elements: {
-      bar: { borderWidth: 2 },
+      bar: { borderWidth: 1 },
     },
     responsive: true,
     maintainAspectRatio: false,
