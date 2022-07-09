@@ -77,8 +77,7 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
     elements: {
       bar: { borderWidth: 1 },
     },
-    responsive: true,
-    maintainAspectRatio: false,
+    normalized: true,
     scales: {
       x: { display: false },
       y: {
