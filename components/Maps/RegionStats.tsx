@@ -7,35 +7,36 @@ import {
   Title,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { NameStat, GrobljeStat } from "../../pages/viz";
-import { useMemo } from "react";
+import { NameStat, GrobljeStat, Okrug } from "../../pages/viz";
+import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import Icons from "../Icons";
 
 const GraveyardStats = ({
   graveyardStats,
 }: {
   graveyardStats: GrobljeStat[];
 }) => (
-  <div className="flex justify-center md:w-1/2">
-    <div>
-      <p className="font-bold">Groblja</p>
-      <ul className="list-disc">
-        {graveyardStats.map((graveyard, index) => (
-          //TODO add links to searches
-          <li key={index}>{graveyard.grobljename}</li>
-        ))}
-      </ul>
-    </div>
+  <div>
+    <p className="font-bold">Groblja</p>
+    <ul className="list-disc">
+      {graveyardStats.map((graveyard, index) => (
+        //TODO add links to searches
+        <li key={index}>{graveyard.grobljename}</li>
+      ))}
+    </ul>
   </div>
 );
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  ChartDataLabels
+);
+
 const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    ChartDataLabels
-  );
   const labels = useMemo(() => nameStats.map((x) => x.ime), [nameStats]);
   const data = useMemo(() => {
     return {
@@ -73,9 +74,10 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
   const options = {
     indexAxis: "y" as const,
     elements: {
-      bar: { borderWidth: 1 },
+      bar: { borderWidth: 2, inflateAmount: 2 },
     },
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: { display: false },
       y: {
@@ -94,29 +96,32 @@ const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
   };
 
   return (
-    <div className="p-1 sm:p-5 md:w-1/2">
-      <Bar
-        datasetIdKey="names"
-        options={options}
-        data={data}
-        plugins={[ChartDataLabels]}
-      />
-    </div>
+    <Bar
+      datasetIdKey="names"
+      options={options}
+      data={data}
+      plugins={[ChartDataLabels]}
+    />
   );
 };
 
-export const RegionStats = ({
-  okrugName,
+const RegionStats = ({
   grobljeStats,
   nameStats,
 }: {
-  okrugName: string;
   grobljeStats: GrobljeStat[];
   nameStats: NameStat[];
 }) => {
   return (
-    <div className="py-2">
-      <p className="text-center text-2xl font-bold">{okrugName}</p>
+    <Transition.Child
+      enter="transition-opacity duration-700"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-700"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+      className="h-full overflow-scroll py-2"
+    >
       {grobljeStats === null && nameStats === null && (
         <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
       )}
@@ -124,11 +129,57 @@ export const RegionStats = ({
         nameStats &&
         grobljeStats.length !== 0 &&
         nameStats.length !== 0 && (
-          <div className="space-x-10 sm:mt-10 md:flex md:justify-center">
-            <NamesGraph nameStats={nameStats} />
-            <GraveyardStats graveyardStats={grobljeStats} />
+          <div className="sm:mt-10 md:justify-center lg:flex">
+            <div className="h-[50vh] grow p-1">
+              <NamesGraph nameStats={nameStats} />
+            </div>
+            <div className="flex justify-center lg:w-1/4">
+              <GraveyardStats graveyardStats={grobljeStats} />
+            </div>
           </div>
         )}
-    </div>
+    </Transition.Child>
+  );
+};
+
+export const RegionStatsModal = ({
+  selectedOkrug,
+  nameStats,
+  grobljeStats,
+  showModal,
+  setShowModal,
+}: {
+  selectedOkrug: Okrug | null;
+  nameStats: NameStat[];
+  grobljeStats: GrobljeStat[];
+  showModal: boolean;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+}) => {
+  return (
+    <Transition
+      show={showModal}
+      className="fixed top-5 bottom-5 left-0 right-5 z-50 min-h-screen w-full overflow-scroll border-t border-gray-600 bg-white shadow-lg"
+      enter="transition delay-150 duration-500 ease-in-out"
+      enterFrom="-translate-x-full"
+      enterTo="translate-x-0"
+      leave="transition duration-500 delay-150 ease-in-out"
+      leaveFrom="translate-x-0"
+      leaveTo="-translate-x-full"
+    >
+      <div
+        className="flex items-center justify-center pt-1"
+        onClick={() => setShowModal(false)}
+      >
+        <div className="flex grow justify-end">
+          <p className="text-center text-2xl font-bold">
+            {selectedOkrug?.name || ""}
+          </p>
+        </div>
+        <div className="flex w-1/3 justify-end">
+          <Icons.Cross className="mr-3 h-5 w-5 border border-gray-600" />
+        </div>
+      </div>
+      <RegionStats nameStats={nameStats} grobljeStats={grobljeStats} />
+    </Transition>
   );
 };

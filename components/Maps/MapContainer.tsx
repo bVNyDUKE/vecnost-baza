@@ -71,26 +71,25 @@ export const MapContainer = ({
   );
 
   return (
-    <div className="top-0 left-0 bottom-0 right-0 mb-10 flex items-center justify-center px-1 md:pr-5">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        height={windowHeight - 250}
-        ref={ref}
-      >
-        <g>
-          {Okruzi.map((okrug) => (
-            <MapRegion
-              svgPath={okrug.path}
-              handleClick={() => handleClick(okrug)}
-              selected={selectedOkrugId === okrug.id}
-              fillColor={getFillColor(okrug.id)}
-              strokeColor={selectedOkrugId === okrug.id ? "#fff" : "#000"}
-              key={okrug.id}
-              strokeWidth={selectedOkrugId === okrug.id ? "2px" : "1px"}
-            />
-          ))}
-        </g>
-      </svg>
-    </div>
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      height={windowHeight - 250}
+      ref={ref}
+      className="mt-10 px-2"
+    >
+      <g>
+        {Okruzi.map((okrug) => (
+          <MapRegion
+            svgPath={okrug.path}
+            handleClick={() => handleClick(okrug)}
+            selected={selectedOkrugId === okrug.id}
+            fillColor={getFillColor(okrug.id)}
+            strokeColor={selectedOkrugId === okrug.id ? "#fff" : "#000"}
+            key={okrug.id}
+            strokeWidth={selectedOkrugId === okrug.id ? "2px" : "1px"}
+          />
+        ))}
+      </g>
+    </svg>
   );
 };

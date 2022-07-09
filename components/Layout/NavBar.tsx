@@ -22,7 +22,7 @@ const NavBar = () => (
       </Link>
     </div>
 
-    <div className="relative mb-5 flex w-full items-center justify-start bg-white">
+    <div className="relative mb-5 flex w-full items-center justify-start bg-white sm:hidden">
       <Link passHref href="/">
         <a>
           <Image

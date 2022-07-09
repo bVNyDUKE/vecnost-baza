@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   withPageAuth,
   supabaseClient,
 } from "@supabase/supabase-auth-helpers/nextjs";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
-import { RegionStats } from "../components/Maps/RegionStats";
-import { MapContainer } from "../components/Maps/MapContainer";
 
-import Icons from "../components/Icons";
+import { RegionStatsModal } from "../components/Maps/RegionStats";
+import { MapContainer } from "../components/Maps/MapContainer";
 import { Transition } from "@headlessui/react";
 
 export type Okrug = {
@@ -42,7 +41,7 @@ export default function Viz() {
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [grobljeStats, setGrobljStats] = useState<[] | GrobljeStat[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     async function getPersonsPerOkrug() {
@@ -58,15 +57,19 @@ export default function Viz() {
   }, [user]);
 
   useEffect(() => {
+    if (selectedOkrug) {
+      setShowModal(true);
+    }
+  }, [selectedOkrug]);
+
+  useEffect(() => {
     async function search(id: number) {
-      setLoading(true);
       const res = await supabaseClient.rpc<QueryReturn>("okrug_stats", {
         i: id,
       });
       const data = res.data as QueryReturn[];
       setGrobljStats(JSON.parse(data[0].data));
       setNameStats(JSON.parse(data[1].data));
-      setLoading(false);
     }
 
     if (user && selectedOkrug?.id) {
@@ -75,45 +78,29 @@ export default function Viz() {
   }, [user, selectedOkrug?.id]);
 
   return (
-    <div className="relative mb-10 flex flex-col-reverse overflow-hidden border-gray-200 font-serif md:flex-row md:justify-center">
-      <Transition
-        appear={true}
-        show={!!personsPerOkrug}
-        enter="transition-opacity duration-700"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-150"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div
-          className={`absolute top-0 left-full z-50 h-[100vh] w-full border-t border-gray-600 bg-white transition delay-150 duration-500 ease-in-out ${
-            selectedOkrug ? "-translate-x-full" : ""
-          }`}
-        >
-          <div
-            className="relative top-2 left-2"
-            onClick={() => setSelectedOkrug(null)}
-          >
-            <Icons.Cross />
-          </div>
-          {!loading && selectedOkrug !== null && (
-            <RegionStats
-              nameStats={nameStats}
-              okrugName={selectedOkrug?.name || ""}
-              grobljeStats={grobljeStats}
-            />
-          )}
-        </div>
-        <div className="md:w-1/2"></div>
-        <div className="relative md:w-1/2">
-          <MapContainer
-            selectedOkrugId={selectedOkrug?.id || null}
-            setSelectedOkrug={setSelectedOkrug}
-            personsPerOkrug={personsPerOkrug}
-          />
-        </div>
-      </Transition>
-    </div>
+    <Transition
+      appear={true}
+      show={!!personsPerOkrug}
+      enter="transition-opacity duration-700"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-150"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+      className="flex h-screen overflow-scroll border-gray-200 font-serif sm:flex-col"
+    >
+      <RegionStatsModal
+        nameStats={nameStats}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        grobljeStats={grobljeStats}
+        selectedOkrug={selectedOkrug}
+      />
+      <MapContainer
+        selectedOkrugId={selectedOkrug?.id || null}
+        setSelectedOkrug={setSelectedOkrug}
+        personsPerOkrug={personsPerOkrug}
+      />
+    </Transition>
   );
 }
