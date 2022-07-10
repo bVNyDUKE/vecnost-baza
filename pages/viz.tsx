@@ -97,7 +97,7 @@ export default function Viz() {
       leave="transition-opacity duration-150"
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
-      className="flex justify-center border-gray-200 font-serif sm:flex-col"
+      className="flex justify-center border-gray-200 font-serif md:justify-between"
     >
       <RegionStatsModal
         nameStats={nameStats}
@@ -106,6 +106,7 @@ export default function Viz() {
         grobljeStats={grobljeStats}
         selectedOkrug={selectedOkrug}
       />
+      <div className="hidden w-1/2 md:block"></div>
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}
         setSelectedOkrug={setSelectedOkrug}

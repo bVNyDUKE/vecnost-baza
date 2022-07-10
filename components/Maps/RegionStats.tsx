@@ -128,7 +128,7 @@ const RegionStats = ({
       leave="transition-opacity duration-700"
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
-      className="h-[84vh] overflow-auto py-2 shadow-md"
+      className="h-[84vh] overflow-auto py-2 shadow-md md:h-[95vh]"
     >
       {grobljeStats === null && nameStats === null && (
         <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
@@ -166,7 +166,7 @@ export const RegionStatsModal = ({
   return (
     <Transition
       show={showModal}
-      className="top-15 fixed bottom-5 left-0 right-5 z-50 h-[90vh] w-full rounded-lg bg-white text-gray-700"
+      className="top-15 fixed bottom-5 left-0 right-5 z-50 h-[90vh] w-full rounded-lg bg-white text-gray-700 md:top-0 md:bottom-0 md:h-[100vh] md:w-1/2"
       enter="transition delay-150 duration-500 ease-in-out"
       enterFrom="-translate-x-full"
       enterTo="translate-x-0"
