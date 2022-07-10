@@ -57,9 +57,7 @@ export default function Viz() {
   }, [user]);
 
   useEffect(() => {
-    if (selectedOkrug) {
-      setShowModal(true);
-    }
+    selectedOkrug && setShowModal(true);
   }, [selectedOkrug]);
 
   useEffect(() => {
@@ -99,6 +97,7 @@ export default function Viz() {
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}
         setSelectedOkrug={setSelectedOkrug}
+        setShowModal={setShowModal}
         personsPerOkrug={personsPerOkrug}
       />
     </Transition>

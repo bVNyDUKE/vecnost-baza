@@ -13,10 +13,12 @@ import { Okruzi } from "./Okruzi";
 export const MapContainer = ({
   selectedOkrugId,
   setSelectedOkrug,
+  setShowModal,
   personsPerOkrug,
 }: {
   selectedOkrugId: number | null;
   setSelectedOkrug: Dispatch<SetStateAction<Okrug | null>>;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
   personsPerOkrug: PersonsPerOkrugStat[] | null;
 }) => {
   const ref = useRef<SVGSVGElement | null>(null);
@@ -62,12 +64,13 @@ export const MapContainer = ({
   const handleClick = useCallback(
     (okrug: Okrug) => {
       if (selectedOkrugId === okrug.id) {
-        setSelectedOkrug(null);
+        console.log(setShowModal);
+        setShowModal((prev) => !prev);
       } else {
         setSelectedOkrug(okrug);
       }
     },
-    [selectedOkrugId, setSelectedOkrug]
+    [selectedOkrugId, setShowModal, setSelectedOkrug]
   );
 
   return (
