@@ -60,6 +60,18 @@ export default function Viz() {
     selectedOkrug && setShowModal(true);
   }, [selectedOkrug]);
 
+  //Prevent the body from scrolling when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.removeAttribute("style");
+    }
+    return () => {
+      document.body.removeAttribute("style");
+    };
+  }, [showModal]);
+
   useEffect(() => {
     async function search(id: number) {
       const res = await supabaseClient.rpc<QueryReturn>("okrug_stats", {
