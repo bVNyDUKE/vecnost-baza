@@ -122,7 +122,7 @@ const RegionStats = ({
       leave="transition-opacity duration-700"
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
-      className="h-full overflow-scroll py-2"
+      className="h-[84vh] overflow-auto py-2 shadow-md"
     >
       {grobljeStats === null && nameStats === null && (
         <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
@@ -160,7 +160,7 @@ export const RegionStatsModal = ({
   return (
     <Transition
       show={showModal}
-      className="fixed top-5 bottom-5 left-0 right-5 z-50 w-full overflow-scroll rounded-lg border-t bg-white text-gray-700 drop-shadow-lg"
+      className="top-15 fixed bottom-5 left-0 right-5 z-50 h-[90vh] w-full rounded-lg bg-white text-gray-700"
       enter="transition delay-150 duration-500 ease-in-out"
       enterFrom="-translate-x-full"
       enterTo="translate-x-0"
@@ -168,16 +168,14 @@ export const RegionStatsModal = ({
       leaveFrom="translate-x-0"
       leaveTo="-translate-x-full"
     >
-      <div
-        className="flex items-center justify-center pt-1"
-        onClick={() => setShowModal(false)}
-      >
-        <div className="flex grow justify-end">
-          <p className="text-2xl font-bold">{selectedOkrug?.name || ""}</p>
-        </div>
-        <div className="flex w-1/3 justify-end">
-          <Icons.Cross className="mr-3 h-5 w-5 border text-gray-500 shadow-sm" />
-        </div>
+      <div className="relative border-y py-2 ">
+        <Icons.Cross
+          onClick={() => setShowModal(false)}
+          className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-sm"
+        />
+        <p className="text-center text-2xl font-bold">
+          {selectedOkrug?.name || ""}
+        </p>
       </div>
       <RegionStats nameStats={nameStats} grobljeStats={grobljeStats} />
     </Transition>

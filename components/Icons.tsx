@@ -41,12 +41,19 @@ export const Magnifier = () => (
 export const RightArrow = () => <span>&#9654;</span>;
 export const DownArrow = () => <span>&#9660;</span>;
 
-export const Cross = ({ className }: { className: string }): JSX.Element => (
+export const Cross = ({
+  className,
+  onClick,
+}: {
+  className: string;
+  onClick: () => void;
+}): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className || "h-3 w-3"}
     viewBox="0 0 20 20"
     fill="currentColor"
+    onClick={onClick}
   >
     <path
       fillRule="evenodd"
