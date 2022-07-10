@@ -1,9 +1,7 @@
 import { useState, useMemo } from "react";
-import {
-  withPageAuth,
-  supabaseServerClient,
-} from "@supabase/supabase-auth-helpers/nextjs";
+import { supabase } from "../lib/supabaseClient";
 import { RightArrow, DownArrow } from "../components/Icons";
+import { GetServerSideProps } from "next";
 
 interface Result {
   id: string;
@@ -22,17 +20,14 @@ interface Region extends Result {
   okrug: Okrug[];
 }
 
-export const getServerSideProps = withPageAuth({
-  redirectTo: "/login",
-  async getServerSideProps(ctx) {
-    const { data } = await supabaseServerClient(ctx)
-      .from<Region>("region")
-      .select(
-        "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
-      );
-    return { props: { data } };
-  },
-});
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { data } = await supabase
+    .from<Region>("region")
+    .select(
+      "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
+    );
+  return { props: { data } };
+};
 
 const IndexList = ({
   data,

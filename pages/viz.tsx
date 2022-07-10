@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  withPageAuth,
-  supabaseClient,
-} from "@supabase/supabase-auth-helpers/nextjs";
-import { useUser } from "@supabase/supabase-auth-helpers/react";
+import { supabase } from "../lib/supabaseClient";
 
 import { RegionStatsModal } from "../components/Maps/RegionStats";
 import { MapContainer } from "../components/Maps/MapContainer";
@@ -32,10 +28,7 @@ export type PersonsPerOkrugStat = {
 
 type QueryReturn = { data: string };
 
-export const getServerSideProps = withPageAuth();
-
 export default function Viz() {
-  const { user } = useUser();
   //prettier-ignore
   const [personsPerOkrug, setPersonsPerOkrug] = useState< PersonsPerOkrugStat[] | null>(null);
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
@@ -45,16 +38,14 @@ export default function Viz() {
 
   useEffect(() => {
     async function getPersonsPerOkrug() {
-      const { data } = await supabaseClient.rpc<PersonsPerOkrugStat>(
+      const { data } = await supabase.rpc<PersonsPerOkrugStat>(
         "persons_per_okrug"
       );
       console.log(data);
       setPersonsPerOkrug(data);
     }
-    if (user) {
-      getPersonsPerOkrug();
-    }
-  }, [user]);
+    getPersonsPerOkrug();
+  }, []);
 
   useEffect(() => {
     selectedOkrug && setShowModal(true);
@@ -74,7 +65,7 @@ export default function Viz() {
 
   useEffect(() => {
     async function search(id: number) {
-      const res = await supabaseClient.rpc<QueryReturn>("okrug_stats", {
+      const res = await supabase.rpc<QueryReturn>("okrug_stats", {
         i: id,
       });
       const data = res.data as QueryReturn[];
@@ -82,10 +73,10 @@ export default function Viz() {
       setNameStats(JSON.parse(data[1].data));
     }
 
-    if (user && selectedOkrug?.id) {
+    if (selectedOkrug?.id) {
       search(selectedOkrug.id);
     }
-  }, [user, selectedOkrug?.id]);
+  }, [selectedOkrug?.id]);
 
   return (
     <Transition

@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { User } from "@supabase/supabase-js";
 import { useSearchStore } from "../../../stores/searchStore";
 import { AdvancedOptions } from "./AdvancedOptions";
 import { Spinner, Magnifier, AdjustmentsIcon } from "../../Icons";
 
-export const SearchBar = ({
-  searching,
-  user,
-}: {
-  searching: boolean;
-  user: User | null;
-}) => {
+export const SearchBar = ({ searching }: { searching: boolean }) => {
   const router = useRouter();
   const { opstina, groblje, okrug, ime } = router.query;
   const [parent] = useAutoAnimate<HTMLDivElement>();
@@ -25,11 +18,11 @@ export const SearchBar = ({
   const getOptions = useSearchStore((state) => state.getOptions);
 
   useEffect(() => {
-    user && getOptions();
-  }, [getOptions, user]);
+    getOptions();
+  }, [getOptions]);
 
   useEffect(() => {
-    setSearch(ime !== "all" && ime || "");
+    setSearch((ime !== "all" && ime) || "");
     if (opstina && typeof opstina === "string") {
       setOption("opstina", opstina);
     }
@@ -47,15 +40,19 @@ export const SearchBar = ({
     }
     const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
 
-    router.push({
-      pathname: "/search",
-      query: {
-        ime: cleanedInput,
-        ...(filters.groblje && { groblje: filters.groblje }),
-        ...(filters.opstina && { opstina: filters.opstina }),
-        ...(filters.okrug && { okrug: filters.okrug }),
+    router.push(
+      {
+        pathname: "/search",
+        query: {
+          ime: cleanedInput,
+          ...(filters.groblje && { groblje: filters.groblje }),
+          ...(filters.opstina && { opstina: filters.opstina }),
+          ...(filters.okrug && { okrug: filters.okrug }),
+        },
       },
-    }, '', { shallow: true });
+      "",
+      { shallow: true }
+    );
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) =>
@@ -65,7 +62,7 @@ export const SearchBar = ({
     e.key == "Enter" && handleSearch(e.currentTarget.value);
 
   return (
-    <div ref={parent} className="px-5 m-auto max-w-3xl">
+    <div ref={parent} className="m-auto max-w-3xl px-5">
       <div className="flex items-center justify-center rounded-md border border-gray-300">
         <div className="flex h-16 w-full flex-shrink items-center space-x-8 hover:shadow-md">
           <input

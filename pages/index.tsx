@@ -1,7 +1,4 @@
 import Section from "../components/Section";
-import { withPageAuth } from "@supabase/supabase-auth-helpers/nextjs";
-
-export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
 
 export default function Home() {
   const data = [

@@ -1,4 +1,4 @@
-import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { supabase } from "../lib/supabaseClient";
 import create from "zustand";
 import uniqBy from "lodash.uniqby";
 
@@ -87,7 +87,7 @@ export const useSearchStore = create<SearchStore>((set, get) => ({
   },
   getOptions: async () => {
     if (get().allOptions.length > 0) return;
-    const { data } = await supabaseClient.rpc<Result>("region_data");
+    const { data } = await supabase.rpc<Result>("region_data");
     const options = generateOptions(data || [], {});
 
     set(() => ({

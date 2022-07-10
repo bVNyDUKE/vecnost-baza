@@ -1,7 +1,5 @@
-import {
-  withPageAuth,
-  supabaseServerClient,
-} from "@supabase/supabase-auth-helpers/nextjs";
+import { GetServerSideProps } from "next";
+import { supabase } from "../../lib/supabaseClient";
 
 type Person = {
   id: string;
@@ -38,38 +36,35 @@ type Result = {
   region: string;
 };
 
-export const getServerSideProps = withPageAuth({
-  redirectTo: "/login",
-  async getServerSideProps(ctx) {
-    const id = ctx.params?.id as string;
-    const { data } = await supabaseServerClient(ctx)
-      .from<Person>("persons")
-      .select(
-        "ime, prezime, nadimak, pol, rodjenje, smrt, groblje (name, opstina (name, okrug (name, region (name ))))"
-      )
-      .eq("id", id);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const id = ctx.params?.id as string;
+  const { data } = await supabase
+    .from<Person>("persons")
+    .select(
+      "ime, prezime, nadimak, pol, rodjenje, smrt, groblje (name, opstina (name, okrug (name, region (name ))))"
+    )
+    .eq("id", id);
 
-    if (!data) {
-      ctx.res.statusCode = 404;
-      return { props: { data: null } };
-    }
+  if (!data) {
+    ctx.res.statusCode = 404;
+    return { props: { data: null } };
+  }
 
-    const result = {
-      ime: data[0].ime,
-      prezime: data[0].prezime,
-      rodjenje: data[0].rodjenje ?? null,
-      smrt: data[0].smrt ?? null,
-      nadimak: data[0].nadimak ?? null,
-      pol: data[0].pol ?? null,
-      groblje: data[0].groblje.name,
-      opstina: data[0].groblje.opstina.name,
-      okrug: data[0].groblje.opstina.okrug.name,
-      region: data[0].groblje.opstina.okrug.region.name,
-    };
+  const result = {
+    ime: data[0].ime,
+    prezime: data[0].prezime,
+    rodjenje: data[0].rodjenje ?? null,
+    smrt: data[0].smrt ?? null,
+    nadimak: data[0].nadimak ?? null,
+    pol: data[0].pol ?? null,
+    groblje: data[0].groblje.name,
+    opstina: data[0].groblje.opstina.name,
+    okrug: data[0].groblje.opstina.okrug.name,
+    region: data[0].groblje.opstina.okrug.region.name,
+  };
 
-    return { props: { result } };
-  },
-});
+  return { props: { result } };
+};
 
 export default function Entry({ result }: { result: Result }) {
   return (

@@ -3,11 +3,7 @@ import { ResultList } from "../components/Search/Results/ResultList";
 import { Paginator } from "../components/Search/Results/Paginator";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {
-  withPageAuth,
-  supabaseClient,
-} from "@supabase/supabase-auth-helpers/nextjs";
-import { useUser } from "@supabase/supabase-auth-helpers/react";
+import { supabase } from "../lib/supabaseClient";
 
 export type SearchResult = {
   id: string;
@@ -29,10 +25,7 @@ export type SearchResult = {
   };
 };
 
-export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
-
 export default function Search() {
-  const { user } = useUser();
   const [results, setResults] = useState<null | SearchResult[]>(null);
   const [searching, setSearching] = useState(false);
   const [count, setCount] = useState<number | null>(0);
@@ -45,7 +38,7 @@ export default function Search() {
   useEffect(() => {
     const rangeFrom = (page - 1) * 10 || 0;
     const rangeTo = page * 10 || 10;
-    let query = supabaseClient
+    let query = supabase
       .from("persons")
       .select(
         "id, ime, prezime, rodjenje, smrt, groblje!inner(id, name, opstina!inner(id, name, okrug!inner(id,name)))",
@@ -56,7 +49,7 @@ export default function Search() {
       .limit(10)
       .range(rangeFrom, rangeTo);
 
-    if (ime && ime !== 'all') {
+    if (ime && ime !== "all") {
       query = query.textSearch("fts", ime as string, {
         config: "sr",
         type: "websearch",
@@ -78,27 +71,28 @@ export default function Search() {
       setSearching(false);
     }
 
-    if (user && ime !== undefined && ime !== "") {
+    if (ime !== undefined && ime !== "") {
       search();
     }
-  }, [ime, page, user, groblje, opstina, okrug]);
+  }, [ime, page, groblje, opstina, okrug]);
 
   const handlePageChange = (page: number) => {
-    router.push({
-      pathname: "/search",
-      query: { ...router.query, page: page },
-    }, '', { shallow: true, scroll: true });
+    router.push(
+      {
+        pathname: "/search",
+        query: { ...router.query, page: page },
+      },
+      "",
+      { shallow: true, scroll: true }
+    );
   };
 
   return (
     <div className="container mx-auto max-w-3xl">
+      <SearchBar searching={searching} />
 
-      <SearchBar searching={searching} user={user} />
-
-      <div className="my-5 flex justify-center relative">
-        {results &&
-          <ResultList results={results} />
-        }
+      <div className="relative my-5 flex justify-center">
+        {results && <ResultList results={results} />}
       </div>
 
       {results && count !== null && count > 10 && (

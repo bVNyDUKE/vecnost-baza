@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  withPageAuth,
-  supabaseServerClient,
-} from "@supabase/supabase-auth-helpers/nextjs";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { GetServerSideProps } from "next";
+import { supabase } from "../lib/supabaseClient";
 
 type GraveLocations = {
   id: number;
@@ -12,17 +10,14 @@ type GraveLocations = {
   position: google.maps.LatLngLiteral;
 };
 
-export const getServerSideProps = withPageAuth({
-  redirectTo: "/login",
-  async getServerSideProps(ctx) {
-    const { data } = await supabaseServerClient(ctx)
-      .from<GraveLocations>("groblje")
-      .select("id, name, position")
-      .not("position", "is", null);
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { data } = await supabase
+    .from<GraveLocations>("groblje")
+    .select("id, name, position")
+    .not("position", "is", null);
 
-    return { props: { data } };
-  },
-});
+  return { props: { data } };
+};
 
 interface MapProps extends google.maps.MapOptions {
   locations: GraveLocations[];
