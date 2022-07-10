@@ -41,37 +41,30 @@ export const MapContainer = ({
     return () => window.removeEventListener("resize", resizeSVG);
   }, [resizeSVG]);
 
-  const getFillColor = useCallback(
-    (okrugId: number): string => {
-      const count =
-        personsPerOkrug?.find((x) => x.okrug_id === okrugId)?.count || 0;
-      switch (true) {
-        case count > 0 && count <= 100:
-          return "#f6eee0";
-        case count > 100 && count <= 1000:
-          return "#e4b7a0";
-        case count > 1000 && count <= 3000:
-          return "#c38370";
-        case count > 5000:
-          return "#A45C40";
-        default:
-          return "#f9f1f0";
-      }
-    },
-    [personsPerOkrug]
-  );
+  const getFillColor = (okrugId: number): string => {
+    const count =
+      personsPerOkrug?.find((x) => x.okrug_id === okrugId)?.count || 0;
+    switch (true) {
+      case count > 0 && count <= 100:
+        return "#f6eee0";
+      case count > 100 && count <= 1000:
+        return "#e4b7a0";
+      case count > 1000 && count <= 3000:
+        return "#c38370";
+      case count > 5000:
+        return "#A45C40";
+      default:
+        return "#f9f1f0";
+    }
+  };
 
-  const handleClick = useCallback(
-    (okrug: Okrug) => {
-      if (selectedOkrugId === okrug.id) {
-        console.log(setShowModal);
-        setShowModal((prev) => !prev);
-      } else {
-        setSelectedOkrug(okrug);
-      }
-    },
-    [selectedOkrugId, setShowModal, setSelectedOkrug]
-  );
+  const handleClick = (okrug: Okrug) => {
+    if (selectedOkrugId === okrug.id) {
+      setShowModal((prev) => !prev);
+    } else {
+      setSelectedOkrug(okrug);
+    }
+  };
 
   return (
     <svg
