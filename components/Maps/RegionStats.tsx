@@ -1,13 +1,20 @@
-import { Bar } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
+  ArcElement,
+  Tooltip,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { NameStat, GrobljeStat, Okrug } from "../../pages/viz";
+import {
+  NameStat,
+  GrobljeStat,
+  Okrug,
+  PersonsPerOkrugStat,
+} from "../../pages/viz";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { Transition } from "@headlessui/react";
 import Icons from "../Icons";
@@ -33,8 +40,50 @@ ChartJS.register(
   LinearScale,
   BarElement,
   Title,
-  ChartDataLabels
+  Tooltip,
+  ChartDataLabels,
+  ArcElement
 );
+
+export const OkrugGraph = ({
+  personsPerOkrug,
+}: {
+  personsPerOkrug: PersonsPerOkrugStat[];
+}) => {
+  const labels = useMemo(
+    () => personsPerOkrug.map((x) => x.name),
+    [personsPerOkrug]
+  );
+  const data = useMemo(() => {
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Ime okruga",
+          data: personsPerOkrug.map((x) => x.count),
+          backgroundColor: ["#E7D2CC", "#b9b7bd", "#868b8e", "#eeede7"],
+        },
+      ],
+    };
+  }, [labels, personsPerOkrug]);
+
+  const options = {
+    normalized: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Broj lica po okrugu",
+        position: "top" as "top",
+      },
+    },
+  };
+
+  return (
+    <div className="lg:w-1/2">
+      <Doughnut datasetIdKey="names" options={options} data={data} />
+    </div>
+  );
+};
 
 const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
   const labels = useMemo(() => nameStats.map((x) => x.ime), [nameStats]);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 
-import { RegionStatsModal } from "../components/Maps/RegionStats";
+import { OkrugGraph, RegionStatsModal } from "../components/Maps/RegionStats";
 import { MapContainer } from "../components/Maps/MapContainer";
 import { Transition } from "@headlessui/react";
 
@@ -24,6 +24,7 @@ export type GrobljeStat = {
 export type PersonsPerOkrugStat = {
   count: number;
   okrug_id: number;
+  name: string;
 };
 
 type QueryReturn = { data: string };
@@ -65,12 +66,13 @@ export default function Viz() {
 
   useEffect(() => {
     async function search(id: number) {
-      const res = await supabase.rpc<QueryReturn>("okrug_stats", {
+      const { data } = await supabase.rpc<QueryReturn>("okrug_stats", {
         i: id,
       });
-      const data = res.data as QueryReturn[];
-      setGrobljStats(JSON.parse(data[0].data));
-      setNameStats(JSON.parse(data[1].data));
+      if (data) {
+        setGrobljStats(JSON.parse(data[0].data));
+        setNameStats(JSON.parse(data[1].data));
+      }
     }
 
     if (selectedOkrug?.id) {
@@ -88,7 +90,7 @@ export default function Viz() {
       leave="transition-opacity duration-150"
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
-      className="flex justify-center border-gray-200 font-serif lg:justify-between"
+      className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-between"
     >
       <RegionStatsModal
         nameStats={nameStats}
@@ -97,7 +99,7 @@ export default function Viz() {
         grobljeStats={grobljeStats}
         selectedOkrug={selectedOkrug}
       />
-      <div className="hidden w-1/2 lg:block"></div>
+      {personsPerOkrug && <OkrugGraph personsPerOkrug={personsPerOkrug} />}
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}
         setSelectedOkrug={setSelectedOkrug}
