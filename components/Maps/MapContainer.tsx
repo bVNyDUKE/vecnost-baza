@@ -71,7 +71,7 @@ export const MapContainer = ({
       viewBox={`0 0 ${width} ${height}`}
       height={windowHeight - 250}
       ref={ref}
-      className="mt-10 px-2 md:w-1/2"
+      className="mt-10 px-2 lg:w-1/2"
     >
       <g>
         {Okruzi.map((okrug) => (
