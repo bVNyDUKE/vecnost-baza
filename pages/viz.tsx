@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 
-import { OkrugGraph, RegionStatsModal } from "../components/Maps/RegionStats";
+import { OkrugGraph } from "../components/Graphs/OkrugGraph";
 import { MapContainer } from "../components/Maps/MapContainer";
 import { Transition } from "@headlessui/react";
+import { SideDrawer } from "../components/SideDrawer";
+import Icons from "../components/Icons";
+import { NamesGraph } from "../components/Graphs/NamesGraph";
 
 export type Okrug = {
   path: string;
@@ -80,6 +83,12 @@ export default function Viz() {
     }
   }, [selectedOkrug?.id]);
 
+  const statsAvailable =
+    grobljeStats &&
+    grobljeStats.length !== 0 &&
+    nameStats &&
+    nameStats.length !== 0;
+
   return (
     <Transition
       appear={true}
@@ -92,13 +101,39 @@ export default function Viz() {
       leaveTo="opacity-0"
       className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-between"
     >
-      <RegionStatsModal
-        nameStats={nameStats}
-        showModal={showModal}
-        setShowModal={setShowModal}
-        grobljeStats={grobljeStats}
-        selectedOkrug={selectedOkrug}
-      />
+      <SideDrawer show={showModal}>
+        <div className="relative border-y py-2 ">
+          <Icons.Cross
+            onClick={() => setShowModal(false)}
+            className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-sm"
+          />
+          <p className="text-center text-2xl font-bold">
+            {selectedOkrug?.name || ""}
+          </p>
+        </div>
+        <>
+          {statsAvailable ? (
+            <div className="sm:mt-10 md:justify-center lg:flex">
+              <div className="relative h-[50vh] grow">
+                <NamesGraph nameStats={nameStats} />
+              </div>
+              <div className="flex justify-center lg:w-1/4">
+                <div>
+                  <p className="font-bold">Groblja</p>
+                  <ul className="list-disc">
+                    {grobljeStats.map((graveyard, index) => (
+                      //TODO add links to searches
+                      <li key={index}>{graveyard.grobljename}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
+          )}
+        </>
+      </SideDrawer>
       {personsPerOkrug && <OkrugGraph personsPerOkrug={personsPerOkrug} />}
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}
