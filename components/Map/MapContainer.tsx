@@ -8,7 +8,7 @@ import {
 } from "react";
 import { Okrug, PersonsPerOkrugStat } from "../../pages/viz";
 import { MapRegion } from "./MapRegion";
-import { Okruzi } from "./Okruzi";
+import { Okruzi } from "./MapData";
 
 export const MapContainer = ({
   selectedOkrugId,

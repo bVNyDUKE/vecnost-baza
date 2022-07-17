@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 import { OkrugGraph } from "../components/Graphs/OkrugGraph";
-import { MapContainer } from "../components/Maps/MapContainer";
+import { MapContainer } from "../components/Map/MapContainer";
 import { Transition } from "@headlessui/react";
 import { SideDrawer } from "../components/SideDrawer";
 import Icons from "../components/Icons";
@@ -107,18 +107,19 @@ export default function Viz() {
             onClick={() => setShowModal(false)}
             className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-sm"
           />
-          <p className="text-center text-2xl font-bold">
-            {selectedOkrug?.name || ""}
-          </p>
+          <p className="text-center text-xl font-bold">Podaci okruga</p>
         </div>
         <>
+          <p className="mt-4 text-center text-2xl font-bold">
+            {selectedOkrug?.name}
+          </p>
           {statsAvailable ? (
-            <div className="sm:mt-10 md:justify-center lg:flex">
-              <div className="relative h-[50vh] grow">
-                <NamesGraph nameStats={nameStats} />
-              </div>
-              <div className="flex justify-center lg:w-1/4">
-                <div>
+            <>
+              <div className="sm:mt-10 md:justify-center lg:flex">
+                <div className="relative h-[50vh] grow">
+                  <NamesGraph nameStats={nameStats} />
+                </div>
+                <div className="justify-center lg:w-1/4">
                   <p className="font-bold">Groblja</p>
                   <ul className="list-disc">
                     {grobljeStats.map((graveyard, index) => (
@@ -128,9 +129,11 @@ export default function Viz() {
                   </ul>
                 </div>
               </div>
-            </div>
+            </>
           ) : (
-            <p className="text-center font-bold">Nema podataka za ovaj okrug</p>
+            <p className="mt-20 text-center text-3xl font-bold">
+              Nema podataka za ovaj okrug
+            </p>
           )}
         </>
       </SideDrawer>
