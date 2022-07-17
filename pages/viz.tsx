@@ -30,8 +30,6 @@ export type PersonsPerOkrugStat = {
   name: string;
 };
 
-type QueryReturn = { data: string };
-
 export default function Viz() {
   //prettier-ignore
   const [personsPerOkrug, setPersonsPerOkrug] = useState< PersonsPerOkrugStat[] | null>(null);
@@ -69,7 +67,7 @@ export default function Viz() {
 
   useEffect(() => {
     async function search(id: number) {
-      const { data } = await supabase.rpc<QueryReturn>("okrug_stats", {
+      const { data } = await supabase.rpc<{ data: string }>("okrug_stats", {
         i: id,
       });
       if (data) {
