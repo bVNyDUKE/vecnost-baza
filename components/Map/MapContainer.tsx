@@ -31,7 +31,7 @@ export const MapContainer = ({
     if (svgBondingBox) {
       setWidth(svgBondingBox.x + svgBondingBox.width + svgBondingBox.x);
       setHeight(svgBondingBox.y + svgBondingBox.height + svgBondingBox.y);
-      setWindowHeight(window.innerHeight);
+      setWindowHeight(window.outerHeight);
     }
   }, []);
 
@@ -71,7 +71,7 @@ export const MapContainer = ({
       viewBox={`0 0 ${width} ${height}`}
       height={windowHeight - 250}
       ref={ref}
-      className="mt-10 px-2 lg:w-1/2"
+      className="px-2 lg:w-1/2"
     >
       <g>
         {Okruzi.map((okrug) => (
