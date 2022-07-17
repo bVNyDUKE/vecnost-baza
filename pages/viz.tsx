@@ -3,10 +3,10 @@ import { supabase } from "../lib/supabaseClient";
 
 import { OkrugGraph } from "../components/Graphs/OkrugGraph";
 import { MapContainer } from "../components/Map/MapContainer";
-import { Transition } from "@headlessui/react";
 import { SideDrawer } from "../components/SideDrawer";
 import Icons from "../components/Icons";
 import { NamesGraph } from "../components/Graphs/NamesGraph";
+import { Transition } from "@headlessui/react";
 
 export type Okrug = {
   path: string;
@@ -20,10 +20,6 @@ export type NameStat = {
   percent: number;
 };
 
-export type GrobljeStat = {
-  grobljename: string;
-};
-
 export type PersonsPerOkrugStat = {
   count: number;
   okrug_id: number;
@@ -35,7 +31,8 @@ export default function Viz() {
   const [personsPerOkrug, setPersonsPerOkrug] = useState< PersonsPerOkrugStat[] | null>(null);
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
-  const [grobljeStats, setGrobljStats] = useState<[] | GrobljeStat[]>([]);
+  //prettier-ignore
+  const [grobljeStats, setGrobljStats] = useState<[] | {grobljename: string}[]>([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
