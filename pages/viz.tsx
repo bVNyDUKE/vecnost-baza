@@ -58,10 +58,6 @@ export default function Viz() {
   }, []);
 
   useEffect(() => {
-    selectedOkrug && setShowModal(true);
-  }, [selectedOkrug]);
-
-  useEffect(() => {
     async function getOkrugData(okrugid: number) {
       const { data: graveyardData } = await supabase.rpc<Graveyards>(
         "graveyards_per_okrug",
@@ -83,6 +79,7 @@ export default function Viz() {
     }
 
     selectedOkrug?.id && getOkrugData(selectedOkrug.id);
+    selectedOkrug?.id && setShowModal(true);
   }, [selectedOkrug?.id]);
 
   const statsAvailable =
@@ -95,12 +92,12 @@ export default function Viz() {
     <Transition
       appear={true}
       show={!!personsPerOkrug}
-      enter="transition-opacity duration-700"
-      enterFrom="opacity-0"
-      enterTo="opacity-100"
-      leave="transition-opacity duration-150"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
+      enter="transition-all duration-700"
+      enterFrom="opacity-0 scale-50"
+      enterTo="opacity-100 scale-100"
+      leave="transition-all duration-150"
+      leaveFrom="opacity-100 scale-100"
+      leaveTo="opacity-0 scale-60"
       className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-between"
     >
       <SideDrawer show={showModal}>
