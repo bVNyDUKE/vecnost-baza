@@ -1,25 +1,23 @@
 import { useMemo } from "react";
 import { Pie } from "react-chartjs-2";
-import { PersonsPerOkrugStat } from "../../pages/viz";
+import { IGenStats } from "../../pages/viz";
 
-export const OkrugGraph = ({
-  personsPerOkrug,
-}: {
-  personsPerOkrug: PersonsPerOkrugStat[] | null;
-}) => {
+export const GenGraph = ({ genStats }: { genStats: IGenStats[] | null }) => {
   const data = useMemo(() => {
     return {
-      labels: personsPerOkrug ? personsPerOkrug.map((x) => x.name) : [],
+      labels: ["muski", "zenski", "nepoznato"],
       datasets: [
         {
-          data: personsPerOkrug ? personsPerOkrug.map((x) => x.count) : [],
+          data: genStats
+            ? [genStats[0].male, genStats[0].female, genStats[0].na]
+            : [],
           backgroundColor: ["#E7D2CC", "#b9b7bd", "#868b8e", "#eeede7"],
         },
       ],
     };
-  }, [personsPerOkrug]);
+  }, [genStats]);
 
-  if (!personsPerOkrug) {
+  if (!genStats) {
     return <div></div>;
   }
 
@@ -29,15 +27,17 @@ export const OkrugGraph = ({
     plugins: {
       title: {
         display: true,
-        text: "Broj lica po okrugu",
+        text: "Polovi",
         position: "top" as const,
         font: { size: 25, family: "Playfair" },
         color: "Black",
       },
       datalabels: {
         display: true,
-        anchor: "end" as const,
-        align: "end" as const,
+        anchor: "center" as const,
+        formatter: function (value: string) {
+          return value + "%";
+        },
       },
     },
   };

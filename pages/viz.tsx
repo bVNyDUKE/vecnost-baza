@@ -4,7 +4,12 @@ import { supabase } from "../lib/supabaseClient";
 import { MapContainer } from "../components/Map/MapContainer";
 import { SideDrawer } from "../components/SideDrawer";
 import Icons from "../components/Icons";
-import { NamesGraph, OkrugGraph, LastnameGraph } from "../components/Graphs";
+import {
+  NamesGraph,
+  OkrugGraph,
+  LastnameGraph,
+  GenGraph,
+} from "../components/Graphs";
 import { Transition } from "@headlessui/react";
 import Link from "next/link";
 
@@ -37,10 +42,17 @@ export type PersonsPerOkrugStat = {
   name: string;
 };
 
+export interface IGenStats {
+  male: number;
+  female: number;
+  na: number;
+}
+
 export default function Viz() {
   const [personsPerOkrug, setPersonsPerOkrug] = useState<
     PersonsPerOkrugStat[] | null
   >(null);
+  const [genStats, setGenStats] = useState<IGenStats[] | null>(null);
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [lastnameStats, setLastnameStats] = useState<[] | LastnameStat[]>([]);
@@ -52,6 +64,8 @@ export default function Viz() {
       const { data } = await supabase.rpc<PersonsPerOkrugStat>(
         "persons_per_okrug"
       );
+      const { data: genData } = await supabase.rpc<IGenStats>("gender_dist");
+      setGenStats(genData);
       setPersonsPerOkrug(data);
     }
     getPersonsPerOkrug();
@@ -146,8 +160,9 @@ export default function Viz() {
           )}
         </div>
       </SideDrawer>
-      <div className="relative mt-10 h-1/3 w-1/2">
+      <div className="relative mt-10 h-1/3 w-1/2 max-w-xl">
         <OkrugGraph personsPerOkrug={personsPerOkrug} />
+        <GenGraph genStats={genStats} />
       </div>
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}

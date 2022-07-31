@@ -25,3 +25,4 @@ ChartJS.register(
 export * from "./NamesGraph";
 export * from "./LastnamesGraph";
 export * from "./OkrugGraph";
+export * from "./GenGraph";

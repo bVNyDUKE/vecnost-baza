@@ -11,6 +11,21 @@ import { Okrug, PersonsPerOkrugStat } from "../../pages/viz";
 import { MapRegion } from "./MapRegion";
 import { Okruzi } from "./MapData";
 
+const getFillColor = (count: number): string => {
+  switch (true) {
+    case count > 0 && count <= 100:
+      return "#f6eee0";
+    case count > 100 && count <= 1000:
+      return "#e4b7a0";
+    case count > 1000 && count <= 3000:
+      return "#c38370";
+    case count > 5000:
+      return "#A45C40";
+    default:
+      return "#f9f1f0";
+  }
+};
+
 export const MapContainer = ({
   selectedOkrugId,
   setSelectedOkrug,
@@ -42,21 +57,8 @@ export const MapContainer = ({
     return () => window.removeEventListener("resize", resizeSVG);
   }, [resizeSVG]);
 
+  //not sure if this is better without useMemo
   const okrugData = useMemo(() => {
-    const getFillColor = (count: number): string => {
-      switch (true) {
-        case count > 0 && count <= 100:
-          return "#f6eee0";
-        case count > 100 && count <= 1000:
-          return "#e4b7a0";
-        case count > 1000 && count <= 3000:
-          return "#c38370";
-        case count > 5000:
-          return "#A45C40";
-        default:
-          return "#f9f1f0";
-      }
-    };
     return Okruzi.map((okrug) => {
       let count = personsPerOkrug?.find((x) => okrug.id === x.okrug_id)?.count;
       return {
