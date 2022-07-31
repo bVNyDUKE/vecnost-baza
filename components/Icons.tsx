@@ -42,15 +42,15 @@ export const RightArrow = () => <span>&#9654;</span>;
 export const DownArrow = () => <span>&#9660;</span>;
 
 export const Cross = ({
-  className,
-  onClick,
+  className = "h-3 w-3",
+  onClick = undefined,
 }: {
-  className: string;
-  onClick: () => void;
+  className?: string;
+  onClick?: () => void;
 }): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className={className || "h-3 w-3"}
+    className={className}
     viewBox="0 0 20 20"
     fill="currentColor"
     onClick={onClick}
