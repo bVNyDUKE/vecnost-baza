@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 
-import { OkrugGraph } from "../components/Graphs/OkrugGraph";
 import { MapContainer } from "../components/Map/MapContainer";
 import { SideDrawer } from "../components/SideDrawer";
 import Icons from "../components/Icons";
-import { NamesGraph } from "../components/Graphs/NamesGraph";
+import { NamesGraph, OkrugGraph, LastnameGraph } from "../components/Graphs";
 import { Transition } from "@headlessui/react";
+import Link from "next/link";
 
 export type Okrug = {
   path: string;
@@ -15,9 +15,20 @@ export type Okrug = {
 };
 
 export type NameStat = {
-  ime: string;
+  name: string;
   total: number;
   percent: number;
+};
+
+export type LastnameStat = {
+  lastname: string;
+  total: number;
+  percent: number;
+};
+
+export type Graveyards = {
+  id: number;
+  name: string;
 };
 
 export type PersonsPerOkrugStat = {
@@ -27,12 +38,13 @@ export type PersonsPerOkrugStat = {
 };
 
 export default function Viz() {
-  //prettier-ignore
-  const [personsPerOkrug, setPersonsPerOkrug] = useState< PersonsPerOkrugStat[] | null>(null);
+  const [personsPerOkrug, setPersonsPerOkrug] = useState<
+    PersonsPerOkrugStat[] | null
+  >(null);
   const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
-  //prettier-ignore
-  const [grobljeStats, setGrobljStats] = useState<[] | {grobljename: string}[]>([]);
+  const [lastnameStats, setLastnameStats] = useState<[] | LastnameStat[]>([]);
+  const [grobljeStats, setGrobljStats] = useState<[] | Graveyards[]>([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -40,7 +52,6 @@ export default function Viz() {
       const { data } = await supabase.rpc<PersonsPerOkrugStat>(
         "persons_per_okrug"
       );
-      console.log(data);
       setPersonsPerOkrug(data);
     }
     getPersonsPerOkrug();
@@ -50,32 +61,28 @@ export default function Viz() {
     selectedOkrug && setShowModal(true);
   }, [selectedOkrug]);
 
-  //Prevent the body from scrolling when modal is open
   useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.removeAttribute("style");
-    }
-    return () => {
-      document.body.removeAttribute("style");
-    };
-  }, [showModal]);
-
-  useEffect(() => {
-    async function search(id: number) {
-      const { data } = await supabase.rpc<{ data: string }>("okrug_stats", {
-        i: id,
+    async function getOkrugData(okrugid: number) {
+      const { data: graveyardData } = await supabase.rpc<Graveyards>(
+        "graveyards_per_okrug",
+        { okrugid }
+      );
+      const { data: nameData } = await supabase.rpc<NameStat>("top_names", {
+        okrugid,
       });
-      if (data) {
-        setGrobljStats(JSON.parse(data[0].data));
-        setNameStats(JSON.parse(data[1].data));
-      }
+      const { data: lastnameData } = await supabase.rpc<LastnameStat>(
+        "top_lastnames",
+        {
+          okrugid,
+        }
+      );
+
+      graveyardData && setGrobljStats(graveyardData);
+      nameData && setNameStats(nameData);
+      lastnameData && setLastnameStats(lastnameData);
     }
 
-    if (selectedOkrug?.id) {
-      search(selectedOkrug.id);
-    }
+    selectedOkrug?.id && getOkrugData(selectedOkrug.id);
   }, [selectedOkrug?.id]);
 
   const statsAvailable =
@@ -97,29 +104,39 @@ export default function Viz() {
       className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-between"
     >
       <SideDrawer show={showModal}>
-        <div className="relative border-y py-2 ">
+        <div className="absolute z-10 w-full border-y bg-white py-2">
           <Icons.Cross
             onClick={() => setShowModal(false)}
             className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-sm"
           />
           <p className="text-center text-xl font-bold">Podaci okruga</p>
         </div>
-        <>
+        <div className="mt-14">
           <p className="mt-4 text-center text-2xl font-bold">
             {selectedOkrug?.name}
           </p>
           {statsAvailable ? (
             <>
-              <div className="sm:mt-10 md:justify-center lg:flex">
-                <div className="relative h-[50vh] grow">
+              <div className="sm:mt-10">
+                <div className="relative h-[25vh]">
                   <NamesGraph nameStats={nameStats} />
                 </div>
-                <div className="justify-center lg:w-1/4">
-                  <p className="font-bold">Groblja</p>
-                  <ul className="list-disc">
-                    {grobljeStats.map((graveyard, index) => (
-                      //TODO add links to searches
-                      <li key={index}>{graveyard.grobljename}</li>
+                <div className="relative mt-10 h-[25vh]">
+                  <LastnameGraph lastnameStats={lastnameStats} />
+                </div>
+                <div className="justify-center p-10">
+                  <p className="mb-5 text-2xl font-bold">Groblja</p>
+                  <ul className="box-border space-y-1">
+                    {grobljeStats.map((graveyard) => (
+                      <Link
+                        key={graveyard.id}
+                        href={`/search?groblje=${graveyard.id}`}
+                        passHref
+                      >
+                        <li className="box-border border p-8 hover:cursor-pointer hover:shadow-md">
+                          <a>{graveyard.name}</a>
+                        </li>
+                      </Link>
                     ))}
                   </ul>
                 </div>
@@ -130,9 +147,11 @@ export default function Viz() {
               Nema podataka za ovaj okrug
             </p>
           )}
-        </>
+        </div>
       </SideDrawer>
-      {personsPerOkrug && <OkrugGraph personsPerOkrug={personsPerOkrug} />}
+      <div className="relative mt-10 h-1/3 w-1/3">
+        {personsPerOkrug && <OkrugGraph personsPerOkrug={personsPerOkrug} />}
+      </div>
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}
         setSelectedOkrug={setSelectedOkrug}

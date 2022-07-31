@@ -1,15 +1,22 @@
 import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { NameStat } from "../../pages/viz";
+import { LastnameStat } from "../../pages/viz";
 
-export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
-  const labels = useMemo(() => nameStats.map((x) => x.name), [nameStats]);
+export const LastnameGraph = ({
+  lastnameStats,
+}: {
+  lastnameStats: LastnameStat[];
+}) => {
+  const labels = useMemo(
+    () => lastnameStats.map((x) => x.lastname),
+    [lastnameStats]
+  );
   const data = useMemo(() => {
     return {
       labels,
       datasets: [
         {
-          data: nameStats.map((x) => x.percent),
+          data: lastnameStats.map((x) => x.percent),
           borderColor: "white",
           datalabels: {
             display: true,
@@ -23,7 +30,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
           backgroundColor: "gray",
         },
         {
-          data: nameStats.map((x) => x.total),
+          data: lastnameStats.map((x) => x.total),
           borderColor: "white",
           datalabels: {
             display: true,
@@ -36,7 +43,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
         },
       ],
     };
-  }, [labels, nameStats]);
+  }, [labels, lastnameStats]);
 
   const options = {
     elements: {
@@ -66,7 +73,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
     plugins: {
       title: {
         display: true,
-        text: "Najčešća imena",
+        text: "Najčešća prezimena",
         position: "top" as "top",
         font: { weight: "bold", size: 15 },
       },
