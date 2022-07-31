@@ -11,13 +11,20 @@ export default function Home() {
     },
     {
       id: 2,
+      title: "Statistika",
+      content: "Interkativna statistika",
+      href: "/viz",
+      linkLabel: "Idi na statistiku",
+    },
+    {
+      id: 3,
       title: "Mapa",
       content: "Pronađite arhivirane lokacija na mapi",
       href: "/map",
       linkLabel: "Idi na mapu",
     },
     {
-      id: 3,
+      id: 4,
       title: "Indeks",
       content: "Indeks svih arhiviranih lokacija",
       href: "/indexMesta",

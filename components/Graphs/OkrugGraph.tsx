@@ -38,6 +38,7 @@ export const OkrugGraph = ({
         display: true,
         anchor: "end" as const,
         align: "end" as const,
+        offset: -7,
       },
     },
   };

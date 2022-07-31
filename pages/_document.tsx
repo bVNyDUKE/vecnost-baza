@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 class MyDocument extends Document {
   render() {
     return (
-      <Html lang="sr">
+      <Html lang="sr" className="h-screen">
         <Head>
           <link
             rel="preconnect"

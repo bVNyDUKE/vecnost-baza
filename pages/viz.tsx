@@ -107,12 +107,12 @@ export default function Viz() {
       appear={true}
       show={!!personsPerOkrug}
       enter="transition-all duration-700"
-      enterFrom="opacity-0 scale-50"
-      enterTo="opacity-100 scale-100"
+      enterFrom="opacity-0 "
+      enterTo="opacity-100 "
       leave="transition-all duration-150"
-      leaveFrom="opacity-100 scale-100"
-      leaveTo="opacity-0 scale-60"
-      className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-between"
+      leaveFrom="opacity-100 "
+      leaveTo="opacity-0 "
+      className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-center"
     >
       <SideDrawer show={showModal}>
         <div className="absolute z-10 w-full border-y bg-white py-2">
@@ -160,9 +160,13 @@ export default function Viz() {
           )}
         </div>
       </SideDrawer>
-      <div className="relative mt-10 h-1/3 w-1/2 max-w-xl">
-        <OkrugGraph personsPerOkrug={personsPerOkrug} />
-        <GenGraph genStats={genStats} />
+      <div className="mx-auto my-10 h-1/2 max-w-xl space-y-5 lg:my-0 lg:mx-0 lg:mb-10 lg:h-full lg:w-1/2">
+        <div className="relative h-1/2 w-[100vw] sm:w-full">
+          <OkrugGraph personsPerOkrug={personsPerOkrug} />
+        </div>
+        <div className="relative h-1/2 w-[100vw] sm:w-full">
+          <GenGraph genStats={genStats} />
+        </div>
       </div>
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}

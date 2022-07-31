@@ -84,7 +84,7 @@ export const MapContainer = ({
       viewBox={`0 0 ${width} ${height}`}
       height={windowHeight - 250}
       ref={ref}
-      className="px-2 lg:w-1/2"
+      className="px-2 lg:h-[100vh] lg:w-1/2"
     >
       <g>
         {okrugData.map((okrug) => (

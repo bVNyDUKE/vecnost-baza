@@ -14,9 +14,10 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
           borderColor: "white",
           datalabels: {
             display: true,
-            color: "white",
+            color: "black",
             anchor: "end" as const,
             align: "top" as const,
+            rotation: -90,
             formatter: function (value: string) {
               return value + "%";
             },
@@ -56,7 +57,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
     scales: {
       x: {
         display: true,
-        stacked: true,
+        stacked: false,
         grid: { display: false },
         ticks: { font: { size: 16 } },
       },
