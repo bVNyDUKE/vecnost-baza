@@ -146,8 +146,8 @@ export default function Viz() {
           )}
         </div>
       </SideDrawer>
-      <div className="relative mt-10 h-1/3 w-1/3">
-        {personsPerOkrug && <OkrugGraph personsPerOkrug={personsPerOkrug} />}
+      <div className="relative mt-10 h-1/3 w-1/2">
+        <OkrugGraph personsPerOkrug={personsPerOkrug} />
       </div>
       <MapContainer
         selectedOkrugId={selectedOkrug?.id || null}

@@ -5,23 +5,23 @@ import { PersonsPerOkrugStat } from "../../pages/viz";
 export const OkrugGraph = ({
   personsPerOkrug,
 }: {
-  personsPerOkrug: PersonsPerOkrugStat[];
+  personsPerOkrug: PersonsPerOkrugStat[] | null;
 }) => {
-  const labels = useMemo(
-    () => personsPerOkrug.map((x) => x.name),
-    [personsPerOkrug]
-  );
   const data = useMemo(() => {
     return {
-      labels,
+      labels: personsPerOkrug ? personsPerOkrug.map((x) => x.name) : [],
       datasets: [
         {
-          data: personsPerOkrug.map((x) => x.count),
+          data: personsPerOkrug ? personsPerOkrug.map((x) => x.count) : [],
           backgroundColor: ["#E7D2CC", "#b9b7bd", "#868b8e", "#eeede7"],
         },
       ],
     };
-  }, [labels, personsPerOkrug]);
+  }, [personsPerOkrug]);
+
+  if (!personsPerOkrug) {
+    return <div></div>;
+  }
 
   const options = {
     normalized: true,
@@ -30,15 +30,13 @@ export const OkrugGraph = ({
       title: {
         display: true,
         text: "Broj lica po okrugu",
-        position: "top" as "top",
-        font: { weight: "bold", size: 20 },
+        position: "top" as const,
+        font: { size: 25, family: "Playfair" },
+        color: "Black",
       },
       datalabels: {
-        labels: {},
         display: true,
-        color: "black",
         anchor: "end" as const,
-        align: "end" as const,
       },
     },
   };

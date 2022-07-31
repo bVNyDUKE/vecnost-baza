@@ -3,6 +3,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -41,22 +42,32 @@ export const MapContainer = ({
     return () => window.removeEventListener("resize", resizeSVG);
   }, [resizeSVG]);
 
-  const getFillColor = (okrugId: number): string => {
-    const count =
-      personsPerOkrug?.find((x) => x.okrug_id === okrugId)?.count || 0;
-    switch (true) {
-      case count > 0 && count <= 100:
-        return "#f6eee0";
-      case count > 100 && count <= 1000:
-        return "#e4b7a0";
-      case count > 1000 && count <= 3000:
-        return "#c38370";
-      case count > 5000:
-        return "#A45C40";
-      default:
-        return "#f9f1f0";
-    }
-  };
+  const okrugData = useMemo(() => {
+    const getFillColor = (count: number): string => {
+      switch (true) {
+        case count > 0 && count <= 100:
+          return "#f6eee0";
+        case count > 100 && count <= 1000:
+          return "#e4b7a0";
+        case count > 1000 && count <= 3000:
+          return "#c38370";
+        case count > 5000:
+          return "#A45C40";
+        default:
+          return "#f9f1f0";
+      }
+    };
+    return Okruzi.map((okrug) => {
+      let count = personsPerOkrug?.find((x) => okrug.id === x.okrug_id)?.count;
+      return {
+        id: okrug.id,
+        name: okrug.name,
+        count: count ?? 0,
+        path: okrug.path,
+        fillColor: getFillColor(count ?? 0),
+      };
+    });
+  }, [personsPerOkrug]);
 
   const handleClick = (okrug: Okrug) => {
     if (selectedOkrugId === okrug.id) {
@@ -74,15 +85,17 @@ export const MapContainer = ({
       className="px-2 lg:w-1/2"
     >
       <g>
-        {Okruzi.map((okrug) => (
+        {okrugData.map((okrug) => (
           <MapRegion
             svgPath={okrug.path}
-            handleClick={() => handleClick(okrug)}
+            handleClick={() => okrug.count > 0 && handleClick(okrug)}
             selected={selectedOkrugId === okrug.id}
-            fillColor={getFillColor(okrug.id)}
-            strokeColor={selectedOkrugId === okrug.id ? "#fff" : "#000"}
+            fillColor={okrug.fillColor}
+            hoverColor={okrug.count > 0 ? "#fadcd9" : "#f9f1f0"}
+            strokeColor={"#000"}
             key={okrug.id}
             strokeWidth={selectedOkrugId === okrug.id ? "2px" : "1px"}
+            className={okrug.count > 0 ? "hover:cursor-pointer" : ""}
           />
         ))}
       </g>

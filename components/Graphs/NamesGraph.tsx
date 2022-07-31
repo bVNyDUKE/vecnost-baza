@@ -9,6 +9,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
       labels,
       datasets: [
         {
+          label: "Procenat",
           data: nameStats.map((x) => x.percent),
           borderColor: "white",
           datalabels: {
@@ -23,6 +24,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
           backgroundColor: "gray",
         },
         {
+          label: "Ukupno",
           data: nameStats.map((x) => x.total),
           borderColor: "white",
           datalabels: {
@@ -70,6 +72,7 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
         position: "top" as "top",
         font: { weight: "bold", size: 15 },
       },
+      legend: { display: false },
     },
   };
 

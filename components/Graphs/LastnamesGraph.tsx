@@ -16,6 +16,7 @@ export const LastnameGraph = ({
       labels,
       datasets: [
         {
+          label: "Procenat",
           data: lastnameStats.map((x) => x.percent),
           borderColor: "white",
           datalabels: {
@@ -30,6 +31,7 @@ export const LastnameGraph = ({
           backgroundColor: "gray",
         },
         {
+          label: "Ukupno",
           data: lastnameStats.map((x) => x.total),
           borderColor: "white",
           datalabels: {
@@ -77,6 +79,7 @@ export const LastnameGraph = ({
         position: "top" as "top",
         font: { weight: "bold", size: 15 },
       },
+      legend: { display: false },
     },
   };
 
