@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Transition } from "@headlessui/react";
 import { ReactNode } from "react";
 
@@ -21,7 +22,7 @@ export const SideDrawer = ({
     };
   }, [show]);
 
-  return (
+  return createPortal(
     <Transition
       show={show}
       className="fixed top-0 bottom-0 left-0 right-5 z-50 w-full bg-white text-gray-700 lg:w-1/2"
@@ -43,6 +44,7 @@ export const SideDrawer = ({
       >
         {children}
       </Transition.Child>
-    </Transition>
+    </Transition>,
+    document.querySelector("#portal") as HTMLElement
   );
 };

@@ -12,6 +12,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <NavBar />
       <main className="min-h-screen antialiased">{children}</main>
       <Footer />
+      <div id="portal"></div>
     </>
   );
 };
