@@ -17,6 +17,29 @@ export interface SearchResult {
     };
   };
 }
+
+export interface IPerson {
+  id: string;
+  ime: string;
+  prezime: string;
+  rodjenje: string;
+  smrt: string;
+  nadimak: string;
+  pol: string;
+  groblje: {
+    name: string;
+    opstina: {
+      name: string;
+      okrug: {
+        name: string;
+        region: {
+          name: string;
+        };
+      };
+    };
+  };
+}
+
 export interface IGraveLocations {
   id: number;
   name: string;
@@ -42,16 +65,17 @@ export interface IOkrug {
   id: number;
 }
 
-export interface NameStat {
-  name: string;
+interface Stat {
   total: number;
   percent: number;
 }
 
-export interface LastnameStat {
+export interface NameStat extends Stat {
+  name: string;
+}
+
+export interface LastnameStat extends Stat {
   lastname: string;
-  total: number;
-  percent: number;
 }
 
 export interface Graveyards {
