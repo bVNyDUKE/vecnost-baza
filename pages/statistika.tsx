@@ -143,7 +143,7 @@ export default function Viz({
                     {grobljeStats.map((graveyard) => (
                       <Link
                         key={graveyard.id}
-                        href={`/search?groblje=${graveyard.id}`}
+                        href={`/pretraga?groblje=${graveyard.id}`}
                         passHref
                       >
                         <li className="box-border border p-8 hover:cursor-pointer hover:shadow-md">

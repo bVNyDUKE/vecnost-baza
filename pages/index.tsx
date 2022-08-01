@@ -9,7 +9,7 @@ function Home() {
       id: 1,
       title: "Pretraga",
       content: "Pretražite sahranjena lica po imenu",
-      href: "/search",
+      href: "/pretraga",
       linkLabel: "Idi na pretragu",
     },
     {
@@ -23,14 +23,14 @@ function Home() {
       id: 3,
       title: "Mapa",
       content: "Pronađite arhivirane lokacija na mapi",
-      href: "/map",
+      href: "/mapa",
       linkLabel: "Idi na mapu",
     },
     {
       id: 4,
       title: "Indeks",
       content: "Indeks svih arhiviranih lokacija",
-      href: "/indexMesta",
+      href: "/indeks",
       linkLabel: "Idi na indeks",
     },
   ];

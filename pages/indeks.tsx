@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { RightArrow, DownArrow } from "../components/Icons";
-import { GetServerSideProps } from "next";
 
 interface Result {
   id: string;
@@ -20,14 +19,14 @@ interface Region extends Result {
   okrug: Okrug[];
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export async function getStaticProps() {
   const { data } = await supabase
     .from<Region>("region")
     .select(
       "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
     );
   return { props: { data } };
-};
+}
 
 const IndexList = ({
   data,
@@ -101,10 +100,10 @@ const IndexEntry = ({
   return <li>{entry.name}</li>;
 };
 
-export default function Entry({ data }: { data: Region[] | null }) {
+export default function IndeksMesta({ data }: { data: Region[] | null }) {
   return (
     <div className="container mx-auto max-w-lg">
-      <h1 className="text-center font-serif text-4xl">Index</h1>
+      <h1 className="mb-10 text-center font-serif text-4xl">Indeks Mesta</h1>
       <IndexList data={data} title="Regioni" />
     </div>
   );

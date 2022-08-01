@@ -47,7 +47,7 @@ const Map = ({ children, ...props }: MapProps) => {
 
         const infoContent = `<div class="py-4 px-2">
           <h1 class="font-bold text-lg">${location.name}</h1>
-          <a class="underline hover:cursor-pointer" href="/search?ime=all&groblje=${location.id}">Pretrazi ovo groblje</h1>
+          <a class="underline hover:cursor-pointer" href="/pretraga?ime=all&groblje=${location.id}">Pretrazi ovo groblje</h1>
             </div>`;
 
         marker.addListener("click", () => {

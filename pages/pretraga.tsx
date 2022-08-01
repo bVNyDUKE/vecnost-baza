@@ -79,7 +79,7 @@ export default function Search() {
   const handlePageChange = (page: number) => {
     router.push(
       {
-        pathname: "/search",
+        pathname: "/pretraga",
         query: { ...router.query, page: page },
       },
       "",

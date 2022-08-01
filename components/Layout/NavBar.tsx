@@ -30,10 +30,10 @@ const NavBar = () => {
         </Link>
         <div className="flex items-center justify-between space-x-2">
           <Link href="/">Početna</Link>
-          <Link href="/search">Pretraga</Link>
+          <Link href="/pretraga">Pretraga</Link>
           <Link href="/statistika">Statistika</Link>
           <Link href="/indeks">Indeks</Link>
-          <Link href="/map">Mapa</Link>
+          <Link href="/mapa">Mapa</Link>
         </div>
       </div>
 
@@ -52,10 +52,10 @@ const NavBar = () => {
           className="mx-auto flex w-full items-center justify-between space-x-2 px-2 font-bold"
         >
           <Link href="/">Početna</Link>
-          <Link href="/search">Pretraga</Link>
+          <Link href="/pretraga">Pretraga</Link>
           <Link href="/statistika">Statistika</Link>
           <Link href="/indeks">Indeks</Link>
-          <Link href="/map">Mapa</Link>
+          <Link href="/mapa">Mapa</Link>
         </Transition>
       </div>
     </nav>

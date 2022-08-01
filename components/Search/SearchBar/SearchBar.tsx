@@ -42,7 +42,7 @@ export const SearchBar = ({ searching }: { searching: boolean }) => {
 
     router.push(
       {
-        pathname: "/search",
+        pathname: "/pretraga",
         query: {
           ime: cleanedInput,
           ...(filters.groblje && { groblje: filters.groblje }),

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SearchResult } from "../../../pages/search";
+import { SearchResult } from "../../../pages/pretraga";
 
 const Entry = ({ result }: { result: SearchResult }) => {
   return (
@@ -30,7 +30,7 @@ export const ResultList = ({ results }: { results: SearchResult[] | null }) => {
           <Link
             passHref
             key={result.id}
-            href={{ pathname: "/entries/[id]", query: { id: result.id } }}
+            href={{ pathname: "/lica/[id]", query: { id: result.id } }}
           >
             <a>
               <Entry result={result} />
