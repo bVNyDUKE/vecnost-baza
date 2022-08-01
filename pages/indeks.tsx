@@ -25,7 +25,7 @@ export async function getStaticProps() {
     .select(
       "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
     );
-  return { props: { data } };
+  return { props: { data }, revalidate: 60 * 60 * 24 };
 }
 
 const IndexList = ({
