@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Okrug, PersonsPerOkrugStat } from "../../types";
+import { IOkrug, PersonsPerOkrugStat } from "../../types";
 import { MapRegion } from "./MapRegion";
 import { Okruzi } from "./MapData";
 
@@ -33,7 +33,7 @@ export const MapContainer = ({
   personsPerOkrug,
 }: {
   selectedOkrugId: number | null;
-  setSelectedOkrug: Dispatch<SetStateAction<Okrug | null>>;
+  setSelectedOkrug: Dispatch<SetStateAction<IOkrug | null>>;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   personsPerOkrug: PersonsPerOkrugStat[] | null;
 }) => {
@@ -71,7 +71,7 @@ export const MapContainer = ({
     });
   }, [personsPerOkrug]);
 
-  const handleClick = (okrug: Okrug) => {
+  const handleClick = (okrug: IOkrug) => {
     if (selectedOkrugId === okrug.id) {
       setShowModal((prev) => !prev);
     } else {
