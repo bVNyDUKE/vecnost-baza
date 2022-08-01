@@ -17,6 +17,16 @@ export interface SearchResult {
     };
   };
 }
+export interface IGraveLocations {
+  id: number;
+  name: string;
+  position: google.maps.LatLngLiteral;
+}
+
+export interface IMapProps extends google.maps.MapOptions {
+  locations: IGraveLocations[];
+  children?: React.ReactNode;
+}
 
 export interface Region {
   id: string;

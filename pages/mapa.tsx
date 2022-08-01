@@ -1,30 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { GetServerSideProps } from "next";
 import { supabase } from "../lib/supabaseClient";
+import { IGraveLocations, IMapProps } from "../types";
 
-type GraveLocations = {
-  id: number;
-  name: string;
-  position: google.maps.LatLngLiteral;
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
+export async function getStaticProps() {
   const { data } = await supabase
-    .from<GraveLocations>("groblje")
+    .from<IGraveLocations>("groblje")
     .select("id, name, position")
     .not("position", "is", null);
 
-  return { props: { data } };
-};
-
-interface MapProps extends google.maps.MapOptions {
-  locations: GraveLocations[];
-  children?: React.ReactNode;
+  return { props: { data }, revalidate: 60 * 60 * 24 };
 }
 
-const Map = ({ children, ...props }: MapProps) => {
+const Map = ({ children, ...props }: IMapProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>();
   useEffect(() => {
@@ -82,7 +71,7 @@ const LoadingScreen = ({ status }: { status: Status }) => (
   </div>
 );
 
-export default function MapPage({ data }: { data: GraveLocations[] }) {
+export default function MapPage({ data }: { data: IGraveLocations[] }) {
   const center = { lat: 44.628924, lng: 20.643159 };
   const zoom = 7;
 
