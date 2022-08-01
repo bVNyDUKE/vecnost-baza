@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { LastnameStat } from "../../pages/viz";
+import { LastnameStat } from "../../pages/statistika";
 
 export const LastnameGraph = ({
   lastnameStats,

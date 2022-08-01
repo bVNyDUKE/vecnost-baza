@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Pie } from "react-chartjs-2";
-import { PersonsPerOkrugStat } from "../../pages/viz";
+import { PersonsPerOkrugStat } from "../../pages/statistika";
 
 export const OkrugGraph = ({
   personsPerOkrug,

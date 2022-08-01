@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Pie } from "react-chartjs-2";
-import { IGenStats } from "../../pages/viz";
+import { IGenStats } from "../../pages/statistika";
 
 export const GenGraph = ({ genStats }: { genStats: IGenStats[] | null }) => {
   const data = useMemo(() => {
