@@ -13,7 +13,7 @@ export default function Home() {
       id: 2,
       title: "Statistika",
       content: "Interkativna statistika",
-      href: "/viz",
+      href: "/statistika",
       linkLabel: "Idi na statistiku",
     },
     {
