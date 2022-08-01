@@ -18,6 +18,14 @@ export interface SearchResult {
   };
 }
 
+export interface Region {
+  id: string;
+  name: string;
+  groblje?: { id: string; name: string }[];
+  opstina?: { id: string; name: string; groblje: Region["groblje"][] }[];
+  okrug?: { id: string; name: string; opstina: Region["opstina"][] }[];
+}
+
 export interface IOkrug {
   path: string;
   name: string;

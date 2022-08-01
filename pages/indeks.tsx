@@ -1,27 +1,11 @@
 import { useState, useMemo } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { RightArrow, DownArrow } from "../components/Icons";
-
-interface Result {
-  id: string;
-  name: string;
-}
-
-interface Opstina extends Result {
-  groblje: Result[];
-}
-
-interface Okrug extends Result {
-  opstina: Opstina[];
-}
-
-interface Region extends Result {
-  okrug: Okrug[];
-}
+import { Region } from "../types";
 
 export async function getStaticProps() {
   const { data } = await supabase
-    .from<Region>("region")
+    .from<Omit<Region, "groblje" | "opstina">>("region")
     .select(
       "id, name, okrug ( id, name, opstina (id, name, groblje (id, name) ) )"
     );
@@ -32,7 +16,7 @@ const IndexList = ({
   data,
   title,
 }: {
-  data: Region[] | Okrug[] | Opstina[] | Result[] | null;
+  data: Region[] | null;
   title: string;
 }) => {
   return (
@@ -46,11 +30,7 @@ const IndexList = ({
   );
 };
 
-const IndexEntry = ({
-  entry,
-}: {
-  entry: Region | Opstina | Okrug | Result;
-}) => {
+const IndexEntry = ({ entry }: { entry: Region }) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen((open) => !open);
 
