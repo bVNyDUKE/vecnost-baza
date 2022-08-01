@@ -4,26 +4,7 @@ import { Paginator } from "../components/Search/Results/Paginator";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
-
-export type SearchResult = {
-  id: string;
-  ime: string;
-  prezime: string;
-  rodjenje: string;
-  smrt: string;
-  groblje: {
-    id: string;
-    name: string;
-    opstina: {
-      id: string;
-      name: string;
-      okrug: {
-        id: string;
-        name: string;
-      };
-    };
-  };
-};
+import { SearchResult } from "../types";
 
 export default function Search() {
   const [results, setResults] = useState<null | SearchResult[]>(null);

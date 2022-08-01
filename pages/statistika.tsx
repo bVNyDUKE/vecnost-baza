@@ -5,6 +5,14 @@ import { MapContainer } from "../components/Map/MapContainer";
 import { SideDrawer } from "../components/SideDrawer";
 import Icons from "../components/Icons";
 import {
+  PersonsPerOkrugStat,
+  IGenStats,
+  NameStat,
+  IOkrug,
+  LastnameStat,
+  Graveyards,
+} from "../types";
+import {
   NamesGraph,
   OkrugGraph,
   LastnameGraph,
@@ -12,41 +20,6 @@ import {
 } from "../components/Graphs";
 import { Transition } from "@headlessui/react";
 import Link from "next/link";
-
-export type Okrug = {
-  path: string;
-  name: string;
-  id: number;
-};
-
-export type NameStat = {
-  name: string;
-  total: number;
-  percent: number;
-};
-
-export type LastnameStat = {
-  lastname: string;
-  total: number;
-  percent: number;
-};
-
-export type Graveyards = {
-  id: number;
-  name: string;
-};
-
-export type PersonsPerOkrugStat = {
-  count: number;
-  okrug_id: number;
-  name: string;
-};
-
-export interface IGenStats {
-  male: number;
-  female: number;
-  na: number;
-}
 
 export async function getStaticProps() {
   const [{ data: personsPerOkrug }, { data: genData }] = await Promise.all([
@@ -64,7 +37,7 @@ export default function Viz({
   personsPerOkrug: PersonsPerOkrugStat[] | null;
   genData: IGenStats[] | null;
 }) {
-  const [selectedOkrug, setSelectedOkrug] = useState<null | Okrug>(null);
+  const [selectedOkrug, setSelectedOkrug] = useState<null | IOkrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [lastnameStats, setLastnameStats] = useState<[] | LastnameStat[]>([]);
   const [grobljeStats, setGrobljStats] = useState<[] | Graveyards[]>([]);
