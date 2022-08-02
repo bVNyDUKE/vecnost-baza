@@ -5,29 +5,19 @@ import { ReactNode } from "react";
 
 const ClientPortal = ({
   children,
-  selector,
+  show,
 }: {
   children: ReactNode;
-  selector: string;
+  show: boolean;
 }) => {
   const ref = useRef<Element | undefined>();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    ref.current = document.querySelector(selector) as Element;
+    ref.current = document.querySelector("body") as Element;
     setMounted(true);
-  }, [selector]);
+  }, []);
 
-  return mounted && ref.current ? createPortal(children, ref.current) : null;
-};
-
-export const SideDrawer = ({
-  show,
-  children,
-}: {
-  show: boolean;
-  children: ReactNode;
-}) => {
   //Prevent the body from scrolling when modal is open
   useEffect(() => {
     if (show) {
@@ -40,11 +30,21 @@ export const SideDrawer = ({
     };
   }, [show]);
 
+  return mounted && ref.current ? createPortal(children, ref.current) : null;
+};
+
+export const SideDrawer = ({
+  show,
+  children,
+}: {
+  show: boolean;
+  children: ReactNode;
+}) => {
   return (
-    <ClientPortal selector="#portal">
+    <ClientPortal show={show}>
       <Transition
         show={show}
-        className="fixed top-0 bottom-0 left-0 right-5 z-50 w-full bg-white text-gray-700 lg:w-1/2"
+        className="fixed top-0 bottom-0 left-0 right-5 z-50 bg-white text-gray-700 lg:w-1/2"
         enter="transition delay-150 duration-500 ease-in-out"
         enterFrom="-translate-x-full"
         enterTo="translate-x-0"
