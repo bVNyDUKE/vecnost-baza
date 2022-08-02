@@ -33,13 +33,13 @@ const ClientPortal = ({
   return mounted && ref.current ? createPortal(children, ref.current) : null;
 };
 
-export const SideDrawer = ({
+export default function SideDrawer({
   show,
   children,
 }: {
   show: boolean;
   children: ReactNode;
-}) => {
+}) {
   return (
     <ClientPortal show={show}>
       <Transition
@@ -66,4 +66,4 @@ export const SideDrawer = ({
       </Transition>
     </ClientPortal>
   );
-};
+}
