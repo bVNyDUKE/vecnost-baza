@@ -43,6 +43,9 @@ export default function Search() {
     if (opstina) {
       query = query.eq("groblje.opstina.id", opstina);
     }
+    if (okrug) {
+      query = query.eq("groblje.opstina.okrug.id", okrug);
+    }
 
     async function search() {
       setSearching(true);
