@@ -18,6 +18,15 @@ export interface SearchResult {
   };
 }
 
+export interface RegionData {
+  grobljeid: string;
+  grobljename: string;
+  opstinaid: string;
+  opstinaname: string;
+  okrugid: string;
+  okrugname: string;
+}
+
 export interface IPerson {
   id: string;
   ime: string;

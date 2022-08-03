@@ -1,16 +1,15 @@
-import { SearchStore, Regions, Option } from "../../../stores/searchStore";
-import { Cross } from "../../Icons";
+import { Cross } from "./Icons";
 
 interface OptionDropdownProps {
-  def: keyof typeof Regions;
-  options: Option[];
+  label: string;
+  options: { id: string; name: string }[];
   choice: string | null;
-  setChoice: SearchStore["setOption"];
+  setChoice: (choice: string) => void;
   clearChoice: () => void;
 }
 
 export const OptionDropdown = ({
-  def,
+  label,
   options,
   choice,
   setChoice,
@@ -40,10 +39,10 @@ export const OptionDropdown = ({
 
   return (
     <select
-      onChange={(e) => setChoice(def, e.target.value)}
+      onChange={(e) => setChoice(e.target.value)}
       className="w-1/3 bg-white p-2 text-center text-sm capitalize"
     >
-      <option className="text-clip text-xs" value="0" label={def} />
+      <option className="text-clip text-xs" value="0" label={label} />
       {options.map((option) => (
         <option
           className="text-clip text-xs"
