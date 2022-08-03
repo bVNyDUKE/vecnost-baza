@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SearchResult } from "../../../types";
+import { SearchResult } from "../../types";
 
 const Entry = ({ result }: { result: SearchResult }) => {
   return (
