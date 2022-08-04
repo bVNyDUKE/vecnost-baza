@@ -6,13 +6,12 @@ import { Spinner, Magnifier, AdjustmentsIcon } from "../Icons";
 import OptionDropdown from "../OptionsDropdown";
 
 function removeDuplicates(input: Array<{ id: string; name: string }>) {
-  return input.reduce((prev, current) => {
-    console.log(prev, current);
+  return input.reduce<typeof input>((prev, current) => {
     if (prev.find((x) => x.id === current.id) === undefined) {
       prev.push(current);
     }
     return prev;
-  }, [] as Array<{ id: string; name: string }>);
+  }, []);
 }
 
 function generateDropdownOptions(
