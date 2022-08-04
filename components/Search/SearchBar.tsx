@@ -18,15 +18,6 @@ interface FilterValues {
 }
 type SelectedFilters = Record<keyof typeof AvailableFilters, string | null>;
 
-function removeDuplicates(input: Array<FilterValues>) {
-  return input.reduce<typeof input>((prev, current) => {
-    if (prev.find((x) => x.id === current.id) === undefined) {
-      prev.push(current);
-    }
-    return prev;
-  }, []);
-}
-
 function generateDropdownOptions(
   data: RegionData[],
   filters: SelectedFilters
@@ -40,12 +31,17 @@ function generateDropdownOptions(
   });
 
   filterList.forEach((name) => {
-    dropdownOptions[name] = removeDuplicates(
-      data.map((row) => ({
+    dropdownOptions[name] = data
+      .map((row) => ({
         name: row[`${name}name`],
         id: row[`${name}id`],
       }))
-    );
+      .reduce<FilterValues[]>((prev, curr) => {
+        if (prev.find((x) => x.id === curr.id) === undefined) {
+          prev.push(curr);
+        }
+        return prev;
+      }, []);
   });
 
   return dropdownOptions;
@@ -150,20 +146,20 @@ export default function SearchBar({
       {filtersShown && (
         <div className="mb-10">
           <div className="flex h-10 items-center justify-between">
-            {filterList.map((option) => (
+            {filterList.map((name) => (
               <OptionDropdown
-                key={option}
-                label={option}
-                choice={selectedFilters[option]}
-                options={availableFilters[option]}
+                key={name}
+                label={name}
+                choice={selectedFilters[name]}
+                options={availableFilters[name]}
                 setChoice={(choice: string) =>
                   setSelectedFilters((prev) => ({
                     ...prev,
-                    [option]: choice,
+                    [name]: choice,
                   }))
                 }
                 clearChoice={() =>
-                  setSelectedFilters((prev) => ({ ...prev, [option]: null }))
+                  setSelectedFilters((prev) => ({ ...prev, [name]: null }))
                 }
               />
             ))}
