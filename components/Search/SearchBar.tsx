@@ -3,8 +3,17 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { NextRouter } from "next/router";
 import { RegionData } from "../../types";
 import { Spinner, Magnifier, AdjustmentsIcon } from "../Icons";
-import uniqBy from "lodash.uniqby";
 import OptionDropdown from "../OptionsDropdown";
+
+function removeDuplicates(input: Array<{ id: string; name: string }>) {
+  return input.reduce((prev, current) => {
+    console.log(prev, current);
+    if (prev.find((x) => x.id === current.id) === undefined) {
+      prev.push(current);
+    }
+    return prev;
+  }, [] as Array<{ id: string; name: string }>);
+}
 
 function generateDropdownOptions(
   data: RegionData[],
@@ -21,27 +30,25 @@ function generateDropdownOptions(
   if (selectedGroblje && selectedGroblje !== "0") {
     data = data.filter((row) => row.grobljeid === selectedGroblje);
   }
+
   return {
-    okrug: uniqBy(
+    okrug: removeDuplicates(
       data.map((row) => ({
         name: row.okrugname,
         id: row.okrugid,
-      })),
-      "id"
+      }))
     ),
-    opstina: uniqBy(
+    opstina: removeDuplicates(
       data.map((row) => ({
         name: row.opstinaname,
         id: row.opstinaid,
-      })),
-      "id"
+      }))
     ),
-    groblje: uniqBy(
+    groblje: removeDuplicates(
       data.map((row) => ({
         name: row.grobljename,
         id: row.grobljeid,
-      })),
-      "id"
+      }))
     ),
   };
 }
