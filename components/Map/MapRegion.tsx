@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const MapRegion = ({
+export default function MapRegion({
   svgPath,
   fillColor,
   strokeColor,
@@ -18,7 +18,7 @@ export const MapRegion = ({
   handleClick: () => void;
   selected: boolean;
   className: string;
-}) => {
+}) {
   const style = { strokeWidth };
   const [hovered, setHovered] = useState(false);
   const fill = selected ? "#F79489" : hovered ? hoverColor : fillColor;
@@ -35,4 +35,4 @@ export const MapRegion = ({
       className={className}
     />
   );
-};
+}

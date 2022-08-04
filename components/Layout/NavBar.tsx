@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Transition } from "@headlessui/react";
 import { Menu } from "../Icons";
 
-const NavBar = () => {
+export default function NavBar() {
   const [showNav, setShowNav] = useState(false);
 
   return (
@@ -60,6 +60,4 @@ const NavBar = () => {
       </div>
     </nav>
   );
-};
-
-export default NavBar;
+}

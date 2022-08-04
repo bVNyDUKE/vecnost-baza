@@ -17,7 +17,7 @@ import {
   GenGraph,
 } from "../components/Graphs";
 import Icons from "../components/Icons";
-import { MapContainer } from "../components/Map/MapContainer";
+import MapContainer from "../components/Map/MapContainer";
 import SideDrawer from "../components/SideDrawer";
 
 export async function getStaticProps() {

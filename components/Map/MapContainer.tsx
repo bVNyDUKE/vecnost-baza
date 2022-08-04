@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { IOkrug, PersonsPerOkrugStat } from "../../types";
-import { MapRegion } from "./MapRegion";
+import MapRegion from "./MapRegion";
 import { Okruzi } from "./MapData";
 
 const getFillColor = (count: number): string => {
@@ -26,7 +26,7 @@ const getFillColor = (count: number): string => {
   }
 };
 
-export const MapContainer = ({
+export default function MapContainer({
   selectedOkrugId,
   setSelectedOkrug,
   setShowModal,
@@ -36,7 +36,7 @@ export const MapContainer = ({
   setSelectedOkrug: Dispatch<SetStateAction<IOkrug | null>>;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   personsPerOkrug: PersonsPerOkrugStat[] | null;
-}) => {
+}) {
   const ref = useRef<SVGSVGElement | null>(null);
   const [width, setWidth] = useState(544);
   const [height, setHeight] = useState(792);
@@ -103,4 +103,4 @@ export const MapContainer = ({
       </g>
     </svg>
   );
-};
+}

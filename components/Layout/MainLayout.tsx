@@ -3,7 +3,11 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import React from "react";
 
-export const MainLayout = ({ children }: { children: React.ReactNode }) => {
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Head>
@@ -14,4 +18,4 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <Footer />
     </>
   );
-};
+}
