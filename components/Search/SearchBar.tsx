@@ -5,7 +5,20 @@ import { RegionData } from "../../types";
 import { Spinner, Magnifier, AdjustmentsIcon } from "../Icons";
 import OptionDropdown from "../OptionsDropdown";
 
-function removeDuplicates(input: Array<{ id: string; name: string }>) {
+const AvailableFilters = {
+  opstina: "opstina",
+  groblje: "groblje",
+  okrug: "okrug",
+} as const;
+const filterList = Object.values(AvailableFilters);
+
+interface FilterValues {
+  id: string;
+  name: string;
+}
+type SelectedFilters = Record<keyof typeof AvailableFilters, string | null>;
+
+function removeDuplicates(input: Array<FilterValues>) {
   return input.reduce<typeof input>((prev, current) => {
     if (prev.find((x) => x.id === current.id) === undefined) {
       prev.push(current);
@@ -16,40 +29,26 @@ function removeDuplicates(input: Array<{ id: string; name: string }>) {
 
 function generateDropdownOptions(
   data: RegionData[],
-  selectedOpstina: null | string,
-  selectedGroblje: null | string,
-  selectedOkrug: null | string
-) {
-  if (selectedOkrug && selectedOkrug !== "0") {
-    data = data.filter((row) => row.okrugid === selectedOkrug);
-  }
-  if (selectedOpstina && selectedOpstina !== "0") {
-    data = data.filter((row) => row.opstinaid === selectedOpstina);
-  }
-  if (selectedGroblje && selectedGroblje !== "0") {
-    data = data.filter((row) => row.grobljeid === selectedGroblje);
-  }
+  filters: SelectedFilters
+): Record<keyof SelectedFilters, FilterValues[]> {
+  const dropdownOptions = Object.create(AvailableFilters);
 
-  return {
-    okrug: removeDuplicates(
+  filterList.forEach((name) => {
+    if (filters[name] && filters[name] !== "0") {
+      data = data.filter((row) => row[`${name}id`] === filters[name]);
+    }
+  });
+
+  filterList.forEach((name) => {
+    dropdownOptions[name] = removeDuplicates(
       data.map((row) => ({
-        name: row.okrugname,
-        id: row.okrugid,
+        name: row[`${name}name`],
+        id: row[`${name}id`],
       }))
-    ),
-    opstina: removeDuplicates(
-      data.map((row) => ({
-        name: row.opstinaname,
-        id: row.opstinaid,
-      }))
-    ),
-    groblje: removeDuplicates(
-      data.map((row) => ({
-        name: row.grobljename,
-        id: row.grobljeid,
-      }))
-    ),
-  };
+    );
+  });
+
+  return dropdownOptions;
 }
 
 interface SearchBarProps {
@@ -64,36 +63,26 @@ export default function SearchBar({
   router,
 }: SearchBarProps) {
   const [parent] = useAutoAnimate<HTMLDivElement>();
-  const { ime, okrug, opstina, groblje } = router.query;
-  const [filtersShown, setFiltersShown] = useState(() =>
-    opstina || groblje || okrug ? true : false
-  );
-  const [selectedFilters, setSelectedFilters] = useState<{
-    opstina: string | null;
-    groblje: string | null;
-    okrug: string | null;
-  }>({
+  const [filtersShown, setFiltersShown] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
     opstina: null,
     groblje: null,
     okrug: null,
   });
-  const availableFilters = generateDropdownOptions(
-    options,
-    selectedFilters.opstina,
-    selectedFilters.groblje,
-    selectedFilters.okrug
-  );
+  const availableFilters = generateDropdownOptions(options, selectedFilters);
 
   useEffect(() => {
-    if (opstina && typeof opstina === "string") {
-      setSelectedFilters((prev) => ({ ...prev, opstina }));
-    }
-    if (groblje && typeof groblje === "string") {
-      setSelectedFilters((prev) => ({ ...prev, groblje }));
-    }
-    if (okrug && typeof okrug === "string") {
-      setSelectedFilters((prev) => ({ ...prev, okrug }));
-    }
+    filterList.forEach((filter) => {
+      if (router.query[filter] && typeof router.query[filter] === "string") {
+        setSelectedFilters((prev) => ({
+          ...prev,
+          [filter]: router.query[filter],
+        }));
+        setFiltersShown(true);
+      }
+    });
+
+    const { ime } = router.query;
     if (
       ime !== undefined &&
       typeof ime === "string" &&
@@ -102,19 +91,18 @@ export default function SearchBar({
     ) {
       setSearchInput(ime);
     }
-    (opstina || groblje || okrug) && setFiltersShown(true);
-  }, [opstina, groblje, okrug, ime]);
+  }, [router.query]);
 
   //handle search input
   const [searchInput, setSearchInput] = useState("");
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const cleanedInput = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
+    const ime = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
     router.push(
       {
         pathname: "/pretraga",
         query: {
-          ime: cleanedInput,
+          ime,
           ...(selectedFilters.groblje && { groblje: selectedFilters.groblje }),
           ...(selectedFilters.opstina && { opstina: selectedFilters.opstina }),
           ...(selectedFilters.okrug && { okrug: selectedFilters.okrug }),
@@ -162,16 +150,12 @@ export default function SearchBar({
       {filtersShown && (
         <div className="mb-10">
           <div className="flex h-10 items-center justify-between">
-            {["okrug", "opstina", "groblje"].map((option) => (
+            {filterList.map((option) => (
               <OptionDropdown
                 key={option}
                 label={option}
-                choice={
-                  selectedFilters[option as "okrug" | "opstina" | "groblje"]
-                }
-                options={
-                  availableFilters[option as "okrug" | "opstina" | "groblje"]
-                }
+                choice={selectedFilters[option]}
+                options={availableFilters[option]}
                 setChoice={(choice: string) =>
                   setSelectedFilters((prev) => ({
                     ...prev,
