@@ -1,4 +1,4 @@
-export const Paginator = ({
+export default function Paginator({
   count,
   page,
   perPage,
@@ -8,7 +8,7 @@ export const Paginator = ({
   page: number;
   perPage: number;
   handlePageChange: (page: number) => void;
-}) => {
+}) {
   const pages = Math.ceil(count / perPage);
 
   return (
@@ -50,4 +50,4 @@ export const Paginator = ({
       </div>
     </div>
   );
-};
+}

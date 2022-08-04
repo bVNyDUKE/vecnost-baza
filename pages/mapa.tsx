@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  Children,
+  isValidElement,
+  cloneElement,
+} from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { supabase } from "../lib/supabaseClient";
@@ -55,10 +62,10 @@ const Map = ({ children, ...props }: IMapProps) => {
   return (
     <>
       <div ref={ref} style={{ flexGrow: "1", height: "100%" }} />
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
+      {Children.map(children, (child) => {
+        if (isValidElement(child)) {
           // set the map prop on the child component
-          return React.cloneElement(child, { map });
+          return cloneElement(child, { map });
         }
       })}
     </>

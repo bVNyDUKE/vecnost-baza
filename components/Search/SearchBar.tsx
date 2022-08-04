@@ -1,10 +1,10 @@
-import { useEffect, useState, FormEvent, useMemo } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { RegionData } from "../../types";
-import uniqBy from "lodash.uniqby";
 import { NextRouter } from "next/router";
-import { OptionDropdown } from "../OptionsDropdown";
+import { RegionData } from "../../types";
 import { Spinner, Magnifier, AdjustmentsIcon } from "../Icons";
+import uniqBy from "lodash.uniqby";
+import OptionDropdown from "../OptionsDropdown";
 
 function generateDropdownOptions(
   data: RegionData[],
@@ -12,11 +12,11 @@ function generateDropdownOptions(
   selectedGroblje: null | string,
   selectedOkrug: null | string
 ) {
-  if (selectedOpstina && selectedOpstina !== "0") {
-    data = data.filter((row) => row.opstinaid === selectedOpstina);
-  }
   if (selectedOkrug && selectedOkrug !== "0") {
     data = data.filter((row) => row.okrugid === selectedOkrug);
+  }
+  if (selectedOpstina && selectedOpstina !== "0") {
+    data = data.filter((row) => row.opstinaid === selectedOpstina);
   }
   if (selectedGroblje && selectedGroblje !== "0") {
     data = data.filter((row) => row.grobljeid === selectedGroblje);
@@ -71,20 +71,11 @@ export default function SearchBar({
     groblje: null,
     okrug: null,
   });
-  const availableFilters = useMemo(
-    () =>
-      generateDropdownOptions(
-        options,
-        selectedFilters.opstina,
-        selectedFilters.groblje,
-        selectedFilters.okrug
-      ),
-    [
-      options,
-      selectedFilters.opstina,
-      selectedFilters.groblje,
-      selectedFilters.okrug,
-    ]
+  const availableFilters = generateDropdownOptions(
+    options,
+    selectedFilters.opstina,
+    selectedFilters.groblje,
+    selectedFilters.okrug
   );
 
   useEffect(() => {

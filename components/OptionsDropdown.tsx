@@ -8,13 +8,13 @@ interface OptionDropdownProps {
   clearChoice: () => void;
 }
 
-export const OptionDropdown = ({
+export default function OptionDropdown({
   label,
   options,
   choice,
   setChoice,
   clearChoice,
-}: OptionDropdownProps) => {
+}: OptionDropdownProps) {
   if (choice !== null) {
     return (
       <div
@@ -53,4 +53,4 @@ export const OptionDropdown = ({
       ))}
     </select>
   );
-};
+}

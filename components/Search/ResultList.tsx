@@ -19,7 +19,11 @@ const Entry = ({ result }: { result: SearchResult }) => {
   );
 };
 
-export const ResultList = ({ results }: { results: SearchResult[] | null }) => {
+export default function ResultList({
+  results,
+}: {
+  results: SearchResult[] | null;
+}) {
   if (results === null || results.length === 0) {
     return <div className="m-auto">Nema rezultata za ovu pretragu</div>;
   }
@@ -39,4 +43,4 @@ export const ResultList = ({ results }: { results: SearchResult[] | null }) => {
         ))}
     </div>
   );
-};
+}

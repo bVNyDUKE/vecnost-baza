@@ -1,6 +1,6 @@
 import Button from "./Button";
 
-const Section = ({
+export default function Section({
   title,
   content,
   href,
@@ -10,7 +10,7 @@ const Section = ({
   content: React.ReactNode;
   href: string;
   linkLabel: string;
-}) => {
+}) {
   return (
     <div className="group">
       <section className="group-even:text-white md:flex md:h-96">
@@ -38,6 +38,4 @@ const Section = ({
       </section>
     </div>
   );
-};
-
-export default Section;
+}

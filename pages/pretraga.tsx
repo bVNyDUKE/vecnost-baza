@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ResultList } from "../components/Search/ResultList";
-import { Paginator } from "../components/Search/Paginator";
-import { useRouter } from "next/router";
 import { supabase } from "../lib/supabaseClient";
+import { useRouter } from "next/router";
 import { RegionData, SearchResult } from "../types";
+import Paginator from "../components/Search/Paginator";
+import ResultList from "../components/Search/ResultList";
 import SearchBar from "../components/Search/SearchBar";
 
 export async function getStaticProps() {
