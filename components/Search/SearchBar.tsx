@@ -5,48 +5,19 @@ import { RegionData } from "../../types";
 import { Spinner, Magnifier, AdjustmentsIcon } from "../Icons";
 import OptionDropdown from "../OptionsDropdown";
 
-const AvailableFilters = {
+const AcceptedFilters = {
   opstina: "opstina",
   groblje: "groblje",
   okrug: "okrug",
 } as const;
-const filterList = Object.values(AvailableFilters);
+const filterList = Object.values(AcceptedFilters);
 
 interface FilterValues {
   id: string;
   name: string;
 }
-type SelectedFilters = Record<keyof typeof AvailableFilters, string | null>;
-
-function generateDropdownOptions(
-  data: RegionData[],
-  filters: SelectedFilters
-): Record<keyof SelectedFilters, FilterValues[]> {
-  const dropdownOptions = Object.create(AvailableFilters);
-
-  filterList.forEach((name) => {
-    if (filters[name] && filters[name] !== "0") {
-      data = data.filter((row) => row[`${name}id`] === filters[name]);
-    }
-  });
-
-  filterList.forEach((name) => {
-    dropdownOptions[name] = data
-      .map((row) => ({
-        name: row[`${name}name`],
-        id: row[`${name}id`],
-      }))
-      .reduce<FilterValues[]>((prev, curr) => {
-        if (prev.find((x) => x.id === curr.id) === undefined) {
-          prev.push(curr);
-        }
-        return prev;
-      }, []);
-  });
-
-  return dropdownOptions;
-}
-
+type SelectedFilters = Record<keyof typeof AcceptedFilters, string | null>;
+type AvailableFilters = Record<keyof SelectedFilters, FilterValues[]>;
 interface SearchBarProps {
   options: RegionData[];
   searching: boolean;
@@ -65,7 +36,33 @@ export default function SearchBar({
     groblje: null,
     okrug: null,
   });
-  const availableFilters = generateDropdownOptions(options, selectedFilters);
+  const availableFilters = ((): AvailableFilters => {
+    const dropdownOptions = Object.create(AcceptedFilters);
+
+    filterList.forEach((name) => {
+      if (selectedFilters[name] && selectedFilters[name] !== "0") {
+        options = options.filter(
+          (row) => row[`${name}id`] === selectedFilters[name]
+        );
+      }
+    });
+
+    filterList.forEach((name) => {
+      dropdownOptions[name] = options
+        .map((row) => ({
+          name: row[`${name}name`],
+          id: row[`${name}id`],
+        }))
+        .reduce<FilterValues[]>((prev, curr) => {
+          if (prev.find((x) => x.id === curr.id) === undefined) {
+            prev.push(curr);
+          }
+          return prev;
+        }, []);
+    });
+
+    return dropdownOptions;
+  })();
 
   useEffect(() => {
     filterList.forEach((filter) => {
