@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Transition } from "@headlessui/react";
 import { supabase } from "../lib/supabaseClient";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export async function getStaticProps() {
   return { props: { personsPerOkrug, genData }, revalidate: 60 * 60 * 24 };
 }
 
-export default function Viz({
+export default function Statistika({
   personsPerOkrug,
   genData,
 }: {
@@ -43,32 +43,38 @@ export default function Viz({
   const [showModal, setShowModal] = useState(false);
   const [startTransition, setStartTransition] = useState(false);
 
+  const getOkrugData = useCallback(async (okrugid: number) => {
+    const apiResults = await Promise.all([
+      await supabase.rpc<Graveyards>("graveyards_per_okrug", { okrugid }),
+      await supabase.rpc<NameStat>("top_names", {
+        okrugid,
+      }),
+      await supabase.rpc<LastnameStat>("top_lastnames", {
+        okrugid,
+      }),
+    ]);
+
+    const [
+      { data: graveyardData },
+      { data: nameData },
+      { data: lastnameData }
+    ] = apiResults;
+
+    graveyardData && setGrobljStats(graveyardData);
+    nameData && setNameStats(nameData);
+    lastnameData && setLastnameStats(lastnameData);
+  }, [])
+
   useEffect(() => setStartTransition(true), []);
 
   useEffect(() => {
-    async function getOkrugData(okrugid: number) {
-      const [
-        { data: graveyardData },
-        { data: nameData },
-        { data: lastnameData },
-      ] = await Promise.all([
-        await supabase.rpc<Graveyards>("graveyards_per_okrug", { okrugid }),
-        await supabase.rpc<NameStat>("top_names", {
-          okrugid,
-        }),
-        await supabase.rpc<LastnameStat>("top_lastnames", {
-          okrugid,
-        }),
-      ]);
-
-      graveyardData && setGrobljStats(graveyardData);
-      nameData && setNameStats(nameData);
-      lastnameData && setLastnameStats(lastnameData);
+    console.log('okrug data', getOkrugData)
+    console.log('selected okrug', selectedOkrug?.id)
+    if (selectedOkrug?.id) {
+      getOkrugData(selectedOkrug.id)
+      setShowModal(true);
     }
-
-    selectedOkrug?.id && getOkrugData(selectedOkrug.id);
-    selectedOkrug?.id && setShowModal(true);
-  }, [selectedOkrug?.id]);
+  }, [selectedOkrug?.id, getOkrugData]);
 
   const statsAvailable =
     grobljeStats &&
