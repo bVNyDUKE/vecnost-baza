@@ -1,8 +1,9 @@
 import { useState } from "react";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import { Transition } from "@headlessui/react";
 import { Menu } from "../Icons";
+import img from "../../public/vecna-logo-solo-100.png";
 
 export default function NavBar() {
   const [showNav, setShowNav] = useState(false);
@@ -14,13 +15,12 @@ export default function NavBar() {
           <a>
             <div className="flex items-center justify-center ">
               <Image
-                src="/vecna-logo-solo-100.png"
+                src={img}
                 alt="Vecnost logo"
-                className="hover:pointer"
+                className="hover:pointer object-contain"
                 width={"60px"}
                 height={"70px"}
-                objectFit={"contain"}
-                priority
+                placeholder="blur"
               />
               <div className="font-serif text-2xl sm:text-3xl">
                 Baza Podataka

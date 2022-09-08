@@ -1,7 +1,8 @@
 import Section from "../components/Section";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/future/image";
 import Footer from "../components/Layout/Footer";
+import img from "../public/vecna-logo-solo-100.png";
 
 function Home() {
   const data = [
@@ -42,13 +43,13 @@ function Home() {
           <a>
             <div className="flex h-28 items-center justify-center border-b border-[#c9c9c9]">
               <Image
-                src="/vecna-logo-solo-100.png"
+                src={img}
                 alt="Vecnost logo"
-                className="hover:pointer"
-                width={"90px"}
-                height={"100px"}
-                objectFit={"contain"}
+                className="hover:pointer object-contain"
+                width={90}
+                height={100}
                 priority
+                placeholder="blur"
               />
               <div className="font-serif text-2xl sm:text-5xl">
                 Baza Podataka
