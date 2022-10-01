@@ -12,8 +12,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .eq("id", id);
 
   if (!data) {
-    ctx.res.statusCode = 404;
-    return { props: { data: null } };
+    return {
+      notFound: true,
+    };
   }
 
   return { props: { result: data[0] } };
