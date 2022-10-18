@@ -4,8 +4,8 @@
 
 Prerequisites:
 
- - Docker
- - Git
+- Docker
+- Git
 
 ### WSL2 Guide
 
@@ -23,6 +23,12 @@ Prerequisites:
   ```
   cd vecnost-baza
   supabase start
+  ```
+
+- Obtain project ID and link the local instance to remote
+
+  ```
+  supabase link --project-ref $PROJECT_ID
   ```
 
 - Obtain the local supabase keys
