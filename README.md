@@ -1,6 +1,6 @@
 # Vecnost Baza
 
-## Local development setup
+### Local development setup
 
 Prerequisites:
 
