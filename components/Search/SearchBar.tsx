@@ -109,7 +109,7 @@ export default function SearchBar({
   return (
     <div ref={parent} className="m-auto max-w-3xl px-5">
       <form onSubmit={(e) => handleSearch(e)}>
-        <div className="flex items-center justify-center rounded-md border border-gray-300">
+        <div className="flex items-center justify-center border border-gray-300">
           <div className="flex h-16 w-full flex-shrink items-center space-x-8 hover:shadow-md">
             <input
               type="text"

@@ -1,40 +1,62 @@
+import React, { useState } from "react";
 import Button from "./Button";
+import Image from "next/future/image";
 
 export default function Section({
+  imgSrc,
   title,
   content,
   href,
   linkLabel,
 }: {
+  imgSrc: string;
   title: string;
   content: React.ReactNode;
   href: string;
   linkLabel: string;
 }) {
+  const [isShown, setIsShown] = useState(false);
   return (
-    <div className="group">
-      <section className="group-even:text-white md:flex md:h-96">
+    <div
+      className="group mx-auto mb-10 max-w-sm md:w-3/6 lg:mb-0 lg:w-3/12"
+      /*style={{ backgroundImage: `url(${imgSrc})` }}*/
+      onMouseEnter={() => setIsShown(true)}
+      onMouseLeave={() => setIsShown(false)}
+    >
+      <section className="relative flex h-64 flex-col overflow-hidden md:h-[240px] xl:h-[350px]">
+        <Image
+          src={imgSrc}
+          alt="image"
+          className="t-0 l-0 z-05 absolute w-full object-cover"
+          width={"305"}
+          height={"384"}
+        />
         <div
-          className="py-5 group-odd:bg-primary-light 
-        group-even:bg-primary-dark md:flex md:w-1/5 md:items-center md:justify-center"
+          className={`align-center visible z-10 flex grow flex-col justify-center p-5 transition delay-150 ease-in-out ${
+            isShown == true ? "md:visible" : "md:invisible"
+          }`}
         >
-          <div className="text-center md:origin-center md:-rotate-90 md:transform md:font-bold">
-            <h2 className="font-serif text-3xl font-[400] md:text-5xl">
+          <div className="text-center text-white">
+            <div className="mx-auto w-48 text-center text-lg font-semibold md:text-xl">
+              {content}
+            </div>
+            <div className="mt-5 text-sm">
+              <Button label={linkLabel} href={href} />
+            </div>
+          </div>
+        </div>
+        <div className="z-10 hidden py-5 md:block">
+          <div className="font-bold">
+            <h2 className="text-center font-serif font-semibold uppercase text-white md:text-2xl">
               {title}
             </h2>
           </div>
         </div>
         <div
-          className="md:a flex min-h-[175px] flex-col items-center space-y-10 p-5
-         group-odd:bg-secondary-light group-even:bg-secondary-dark md:grow md:flex-row md:justify-center md:space-y-0"
-        >
-          <div className="w-1/2 max-w-md text-center text-lg md:text-2xl">
-            {content}
-          </div>
-          <div className="flex w-1/2 max-w-md justify-center text-sm">
-            <Button label={linkLabel} href={href} />
-          </div>
-        </div>
+          className={`absolute bottom-0 w-full bg-gradient-to-t from-[#000] ${
+            isShown == true ? "h-full" : "h-36"
+          }`}
+        />
       </section>
     </div>
   );
