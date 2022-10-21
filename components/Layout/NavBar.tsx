@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Image from "next/future/image";
+//import Image from "next/future/image";
 import Link from "next/link";
 import { Transition } from "@headlessui/react";
 import { Menu } from "../Icons";
@@ -10,30 +10,24 @@ export default function NavBar() {
 
   return (
     <nav>
-      <div className="relative mx-auto mb-10 hidden w-[90%] items-center justify-between border-b border-[#c9c9c9] bg-white after:absolute after:-bottom-[2px] after:left-[45%] after:h-[5px] after:w-[200px] after:bg-[#c9c9c9] after:text-center sm:flex">
-        <Link passHref href="/">
-          <a>
-            <div className="flex items-center justify-center ">
-              <Image
-                src={img}
-                alt="Vecnost logo"
-                className="hover:pointer object-contain"
-                width={"60px"}
-                height={"70px"}
-                placeholder="blur"
-              />
-              <div className="font-serif text-2xl sm:text-3xl">
-                Baza Podataka
+      <div className="mb-10 hidden bg-white sm:block drop-shadow-md">
+        <div className="container sm:flex items-center justify-between mx-auto py-1.5">
+          <Link passHref href="/">
+            <a>
+              <div className="flex items-center justify-center ">
+                <img src={img.src} width="60px" alt="" />
+                <div className="text-2xl sm:text-2xl font-semibold " style={{lineHeight: "0.85"}}>
+                  Baza <br/> Podataka
+                </div>
               </div>
-            </div>
-          </a>
-        </Link>
-        <div className="flex items-center justify-between space-x-2">
-          <Link href="/">Početna</Link>
-          <Link href="/pretraga">Pretraga</Link>
-          <Link href="/statistika">Statistika</Link>
-          <Link href="/indeks">Indeks</Link>
-          <Link href="/mapa">Mapa</Link>
+            </a>
+          </Link>
+          <div className="flex items-center justify-between space-x-2 basis-96 text-xl font-semibold">
+            <Link href="/pretraga">Pretraga</Link>
+            <Link href="/statistika">Statistika</Link>
+            <Link href="/indeks">Indeks</Link>
+            <Link href="/mapa">Mapa</Link>
+          </div>
         </div>
       </div>
 
