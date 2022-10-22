@@ -65,10 +65,8 @@ function Home() {
         <div className="mx-auto my-7 h-1.5 w-32 bg-secondary-dark"></div>
         <div className="mx-auto mb-[3.125rem] w-4/6 text-center text-lg text-[#8A8A8A]">
           Pred vama je baza podataka sahranjenih lica na teritoriji Republike
-          Srbije. Svi podaci su prikupljeni i obrađeni ručno od strane Večnosti.
-          Ukoliko su vam neophodni detaljniji podaci ili imate zahtev za izmenu
-          podataka o određenom groblju ili pojedinačnom grobu pišite nam na:
-          <a href="mailto:office@vecnost.com"> office@vecnost.com</a>
+          Srbije. <span className="hidden lg:block"></span> Svi podaci su
+          prikupljeni i obrađeni ručno od strane Večnosti.
         </div>
       </div>
       <div className="container mx-auto">
