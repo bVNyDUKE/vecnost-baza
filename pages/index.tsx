@@ -48,9 +48,6 @@ function Home() {
     },
   ];
 
-  const welcomeText =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget nunc at magna rutrum malesuada. Proin mattis consectetur est, non laoreet magna semper vitae. Sed convallis at lectus in facilisis.";
-
   return (
     <>
       <div className="container mx-auto text-center">
@@ -67,7 +64,11 @@ function Home() {
         </h1>
         <div className="mx-auto my-7 h-1.5 w-32 bg-secondary-dark"></div>
         <div className="mx-auto mb-[3.125rem] w-4/6 text-center text-lg text-[#8A8A8A]">
-          {welcomeText}
+          Pred vama je baza podataka sahranjenih lica na teritoriji Republike
+          Srbije. Svi podaci su prikupljeni i obrađeni ručno od strane Večnosti.
+          Ukoliko su vam neophodni detaljniji podaci ili imate zahtev za izmenu
+          podataka o određenom groblju ili pojedinačnom grobu pišite nam na:
+          <a href="mailto:office@vecnost.com"> office@vecnost.com</a>
         </div>
       </div>
       <div className="container mx-auto">
