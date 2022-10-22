@@ -3,18 +3,20 @@ import Link from "next/link";
 import Image from "next/future/image";
 import img from "../public/vecna-logo-solo-100.png";
 
-import img1 from "../public/index_1.svg";
-import img2 from "../public/index_2.svg";
-import img3 from "../public/index_3.svg";
-import img4 from "../public/index_4.svg";
+import img1 from "../public/index_1.webp";
+import img2 from "../public/index_2.webp";
+import img3 from "../public/index_3.webp";
+import img4 from "../public/index_4.webp";
 
 import { log } from "console";
+
+console.log(typeof img1);
 
 function Home() {
   const data = [
     {
       id: 1,
-      imgSrc: img1.src,
+      imgSrc: img1,
       title: "Pretraga",
       content: "Pretražite sahranjena lica po imenu",
       href: "/pretraga",
@@ -22,7 +24,7 @@ function Home() {
     },
     {
       id: 2,
-      imgSrc: img2.src,
+      imgSrc: img2,
       title: "Statistika",
       content: "Interkativna statistika",
       href: "/statistika",
@@ -30,7 +32,7 @@ function Home() {
     },
     {
       id: 3,
-      imgSrc: img3.src,
+      imgSrc: img3,
       title: "Mapa",
       content: "Pronađite arhivirane lokacija na mapi",
       href: "/mapa",
@@ -38,7 +40,7 @@ function Home() {
     },
     {
       id: 4,
-      imgSrc: img4.src,
+      imgSrc: img4,
       title: "Indeks",
       content: "Indeks svih arhiviranih lokacija",
       href: "/indeks",
