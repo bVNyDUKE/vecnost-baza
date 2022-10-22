@@ -65,6 +65,7 @@ const Map = ({ children, ...props }: IMapProps) => {
       {Children.map(children, (child) => {
         if (isValidElement(child)) {
           // set the map prop on the child component
+          // @ts-ignore
           return cloneElement(child, { map });
         }
       })}
