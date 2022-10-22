@@ -1,6 +1,5 @@
-import React, { useState } from "react";
 import Button from "./Button";
-import Image from "next/future/image";
+import Image, { StaticImageData } from "next/future/image";
 
 export default function Section({
   imgSrc,
@@ -9,33 +8,22 @@ export default function Section({
   href,
   linkLabel,
 }: {
-  imgSrc: string;
+  imgSrc: StaticImageData;
   title: string;
   content: React.ReactNode;
   href: string;
   linkLabel: string;
 }) {
-  const [isShown, setIsShown] = useState(false);
   return (
-    <div
-      className="group mx-auto mb-10 max-w-sm md:w-3/6 lg:mb-0 lg:w-3/12"
-      /*style={{ backgroundImage: `url(${imgSrc})` }}*/
-      onMouseEnter={() => setIsShown(true)}
-      onMouseLeave={() => setIsShown(false)}
-    >
+    <div className="group mx-auto mb-10 max-w-sm md:w-3/6 lg:mb-0 lg:w-3/12">
       <section className="relative flex h-64 flex-col overflow-hidden md:h-[240px] xl:h-[350px]">
         <Image
           src={imgSrc}
           alt="image"
           className="t-0 l-0 z-05 absolute w-full object-cover"
-          width={"305"}
-          height={"384"}
+          priority
         />
-        <div
-          className={`align-center visible z-10 flex grow flex-col justify-center p-5 transition delay-150 ease-in-out ${
-            isShown == true ? "md:visible" : "md:invisible"
-          }`}
-        >
+        <div className="align-center visible z-10 flex grow flex-col justify-center p-5 transition delay-150 ease-in-out md:invisible md:group-hover:visible">
           <div className="text-center text-white">
             <div className="mx-auto w-48 text-center text-lg font-semibold md:text-xl">
               {content}
@@ -52,11 +40,7 @@ export default function Section({
             </h2>
           </div>
         </div>
-        <div
-          className={`absolute bottom-0 w-full bg-gradient-to-t from-[#000] ${
-            isShown == true ? "h-full" : "h-36"
-          }`}
-        />
+        <div className="absolute bottom-0 h-36 w-full bg-gradient-to-t from-[#000] group-hover:h-full" />
       </section>
     </div>
   );

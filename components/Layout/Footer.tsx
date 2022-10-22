@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="absolute top-[-3rem] left-1/2 flex -translate-x-1/2 transform gap-4">
         {/* Facebook */}
         <Link href="https://www.facebook.com/vecnostcom">
-          <a target="_blank">
+          <a target="_blank" aria-label="Facebook">
             <div>
               <Facebook />
             </div>
@@ -16,7 +16,7 @@ export default function Footer() {
 
         {/* Linkedin */}
         <Link href="https://www.linkedin.com/company/vecnostcom/">
-          <a target="_blank">
+          <a target="_blank" aria-label="LinkedIn">
             <div>
               <Linkedin />
             </div>
@@ -25,7 +25,7 @@ export default function Footer() {
 
         {/* Instagram */}
         <Link href="https://www.instagram.com/vecnostcom/">
-          <a target="_blank">
+          <a target="_blank" aria-label="Instagram">
             <div>
               <Instagram />
             </div>
