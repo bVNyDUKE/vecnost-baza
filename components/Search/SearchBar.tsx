@@ -1,8 +1,8 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { NextRouter } from "next/router";
+import { useRouter } from "next/router";
 import { RegionData } from "../../types";
-import { Spinner, Magnifier, AdjustmentsIcon } from "../Icons";
+import { Magnifier, AdjustmentsIcon } from "../Icons";
 import OptionDropdown from "../OptionsDropdown";
 
 const AcceptedFilters = {
@@ -18,16 +18,15 @@ interface FilterValues {
 }
 type SelectedFilters = Record<keyof typeof AcceptedFilters, string | null>;
 type AvailableFilters = Record<keyof SelectedFilters, FilterValues[]>;
+
 interface SearchBarProps {
   options: RegionData[];
-  searching: boolean;
-  router: NextRouter;
+  icon?: React.ReactNode;
 }
 
 export default function SearchBar({
-  searching,
   options,
-  router,
+  icon = <Magnifier />,
 }: SearchBarProps) {
   const [parent] = useAutoAnimate<HTMLDivElement>();
   const [filtersShown, setFiltersShown] = useState(false);
@@ -36,6 +35,8 @@ export default function SearchBar({
     groblje: null,
     okrug: null,
   });
+  const router = useRouter();
+
   const availableFilters = ((): AvailableFilters => {
     const dropdownOptions = Object.create(AcceptedFilters);
 
@@ -126,7 +127,7 @@ export default function SearchBar({
               className="flex h-full w-full flex-grow items-center justify-center border-r hover:shadow-md"
               type="submit"
             >
-              {searching ? <Spinner /> : <Magnifier />}
+              {icon}
             </button>
             <button
               className="flex h-full w-10 items-center justify-center hover:shadow-md"

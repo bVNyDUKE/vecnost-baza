@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { SearchResult } from "../../types";
-import ResultIcon from "../../public/resultG.svg";
 
 const Entry = ({ result }: { result: SearchResult }) => {
   return (

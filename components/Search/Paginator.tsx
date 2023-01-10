@@ -1,15 +1,18 @@
+import { useRouter } from "next/router";
+
 export default function Paginator({
   count,
-  page,
   perPage,
   handlePageChange,
 }: {
   count: number;
-  page: number;
   perPage: number;
   handlePageChange: (page: number) => void;
 }) {
   const pages = Math.ceil(count / perPage);
+
+  const router = useRouter();
+  const page = router.query.page ? +router.query.page : 1;
 
   return (
     <div className="mb-5 flex justify-center">
