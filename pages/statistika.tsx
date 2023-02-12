@@ -19,6 +19,7 @@ import {
 import Icons from "../components/Icons";
 import MapContainer from "../components/Map/MapContainer";
 import SideDrawer from "../components/SideDrawer";
+import { useHashModal } from "../hooks/useHashModal";
 
 export async function getStaticProps() {
   const [{ data: personsPerOkrug }, { data: genData }] = await Promise.all([
@@ -40,7 +41,7 @@ export default function Statistika({
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [lastnameStats, setLastnameStats] = useState<[] | LastnameStat[]>([]);
   const [grobljeStats, setGrobljStats] = useState<[] | Graveyards[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const { isOpen, openModal, closeModal, toggleModal } = useHashModal();
   const [startTransition, setStartTransition] = useState(false);
 
   const getOkrugData = useCallback(async (okrugid: number) => {
@@ -68,9 +69,17 @@ export default function Statistika({
   useEffect(() => {
     if (selectedOkrug?.id) {
       getOkrugData(selectedOkrug.id);
-      setShowModal(true);
+      openModal();
     }
-  }, [getOkrugData, selectedOkrug?.id]);
+  }, [openModal, getOkrugData, selectedOkrug?.id]);
+
+  const handleMapClick = (okrug: IOkrug) => {
+    if (selectedOkrug?.id === okrug.id) {
+      toggleModal();
+    } else {
+      setSelectedOkrug(okrug);
+    }
+  };
 
   const statsAvailable =
     grobljeStats &&
@@ -101,15 +110,14 @@ export default function Statistika({
         </div>
         <MapContainer
           selectedOkrugId={selectedOkrug?.id || null}
-          setSelectedOkrug={setSelectedOkrug}
-          setShowModal={setShowModal}
+          handleMapClick={handleMapClick}
           personsPerOkrug={personsPerOkrug}
         />
       </Transition>
-      <SideDrawer show={showModal}>
+      <SideDrawer show={isOpen}>
         <div className="absolute z-10 w-full border-y bg-white py-2">
           <Icons.Cross
-            onClick={() => setShowModal(false)}
+            onClick={closeModal}
             className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-sm"
           />
           <p className="text-center text-xl font-bold">Podaci okruga</p>

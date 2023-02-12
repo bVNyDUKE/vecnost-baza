@@ -28,13 +28,11 @@ const getFillColor = (count: number): string => {
 
 export default function MapContainer({
   selectedOkrugId,
-  setSelectedOkrug,
-  setShowModal,
+  handleMapClick,
   personsPerOkrug,
 }: {
   selectedOkrugId: number | null;
-  setSelectedOkrug: Dispatch<SetStateAction<IOkrug | null>>;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
+  handleMapClick: (okrug: IOkrug) => void;
   personsPerOkrug: PersonsPerOkrugStat[] | null;
 }) {
   const ref = useRef<SVGSVGElement | null>(null);
@@ -71,14 +69,6 @@ export default function MapContainer({
     });
   }, [personsPerOkrug]);
 
-  const handleClick = (okrug: IOkrug) => {
-    if (selectedOkrugId === okrug.id) {
-      setShowModal((prev) => !prev);
-    } else {
-      setSelectedOkrug(okrug);
-    }
-  };
-
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
@@ -90,7 +80,7 @@ export default function MapContainer({
         {okrugData.map((okrug) => (
           <MapRegion
             svgPath={okrug.path}
-            handleClick={() => okrug.count > 0 && handleClick(okrug)}
+            handleClick={() => okrug.count > 0 && handleMapClick(okrug)}
             selected={selectedOkrugId === okrug.id}
             fillColor={okrug.fillColor}
             hoverColor={okrug.count > 0 ? "#fadcd9" : "#f9f1f0"}
