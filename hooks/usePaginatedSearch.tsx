@@ -15,8 +15,7 @@ export const usePaginatedSearch = () => {
   const page = router.query.page ? +router.query.page : 1;
 
   useEffect(() => {
-    const rangeFrom = (page - 1) * 10 || 0;
-    const rangeTo = page * 10 || 10;
+    const from = (page - 1) * 10 || 0;
     let query = supabase
       .from("persons")
       .select(
@@ -26,7 +25,7 @@ export const usePaginatedSearch = () => {
         }
       )
       .limit(10)
-      .range(rangeFrom, rangeTo);
+      .range(from, from + 9);
 
     if (ime && typeof ime === "string" && ime !== "all") {
       query = query.textSearch("fts", ime as string, {
