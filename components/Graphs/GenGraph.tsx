@@ -1,10 +1,33 @@
-import { useMemo } from "react";
-import { Pie } from "react-chartjs-2";
+import { Chart } from "chart.js";
+import { useEffect, useRef } from "react";
 import { IGenStats } from "../../types";
 
+const options = {
+  normalized: true,
+  responsive: true,
+  plugins: {
+    title: {
+      display: true,
+      text: "Polovi",
+      position: "top" as const,
+      font: { size: 25, family: "Playfair" },
+      color: "Black",
+    },
+    datalabels: {
+      display: true,
+      anchor: "center" as const,
+      formatter: function (value: string) {
+        return value + "%";
+      },
+    },
+  },
+};
+
 export const GenGraph = ({ genStats }: { genStats: IGenStats[] | null }) => {
-  const data = useMemo(() => {
-    return {
+  const rootRef = useRef<null | HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const data = {
       labels: ["muski", "zenski", "nepoznato"],
       datasets: [
         {
@@ -15,32 +38,13 @@ export const GenGraph = ({ genStats }: { genStats: IGenStats[] | null }) => {
         },
       ],
     };
+
+    if (!rootRef.current) return;
+
+    const c = new Chart(rootRef.current, { type: "pie", data, options });
+
+    return () => c.destroy();
   }, [genStats]);
 
-  if (!genStats) {
-    return <div></div>;
-  }
-
-  const options = {
-    normalized: true,
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: "Polovi",
-        position: "top" as const,
-        font: { size: 25, family: "Playfair" },
-        color: "Black",
-      },
-      datalabels: {
-        display: true,
-        anchor: "center" as const,
-        formatter: function (value: string) {
-          return value + "%";
-        },
-      },
-    },
-  };
-
-  return <Pie datasetIdKey="okrug" options={options} data={data} />;
+  return <canvas ref={rootRef}></canvas>;
 };

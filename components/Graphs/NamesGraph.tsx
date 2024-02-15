@@ -1,12 +1,49 @@
-import { useMemo } from "react";
-import { Bar } from "react-chartjs-2";
+import { Chart } from "chart.js";
+import { useEffect, useRef } from "react";
 import { NameStat } from "../../types";
 
+const options = {
+  elements: {
+    bar: { borderWidth: 1 },
+  },
+  normalized: true,
+  responsive: true,
+  maintainAspectRatio: false,
+  layout: {
+    padding: {
+      right: 30,
+      left: 10,
+    },
+  },
+  scales: {
+    x: {
+      display: true,
+      stacked: false,
+      grid: { display: false },
+      ticks: { font: { size: 16 } },
+    },
+    y: {
+      stacked: true,
+      display: false,
+    },
+  },
+  plugins: {
+    title: {
+      display: true,
+      text: "Najčešća imena",
+      position: "top" as "top",
+      font: { weight: "bold", size: 15 },
+    },
+    legend: { display: false },
+  },
+};
 export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
-  const labels = useMemo(() => nameStats.map((x) => x.name), [nameStats]);
-  const data = useMemo(() => {
-    return {
-      labels,
+  const rootRef = useRef<null | HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!rootRef.current || !nameStats) return;
+    const data = {
+      labels: nameStats.map((x) => x.name),
       datasets: [
         {
           label: "Procenat",
@@ -39,43 +76,15 @@ export const NamesGraph = ({ nameStats }: { nameStats: NameStat[] }) => {
         },
       ],
     };
-  }, [labels, nameStats]);
 
-  const options = {
-    elements: {
-      bar: { borderWidth: 1 },
-    },
-    normalized: true,
-    responsive: true,
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        right: 30,
-        left: 10,
-      },
-    },
-    scales: {
-      x: {
-        display: true,
-        stacked: false,
-        grid: { display: false },
-        ticks: { font: { size: 16 } },
-      },
-      y: {
-        stacked: true,
-        display: false,
-      },
-    },
-    plugins: {
-      title: {
-        display: true,
-        text: "Najčešća imena",
-        position: "top" as "top",
-        font: { weight: "bold", size: 15 },
-      },
-      legend: { display: false },
-    },
-  };
+    const c = new Chart(rootRef.current, {
+      type: "bar",
+      data,
+      options,
+    });
 
-  return <Bar datasetIdKey="names" options={options} data={data} />;
+    return () => c.destroy();
+  }, [nameStats]);
+
+  return <canvas ref={rootRef} />;
 };

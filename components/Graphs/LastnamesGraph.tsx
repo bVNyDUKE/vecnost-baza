@@ -1,19 +1,55 @@
-import { useMemo } from "react";
-import { Bar } from "react-chartjs-2";
+import { Chart } from "chart.js";
+import { useEffect, useRef } from "react";
 import { LastnameStat } from "../../types";
+
+const options = {
+  elements: {
+    bar: { borderWidth: 1 },
+  },
+  normalized: true,
+  responsive: true,
+  maintainAspectRatio: false,
+  layout: {
+    padding: {
+      right: 30,
+      left: 10,
+    },
+  },
+  scales: {
+    x: {
+      display: true,
+      stacked: false,
+      grid: { display: false },
+      ticks: { font: { size: 16 } },
+    },
+    y: {
+      stacked: true,
+      display: false,
+    },
+  },
+  plugins: {
+    title: {
+      display: true,
+      text: "Najčešća prezimena",
+      position: "top" as "top",
+      font: { weight: "bold", size: 15 },
+    },
+    legend: { display: false },
+  },
+};
 
 export const LastnameGraph = ({
   lastnameStats,
 }: {
   lastnameStats: LastnameStat[];
 }) => {
-  const labels = useMemo(
-    () => lastnameStats.map((x) => x.lastname),
-    [lastnameStats]
-  );
-  const data = useMemo(() => {
-    return {
-      labels,
+  const rootRef = useRef<null | HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!rootRef.current || !lastnameStats) return;
+
+    const data = {
+      labels: lastnameStats.map((x) => x.lastname),
       datasets: [
         {
           label: "Procenat",
@@ -46,43 +82,10 @@ export const LastnameGraph = ({
         },
       ],
     };
-  }, [labels, lastnameStats]);
+    const c = new Chart(rootRef.current, { type: "bar", options, data });
 
-  const options = {
-    elements: {
-      bar: { borderWidth: 1 },
-    },
-    normalized: true,
-    responsive: true,
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        right: 30,
-        left: 10,
-      },
-    },
-    scales: {
-      x: {
-        display: true,
-        stacked: false,
-        grid: { display: false },
-        ticks: { font: { size: 16 } },
-      },
-      y: {
-        stacked: true,
-        display: false,
-      },
-    },
-    plugins: {
-      title: {
-        display: true,
-        text: "Najčešća prezimena",
-        position: "top" as "top",
-        font: { weight: "bold", size: 15 },
-      },
-      legend: { display: false },
-    },
-  };
+    return () => c.destroy();
+  }, [lastnameStats]);
 
-  return <Bar datasetIdKey="names" options={options} data={data} />;
+  return <canvas ref={rootRef} />;
 };
