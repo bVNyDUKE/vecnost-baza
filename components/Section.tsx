@@ -1,5 +1,5 @@
 import Button from "./Button";
-import Image, { StaticImageData } from "next/future/image";
+import Image, { StaticImageData } from "next/image";
 
 export default function Section({
   imgSrc,

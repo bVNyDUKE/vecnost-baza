@@ -10,9 +10,9 @@ export default function Button({ href, label, onClick }: ButtonProps) {
   if (href) {
     return (
       <Link href={href}>
-        <a className="hover:pointer text-primary-dark rounded-md bg-white px-7 py-2 text-center font-bold uppercase shadow-md hover:shadow-lg active:bg-[#404040]">
+        <span className="hover:pointer rounded-md bg-white px-7 py-2 text-center font-bold uppercase text-primary-dark shadow-md hover:shadow-lg active:bg-[#404040]">
           {label}
-        </a>
+        </span>
       </Link>
     );
   }

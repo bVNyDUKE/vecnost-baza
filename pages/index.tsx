@@ -1,5 +1,5 @@
 import Section from "../components/Section";
-import Image from "next/future/image";
+import Image from "next/image";
 import img from "../public/vecna-logo-solo-100.png";
 import img1 from "../public/index_1.webp";
 import img2 from "../public/index_2.webp";
@@ -49,8 +49,8 @@ function Home() {
           src={img}
           alt="Vecnost logo"
           className="hover:pointer mx-auto object-contain"
-          width={"60px"}
-          height={"70px"}
+          width={60}
+          height={70}
           placeholder="blur"
         />
         <h1 className="mt-5 font-serif text-4xl font-bold text-secondary-dark">

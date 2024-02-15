@@ -142,7 +142,7 @@ export default function Statistika({
                       passHref
                     >
                       <li className="box-border border p-8 hover:cursor-pointer hover:shadow-md">
-                        <a>{graveyard.name}</a>
+                        {graveyard.name}
                       </li>
                     </Link>
                   ))}

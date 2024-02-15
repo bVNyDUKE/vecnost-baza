@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Facebook, Instagram, Linkedin } from "../Icons";
 
 export default function Footer() {
@@ -6,31 +5,37 @@ export default function Footer() {
     <footer className="relative mt-16 bg-gradient-to-r from-[#000] to-[#3d3d3d] py-5 text-center text-white">
       <div className="absolute top-[-3rem] left-1/2 flex -translate-x-1/2 transform gap-4">
         {/* Facebook */}
-        <Link href="https://www.facebook.com/vecnostcom">
-          <a target="_blank" aria-label="Facebook">
-            <div>
-              <Facebook />
-            </div>
-          </a>
-        </Link>
+        <a
+          target="_blank"
+          aria-label="Facebook"
+          href="https://www.facebook.com/vecnostcom"
+        >
+          <div>
+            <Facebook />
+          </div>
+        </a>
 
         {/* Linkedin */}
-        <Link href="https://www.linkedin.com/company/vecnostcom/">
-          <a target="_blank" aria-label="LinkedIn">
-            <div>
-              <Linkedin />
-            </div>
-          </a>
-        </Link>
+        <a
+          target="_blank"
+          aria-label="LinkedIn"
+          href="https://www.linkedin.com/company/vecnostcom/"
+        >
+          <div>
+            <Linkedin />
+          </div>
+        </a>
 
         {/* Instagram */}
-        <Link href="https://www.instagram.com/vecnostcom/">
-          <a target="_blank" aria-label="Instagram">
-            <div>
-              <Instagram />
-            </div>
-          </a>
-        </Link>
+        <a
+          target="_blank"
+          aria-label="Instagram"
+          href="https://www.instagram.com/vecnostcom/"
+        >
+          <div>
+            <Instagram />
+          </div>
+        </a>
       </div>
 
       <div className="container mx-auto">
