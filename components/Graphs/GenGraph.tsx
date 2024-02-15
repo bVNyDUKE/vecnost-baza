@@ -1,9 +1,28 @@
-import Chart from "chart.js/auto";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Legend,
+  Tooltip,
+  ArcElement,
+  PieController,
+} from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+
+Chart.register(
+  CategoryScale,
+  Tooltip,
+  LinearScale,
+  Title,
+  Tooltip,
+  ChartDataLabels,
+  PieController,
+  ArcElement,
+  Legend
+);
 import { useEffect, useRef } from "react";
 import { IGenStats } from "../../types";
-
-Chart.register(ChartDataLabels);
 
 const options = {
   normalized: true,

@@ -1,9 +1,28 @@
-import Chart from "chart.js/auto";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  Title,
+  BarElement,
+  BarController,
+  Legend,
+  Tooltip,
+} from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+
+Chart.register(
+  CategoryScale,
+  Tooltip,
+  LinearScale,
+  Title,
+  Tooltip,
+  ChartDataLabels,
+  BarElement,
+  BarController,
+  Legend
+);
 import { useEffect, useRef } from "react";
 import { NameStat } from "../../types";
-
-Chart.register(ChartDataLabels);
 
 const options = {
   elements: {
@@ -34,7 +53,7 @@ const options = {
     title: {
       display: true,
       text: "Najčešća imena",
-      position: "top" as "top",
+      position: "top" as const,
       font: { weight: "bold", size: 15 },
     },
     legend: { display: false },

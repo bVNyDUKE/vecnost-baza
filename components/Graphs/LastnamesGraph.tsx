@@ -1,9 +1,28 @@
-import Chart from "chart.js/auto";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  Title,
+  BarElement,
+  BarController,
+  Legend,
+  Tooltip,
+} from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+
+Chart.register(
+  CategoryScale,
+  Tooltip,
+  LinearScale,
+  Title,
+  Tooltip,
+  ChartDataLabels,
+  BarElement,
+  BarController,
+  Legend
+);
 import { useEffect, useRef } from "react";
 import { LastnameStat } from "../../types";
-
-Chart.register(ChartDataLabels);
 
 const options = {
   elements: {
