@@ -1,6 +1,9 @@
-import { Chart } from "chart.js";
+import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useEffect, useRef } from "react";
 import { PersonsPerOkrugStat } from "../../types";
+
+Chart.register(ChartDataLabels);
 
 const options = {
   normalized: true,
@@ -47,5 +50,5 @@ export const OkrugGraph = ({
     return () => c.destroy();
   }, [personsPerOkrug]);
 
-  return <canvas ref={rootRef}></canvas>;
+  return <canvas id="okrugGraph" ref={rootRef}></canvas>;
 };

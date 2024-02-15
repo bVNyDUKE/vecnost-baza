@@ -1,6 +1,9 @@
-import { Chart } from "chart.js";
+import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useEffect, useRef } from "react";
 import { NameStat } from "../../types";
+
+Chart.register(ChartDataLabels);
 
 const options = {
   elements: {

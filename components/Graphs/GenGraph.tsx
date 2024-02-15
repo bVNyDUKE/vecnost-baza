@@ -1,6 +1,9 @@
-import { Chart } from "chart.js";
+import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useEffect, useRef } from "react";
 import { IGenStats } from "../../types";
+
+Chart.register(ChartDataLabels);
 
 const options = {
   normalized: true,
@@ -43,7 +46,9 @@ export const GenGraph = ({ genStats }: { genStats: IGenStats[] | null }) => {
 
     const c = new Chart(rootRef.current, { type: "pie", data, options });
 
-    return () => c.destroy();
+    return () => {
+      c.destroy();
+    };
   }, [genStats]);
 
   return <canvas ref={rootRef}></canvas>;

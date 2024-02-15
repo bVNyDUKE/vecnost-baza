@@ -1,6 +1,9 @@
-import { Chart } from "chart.js";
+import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useEffect, useRef } from "react";
 import { LastnameStat } from "../../types";
+
+Chart.register(ChartDataLabels);
 
 const options = {
   elements: {
@@ -84,7 +87,9 @@ export const LastnameGraph = ({
     };
     const c = new Chart(rootRef.current, { type: "bar", options, data });
 
-    return () => c.destroy();
+    return () => {
+      c.destroy();
+    };
   }, [lastnameStats]);
 
   return <canvas ref={rootRef} />;

@@ -19,7 +19,6 @@
     "chartjs-plugin-datalabels": "^2.0.0",
     "next": "^12.3.0",
     "react": "18.0.0",
-    "react-chartjs-2": "^4.2.0",
     "react-dom": "18.0.0"
   },
   "devDependencies": {

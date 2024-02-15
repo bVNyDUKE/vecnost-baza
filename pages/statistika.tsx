@@ -10,12 +10,10 @@ import {
   LastnameStat,
   Graveyards,
 } from "../types";
-import {
-  NamesGraph,
-  OkrugGraph,
-  LastnameGraph,
-  GenGraph,
-} from "../components/Graphs";
+import { GenGraph } from "../components/Graphs/GenGraph";
+import { OkrugGraph } from "../components/Graphs/OkrugGraph";
+import { NamesGraph } from "../components/Graphs/NamesGraph";
+import { LastnameGraph } from "../components/Graphs/LastnamesGraph";
 import Icons from "../components/Icons";
 import MapContainer from "../components/Map/MapContainer";
 import SideDrawer from "../components/SideDrawer";
