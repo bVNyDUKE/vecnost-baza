@@ -54,7 +54,7 @@ const options = {
       display: true,
       text: "Najčešća imena",
       position: "top" as const,
-      font: { weight: "bold", size: 15 },
+      font: { weight: "bold" as const, size: 15 },
     },
     legend: { display: false },
   },

@@ -53,8 +53,8 @@ const options = {
     title: {
       display: true,
       text: "Najčešća prezimena",
-      position: "top" as "top",
-      font: { weight: "bold", size: 15 },
+      position: "top" as const,
+      font: { weight: "bold" as const, size: 15 },
     },
     legend: { display: false },
   },

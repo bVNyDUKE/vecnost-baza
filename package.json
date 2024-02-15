@@ -15,8 +15,8 @@
     "@googlemaps/react-wrapper": "^1.1.35",
     "@headlessui/react": "^1.6.5",
     "@supabase/supabase-js": "^1.34.0",
-    "chart.js": "^3.8.0",
-    "chartjs-plugin-datalabels": "^2.0.0",
+    "chart.js": "^4.4.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "next": "^12.3.0",
     "react": "18.0.0",
     "react-dom": "18.0.0"
