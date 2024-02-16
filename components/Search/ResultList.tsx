@@ -56,9 +56,7 @@ export default function ResultList({
             key={result.id}
             href={{ pathname: "/lica/[id]", query: { id: result.id } }}
           >
-            <a>
-              <Entry result={result} />
-            </a>
+            <Entry result={result} />
           </Link>
         ))}
     </div>
