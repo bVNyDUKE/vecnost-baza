@@ -84,7 +84,7 @@ export default function MapPage({ data }: { data: IGraveLocations[] }) {
   const zoom = 7;
 
   return (
-    <div className="flex h-screen">
+    <div className="-mt-10 flex h-screen">
       <Wrapper
         apiKey={process.env.NEXT_PUBLIC_MAPS_KEY!}
         render={(status: Status) => <LoadingScreen status={status} />}
