@@ -60,12 +60,29 @@ export interface IMapProps extends google.maps.MapOptions {
   children?: React.ReactNode;
 }
 
+type Groblje = {
+  id: string;
+  name: string;
+};
+
+type Opstina = {
+  id: string;
+  name: string;
+  groblje: Groblje[];
+};
+
+type Okrug = {
+  id: string;
+  name: string;
+  opstina: Opstina[];
+};
+
 export interface Region {
   id: string;
   name: string;
-  groblje?: { id: string; name: string }[];
-  opstina?: { id: string; name: string; groblje: Region["groblje"][] }[];
-  okrug?: { id: string; name: string; opstina: Region["opstina"][] }[];
+  groblje?: Groblje[];
+  opstina?: Opstina[];
+  okrug?: Okrug[];
 }
 
 export interface IOkrug {
