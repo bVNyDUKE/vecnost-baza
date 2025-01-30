@@ -12,13 +12,7 @@ export async function getStaticProps() {
   return { props: { data }, revalidate: 60 * 60 * 24 };
 }
 
-const IndexList = ({
-  data,
-  title,
-}: {
-  data: Region[] | null;
-  title: string;
-}) => {
+const IndexList = ({ data, title }: { data?: Region[]; title: string }) => {
   return (
     <div className="mt-5 mb-5 font-serif">
       <h2 className="ml-5 text-3xl">{title}</h2>
@@ -30,57 +24,50 @@ const IndexList = ({
   );
 };
 
+let AREAS = {
+  okrug: "Okruzi",
+  opstina: "Opštine",
+  groblje: "Groblja",
+} as const;
+
 const IndexEntry = ({ entry }: { entry: Region }) => {
   const [open, setOpen] = useState(false);
+
+  const { subListName, subListData } = useMemo(() => {
+    let areas = Object.keys(AREAS) as (keyof typeof AREAS)[];
+    for (let a of areas) {
+      if (Object.hasOwn(entry, a)) {
+        return {
+          subListName: AREAS[a],
+          subListData: entry[a],
+        };
+      }
+    }
+    return { subListName: null, subListData: null };
+  }, [entry]);
+
   const handleClick = () => setOpen((open) => !open);
 
-  const subListData = useMemo(() => {
-    if ("okrug" in entry) {
-      return entry.okrug;
-    }
-    if ("opstina" in entry) {
-      return entry.opstina;
-    }
-    if ("groblje" in entry) {
-      return entry.groblje;
-    }
-    return false;
-  }, [entry]);
-
-  const subListName = useMemo(() => {
-    if ("okrug" in entry) {
-      return "Okruzi";
-    }
-    if ("opstina" in entry) {
-      return "Opštine";
-    }
-    if ("groblje" in entry) {
-      return "Groblja";
-    }
-    return false;
-  }, [entry]);
-
-  if (subListName) {
+  if (!subListName || !subListData?.length) {
     return (
       <li>
-        <span className="hover:cursor-pointer" onClick={handleClick}>
-          {open ? <DownArrow /> : <RightArrow />}{" "}
-          <span className="ml-2">{entry.name}</span>
-        </span>
-        {open && (
-          <div>
-            {subListData && (
-              <IndexList data={subListData} title={subListName} />
-            )}
-          </div>
-        )}
+        <span className="ml-2">{entry.name}</span>
       </li>
     );
   }
-  return <li>{entry.name}</li>;
+
+  return (
+    <li>
+      <span className="hover:cursor-pointer" onClick={handleClick}>
+        {open ? <DownArrow /> : <RightArrow />}{" "}
+        <span className="ml-2">{entry.name}</span>
+      </span>
+      {open ? <IndexList data={subListData} title={subListName} /> : null}
+    </li>
+  );
 };
 
-export default function IndeksMesta({ data }: { data: Region[] | null }) {
+export default function IndeksMesta({ data }: { data?: Region[] }) {
   return (
     <div className="container mx-auto max-w-lg">
       <h1 className="mb-10 text-center font-serif text-4xl">Indeks Mesta</h1>
