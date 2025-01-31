@@ -1,12 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IOkrug, PersonsPerOkrugStat } from "../../types";
 import MapRegion from "./MapRegion";
 import { Okruzi } from "./MapData";
