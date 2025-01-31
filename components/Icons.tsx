@@ -89,13 +89,7 @@ export const AdjustmentsIcon = ({ className = "h-6 w-6" }) => (
   </svg>
 );
 
-export const Facebook = ({
-  className = "h-3 w-3",
-  onClick = undefined,
-}: {
-  className?: string;
-  onClick?: () => void;
-}): JSX.Element => (
+export const Facebook = () => (
   <svg
     width="35"
     height="35"
@@ -123,13 +117,7 @@ export const Facebook = ({
   </svg>
 );
 
-export const Linkedin = ({
-  className = "h-3 w-3",
-  onClick = undefined,
-}: {
-  className?: string;
-  onClick?: () => void;
-}): JSX.Element => (
+export const Linkedin = () => (
   <svg
     width="35"
     height="35"
@@ -157,13 +145,7 @@ export const Linkedin = ({
   </svg>
 );
 
-export const Instagram = ({
-  className = "h-3 w-3",
-  onClick = undefined,
-}: {
-  className?: string;
-  onClick?: () => void;
-}): JSX.Element => (
+export const Instagram = () => (
   <svg
     width="35"
     height="35"
