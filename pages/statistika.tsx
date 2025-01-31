@@ -38,7 +38,7 @@ export default function Statistika({
   const [selectedOkrug, setSelectedOkrug] = useState<null | IOkrug>(null);
   const [nameStats, setNameStats] = useState<[] | NameStat[]>([]);
   const [lastnameStats, setLastnameStats] = useState<[] | LastnameStat[]>([]);
-  const [grobljeStats, setGrobljStats] = useState<[] | Graveyards[]>([]);
+  const [grobljeStats, setGrobljeStats] = useState<[] | Graveyards[]>([]);
   const { isOpen, openModal, closeModal, toggleModal } = useHashModal();
   const [startTransition, setStartTransition] = useState(false);
 
@@ -56,10 +56,17 @@ export default function Statistika({
         okrugid,
       }),
     ]);
+    if (graveyardData) {
+      setGrobljeStats(graveyardData);
+    }
 
-    graveyardData && setGrobljStats(graveyardData);
-    nameData && setNameStats(nameData);
-    lastnameData && setLastnameStats(lastnameData);
+    if (nameData) {
+      setNameStats(nameData);
+    }
+
+    if (lastnameData) {
+      setLastnameStats(lastnameData);
+    }
   }, []);
 
   useEffect(() => setStartTransition(true), []);
@@ -95,22 +102,23 @@ export default function Statistika({
         enterTo="opacity-100"
         leave="transition-opacity duration-150"
         leaveFrom="opacity-100"
-        leaveTo="opacity-0 "
-        className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-center"
+        leaveTo="opacity-0"
       >
-        <div className="mx-auto my-10 h-1/2 max-w-xl space-y-5 lg:my-0 lg:mx-0 lg:mb-10 lg:h-full lg:w-1/2">
-          <div className="relative h-1/2 w-[100vw] sm:w-full">
-            <OkrugGraph personsPerOkrug={personsPerOkrug} />
+        <div className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-center">
+          <div className="mx-auto my-10 h-1/2 max-w-xl space-y-5 lg:my-0 lg:mx-0 lg:mb-10 lg:h-full lg:w-1/2">
+            <div className="relative h-1/2 w-[100vw] sm:w-full">
+              <OkrugGraph personsPerOkrug={personsPerOkrug} />
+            </div>
+            <div className="relative h-1/2 w-[100vw] sm:w-full">
+              <GenGraph genStats={genData} />
+            </div>
           </div>
-          <div className="relative h-1/2 w-[100vw] sm:w-full">
-            <GenGraph genStats={genData} />
-          </div>
+          <MapContainer
+            selectedOkrugId={selectedOkrug?.id || null}
+            handleMapClick={handleMapClick}
+            personsPerOkrug={personsPerOkrug}
+          />
         </div>
-        <MapContainer
-          selectedOkrugId={selectedOkrug?.id || null}
-          handleMapClick={handleMapClick}
-          personsPerOkrug={personsPerOkrug}
-        />
       </Transition>
       <SideDrawer show={isOpen}>
         <div className="absolute z-10 w-full border-y bg-white py-2">

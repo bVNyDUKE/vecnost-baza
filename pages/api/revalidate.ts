@@ -14,7 +14,7 @@ export default async function handler(
     );
     await Promise.all(revalidateUrls);
     return res.json({ revalidated: true });
-  } catch (e) {
+  } catch {
     return res.status(500).send("Error in revalidation");
   }
 }

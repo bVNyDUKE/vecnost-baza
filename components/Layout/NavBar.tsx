@@ -50,13 +50,14 @@ export default function NavBar() {
           leave="transition-opacity duration-700"
           leaveFrom="opacity-100"
           leaveTo="opacity-0 "
-          className="mx-auto w-full items-center justify-between space-x-2 px-2 font-bold"
         >
-          <Link href="/">Početna</Link>
-          <Link href="/pretraga">Pretraga</Link>
-          <Link href="/statistika">Statistika</Link>
-          <Link href="/indeks">Indeks</Link>
-          <Link href="/mapa">Mapa</Link>
+          <div className="mx-auto w-full items-center justify-between space-x-2 px-2 font-bold">
+            <Link href="/">Početna</Link>
+            <Link href="/pretraga">Pretraga</Link>
+            <Link href="/statistika">Statistika</Link>
+            <Link href="/indeks">Indeks</Link>
+            <Link href="/mapa">Mapa</Link>
+          </div>
         </Transition>
       </div>
     </nav>
