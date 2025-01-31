@@ -104,22 +104,20 @@ export default function Statistika({
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div>
-          <div className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-center">
-            <div className="mx-auto my-10 h-1/2 max-w-xl space-y-5 lg:my-0 lg:mx-0 lg:mb-10 lg:h-full lg:w-1/2">
-              <div className="relative h-1/2 w-[100vw] sm:w-full">
-                <OkrugGraph personsPerOkrug={personsPerOkrug} />
-              </div>
-              <div className="relative h-1/2 w-[100vw] sm:w-full">
-                <GenGraph genStats={genData} />
-              </div>
+        <div className="flex flex-col-reverse justify-center border-gray-200 font-serif lg:flex-row lg:justify-center">
+          <div className="mx-auto my-10 h-1/2 max-w-xl space-y-5 lg:my-0 lg:mx-0 lg:mb-10 lg:h-full lg:w-1/2">
+            <div className="relative h-1/2 w-[100vw] sm:w-full">
+              <OkrugGraph personsPerOkrug={personsPerOkrug} />
             </div>
-            <MapContainer
-              selectedOkrugId={selectedOkrug?.id || null}
-              handleMapClick={handleMapClick}
-              personsPerOkrug={personsPerOkrug}
-            />
+            <div className="relative h-1/2 w-[100vw] sm:w-full">
+              <GenGraph genStats={genData} />
+            </div>
           </div>
+          <MapContainer
+            selectedOkrugId={selectedOkrug?.id || null}
+            handleMapClick={handleMapClick}
+            personsPerOkrug={personsPerOkrug}
+          />
         </div>
       </Transition>
       <SideDrawer show={isOpen}>

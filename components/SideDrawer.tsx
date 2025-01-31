@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Transition } from "@headlessui/react";
+import { Transition, TransitionChild } from "@headlessui/react";
 import { ReactNode } from "react";
 
 const ClientPortal = ({
@@ -43,8 +43,8 @@ export default function SideDrawer({
   return (
     <ClientPortal show={show}>
       <Transition
+        appear={true}
         show={show}
-        className="fixed top-0 bottom-0 left-0 right-5 z-50 bg-white text-gray-700 lg:w-1/2"
         enter="transition delay-150 duration-500 ease-in-out"
         enterFrom="-translate-x-full"
         enterTo="translate-x-0"
@@ -52,17 +52,18 @@ export default function SideDrawer({
         leaveFrom="translate-x-0"
         leaveTo="-translate-x-full"
       >
-        <Transition.Child
+        <TransitionChild
           enter="transition-opacity duration-700"
           enterFrom="opacity-0"
           enterTo="opacity-100"
           leave="transition-opacity duration-700"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          className="h-screen overflow-auto shadow-md"
         >
-          {children}
-        </Transition.Child>
+          <div className="fixed top-0 bottom-0 left-0 right-5 z-50 bg-white text-gray-700 lg:w-1/2">
+            <div className="h-screen overflow-auto shadow-md">{children}</div>
+          </div>
+        </TransitionChild>
       </Transition>
     </ClientPortal>
   );
