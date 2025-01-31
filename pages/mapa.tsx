@@ -64,8 +64,7 @@ const Map = ({ children, ...props }: IMapProps) => {
       <div ref={ref} style={{ flexGrow: "1", height: "100%" }} />
       {Children.map(children, (child) => {
         if (isValidElement(child)) {
-          // set the map prop on the child component
-          // @ts-ignore
+          // @ts-expect-error set the map prop on the child component
           return cloneElement(child, { map });
         }
       })}
