@@ -1,6 +1,5 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { supabase } from "../lib/supabaseClient";
-import { RightArrow, DownArrow } from "../components/Icons";
 import { Region } from "../types";
 
 export async function getStaticProps() {
@@ -16,10 +15,10 @@ const IndexList = ({ data, title }: { data?: Region[]; title: string }) => {
   return (
     <div className="mt-5 mb-5 font-serif">
       <h2 className="ml-5 text-3xl">{title}</h2>
-      <ul className="mt-2 ml-7 list-inside">
+      <div className="mt-2 ml-7 list-inside">
         {data &&
           data.map((entry) => <IndexEntry key={entry.id} entry={entry} />)}
-      </ul>
+      </div>
     </div>
   );
 };
@@ -31,8 +30,6 @@ let AREAS = {
 } as const;
 
 const IndexEntry = ({ entry }: { entry: Region }) => {
-  const [open, setOpen] = useState(false);
-
   const { subListName, subListData } = useMemo(() => {
     let areas = Object.keys(AREAS) as (keyof typeof AREAS)[];
     for (let a of areas) {
@@ -46,24 +43,15 @@ const IndexEntry = ({ entry }: { entry: Region }) => {
     return { subListName: null, subListData: null };
   }, [entry]);
 
-  const handleClick = () => setOpen((open) => !open);
-
   if (!subListName || !subListData?.length) {
-    return (
-      <li>
-        <span className="ml-2">{entry.name}</span>
-      </li>
-    );
+    return <p className="ml-5 text-lg">{entry.name}</p>;
   }
 
   return (
-    <li>
-      <span className="hover:cursor-pointer" onClick={handleClick}>
-        {open ? <DownArrow /> : <RightArrow />}{" "}
-        <span className="ml-2">{entry.name}</span>
-      </span>
-      {open ? <IndexList data={subListData} title={subListName} /> : null}
-    </li>
+    <details>
+      <summary className="text-lg before:mr-[5px]">{entry.name}</summary>
+      <IndexList data={subListData} title={subListName} />
+    </details>
   );
 };
 
