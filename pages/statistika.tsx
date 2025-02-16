@@ -124,7 +124,7 @@ export default function Statistika({
         <div className="absolute z-10 w-full border-y bg-white py-2">
           <Icons.Cross
             onClick={closeModal}
-            className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-sm"
+            className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-xs"
           />
           <p className="text-center text-xl font-bold">Podaci okruga</p>
         </div>

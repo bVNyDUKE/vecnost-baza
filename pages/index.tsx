@@ -53,10 +53,10 @@ function Home() {
           height={70}
           placeholder="blur"
         />
-        <h1 className="mt-5 font-serif text-4xl font-bold text-secondary-dark">
+        <h1 className="text-secondary-dark mt-5 font-serif text-4xl font-bold">
           DOBRODOŠLI!
         </h1>
-        <div className="mx-auto my-7 h-1.5 w-32 bg-secondary-dark"></div>
+        <div className="bg-secondary-dark mx-auto my-7 h-1.5 w-32"></div>
         <div className="mx-auto mb-[3.125rem] w-4/6 text-center text-lg text-gray-600">
           Pred vama je baza podataka sahranjenih lica na teritoriji Republike
           Srbije. <span className="hidden lg:block"></span> Svi podaci su

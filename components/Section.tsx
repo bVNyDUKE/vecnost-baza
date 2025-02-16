@@ -40,7 +40,7 @@ export default function Section({
             </h2>
           </div>
         </div>
-        <div className="absolute bottom-0 h-36 w-full bg-gradient-to-t from-[#000] group-hover:h-full" />
+        <div className="absolute bottom-0 h-36 w-full bg-linear-to-t from-[#000] group-hover:h-full" />
       </section>
     </div>
   );
