@@ -49,7 +49,9 @@ const IndexEntry = ({ entry }: { entry: Region }) => {
 
   return (
     <details>
-      <summary className="text-lg before:mr-[5px]">{entry.name}</summary>
+      <summary className="cursor-pointer text-lg before:mr-[5px]">
+        {entry.name}
+      </summary>
       <IndexList data={subListData} title={subListName} />
     </details>
   );
