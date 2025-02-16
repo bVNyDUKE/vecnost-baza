@@ -22,12 +22,11 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
     "@types/google.maps": "^3.49.2",
-    "@types/lodash.uniqby": "^4.7.7",
     "@types/node": "^17.0.42",
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.6",
-    "autoprefixer": "^10.4.4",
     "eslint": "^9.19.0",
     "eslint-config-next": "^15.1.6",
     "eslint-config-prettier": "^10.0.1",
@@ -35,7 +34,7 @@
     "prettier": "^2.6.2",
     "prettier-plugin-tailwindcss": "^0.1.10",
     "supabase": "^1.27.4",
-    "tailwindcss": "^3.0.24",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5.7.3"
   }
 }

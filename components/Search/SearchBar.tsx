@@ -111,7 +111,7 @@ export default function SearchBar({
     <div ref={parent} className="m-auto max-w-3xl px-5">
       <form onSubmit={(e) => handleSearch(e)}>
         <div className="flex items-center justify-center border border-gray-300">
-          <div className="flex h-16 w-full flex-shrink items-center space-x-8 hover:shadow-md">
+          <div className="flex h-16 w-full shrink items-center space-x-8 hover:shadow-md">
             <input
               type="text"
               name="search"
@@ -119,12 +119,12 @@ export default function SearchBar({
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Pretraga..."
-              className="h-full flex-grow p-5 focus:outline-none"
+              className="h-full grow p-5 focus:outline-hidden"
             />
           </div>
-          <div className="flex h-16 w-28 flex-grow border-l ">
+          <div className="flex h-16 w-28 grow border-l ">
             <button
-              className="flex h-full w-full flex-grow items-center justify-center border-r hover:shadow-md"
+              className="flex h-full w-full grow items-center justify-center border-r hover:shadow-md"
               type="submit"
             >
               {icon}
