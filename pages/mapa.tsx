@@ -23,11 +23,14 @@ export async function getStaticProps() {
 const Map = ({ children, ...props }: IMapProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>();
+
   useEffect(() => {
     if (ref.current && !map) {
       const newMap = new window.google.maps.Map(ref.current, {
         center: props.center,
         zoom: props.zoom,
+        mapId: process.env.NEXT_PUBLIC_MAPS_ID,
+        renderingType: google.maps.RenderingType.VECTOR,
       });
 
       const infoWindow = new google.maps.InfoWindow({
@@ -36,9 +39,10 @@ const Map = ({ children, ...props }: IMapProps) => {
 
       const markers = props.locations.map((location, i) => {
         const label = ++i;
-        const marker = new google.maps.Marker({
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map: newMap,
           position: location.position,
-          label: label.toString(),
+          title: label.toString(),
         });
 
         const infoContent = `<div class="py-4 px-2">
@@ -82,11 +86,16 @@ export default function MapPage({ data }: { data: IGraveLocations[] }) {
   const center = { lat: 44.628924, lng: 20.643159 };
   const zoom = 7;
 
+  if (!process.env.NEXT_PUBLIC_MAPS_KEY) {
+    throw new Error("missing maps key");
+  }
+
   return (
     <div className="-mt-10 flex h-screen">
       <Wrapper
-        apiKey={process.env.NEXT_PUBLIC_MAPS_KEY!}
+        apiKey={process.env.NEXT_PUBLIC_MAPS_KEY}
         render={(status: Status) => <LoadingScreen status={status} />}
+        libraries={["core", "maps", "marker"]}
       >
         <Map center={center} zoom={zoom} locations={data} />
       </Wrapper>
