@@ -1,4 +1,4 @@
-import { useEffect, useState, FormEvent } from "react";
+import { useEffect, useState, SubmitEvent, useMemo } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useRouter } from "next/router";
 import { RegionData } from "../../types";
@@ -10,7 +10,7 @@ const AcceptedFilters = {
   groblje: "groblje",
   okrug: "okrug",
 } as const;
-const filterList = Object.values(AcceptedFilters);
+const filterList = ["opstina", "groblje", "okrug"] as const;
 
 interface FilterValues {
   id: string;
@@ -35,21 +35,22 @@ export default function SearchBar({
     groblje: null,
     okrug: null,
   });
+  const [searchInput, setSearchInput] = useState("");
   const router = useRouter();
 
-  const availableFilters = ((): AvailableFilters => {
+  const availableFilters = useMemo((): AvailableFilters => {
     const dropdownOptions = Object.create(AcceptedFilters);
+
+    let opts = [...options];
 
     filterList.forEach((name) => {
       if (selectedFilters[name] && selectedFilters[name] !== "0") {
-        options = options.filter(
-          (row) => row[`${name}id`] === selectedFilters[name]
-        );
+        opts = opts.filter((row) => row[`${name}id`] === selectedFilters[name]);
       }
     });
 
     filterList.forEach((name) => {
-      dropdownOptions[name] = options
+      dropdownOptions[name] = opts
         .map((row) => ({
           name: row[`${name}name`],
           id: row[`${name}id`],
@@ -63,7 +64,7 @@ export default function SearchBar({
     });
 
     return dropdownOptions;
-  })();
+  }, [options, selectedFilters]);
 
   useEffect(() => {
     filterList.forEach((filter) => {
@@ -87,9 +88,7 @@ export default function SearchBar({
     }
   }, [router.query]);
 
-  //handle search input
-  const [searchInput, setSearchInput] = useState("");
-  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const ime = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
     router.push(
