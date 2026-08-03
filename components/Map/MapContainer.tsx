@@ -50,7 +50,9 @@ export default function MapContainer({
   //not sure if this is better without useMemo
   const okrugData = useMemo(() => {
     return Okruzi.map((okrug) => {
-      let count = personsPerOkrug?.find((x) => okrug.id === x.okrug_id)?.count;
+      const count = personsPerOkrug?.find(
+        (x) => okrug.id === x.okrug_id
+      )?.count;
       return {
         id: okrug.id,
         name: okrug.name,
