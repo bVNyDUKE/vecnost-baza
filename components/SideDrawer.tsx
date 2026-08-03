@@ -1,15 +1,9 @@
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Transition } from "@headlessui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-function useMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true, // client snapshot
-    () => false // server snapshot
-  );
-}
+import { useMounted } from "../hooks/useMounted";
 
 const ClientPortal = ({
   children,

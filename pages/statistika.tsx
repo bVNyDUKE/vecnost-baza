@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Transition } from "@headlessui/react";
 import { supabase } from "../lib/supabaseClient";
 import Link from "next/link";
@@ -18,6 +18,7 @@ import Icons from "../components/Icons";
 import MapContainer from "../components/Map/MapContainer";
 import SideDrawer from "../components/SideDrawer";
 import { useHashModal } from "../hooks/useHashModal";
+import { useMounted } from "../hooks/useMounted";
 
 export async function getStaticProps() {
   const [{ data: personsPerOkrug }, { data: genData }] = await Promise.all([
@@ -40,7 +41,7 @@ export default function Statistika({
   const [lastnameStats, setLastnameStats] = useState<[] | LastnameStat[]>([]);
   const [grobljeStats, setGrobljeStats] = useState<[] | Graveyards[]>([]);
   const { isOpen, openModal, closeModal, toggleModal } = useHashModal();
-  const [startTransition, setStartTransition] = useState(false);
+  const mounted = useMounted();
 
   const getOkrugData = useCallback(async (okrugid: number) => {
     const [
@@ -69,21 +70,14 @@ export default function Statistika({
     }
   }, []);
 
-  useEffect(() => setStartTransition(true), []);
-
-  useEffect(() => {
-    if (selectedOkrug?.id) {
-      getOkrugData(selectedOkrug.id);
-      openModal();
-    }
-  }, [openModal, getOkrugData, selectedOkrug?.id]);
-
   const handleMapClick = (okrug: IOkrug) => {
     if (selectedOkrug?.id === okrug.id) {
       toggleModal();
-    } else {
-      setSelectedOkrug(okrug);
+      return;
     }
+    setSelectedOkrug(okrug);
+    getOkrugData(okrug.id);
+    openModal();
   };
 
   const statsAvailable =
@@ -96,7 +90,7 @@ export default function Statistika({
     <>
       <Transition
         appear={true}
-        show={startTransition}
+        show={mounted}
         enter="transition-opacity duration-700"
         enterFrom="opacity-0"
         enterTo="opacity-100"
@@ -124,7 +118,7 @@ export default function Statistika({
         <div className="absolute z-10 w-full border-y bg-white py-2">
           <Icons.Cross
             onClick={closeModal}
-            className="absolute top-3 right-2 h-5 w-5 border text-gray-500 shadow-xs"
+            className="shadow-xs absolute top-3 right-2 h-5 w-5 border text-gray-500"
           />
           <p className="text-center text-xl font-bold">Podaci okruga</p>
         </div>
