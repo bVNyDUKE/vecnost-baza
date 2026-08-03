@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { Region } from "../types";
 
@@ -23,25 +22,23 @@ const IndexList = ({ data, title }: { data?: Region[]; title: string }) => {
   );
 };
 
-let AREAS = {
+const AREAS = {
   okrug: "Okruzi",
   opstina: "Opštine",
   groblje: "Groblja",
 } as const;
 
 const IndexEntry = ({ entry }: { entry: Region }) => {
-  const { subListName, subListData } = useMemo(() => {
-    let areas = Object.keys(AREAS) as (keyof typeof AREAS)[];
-    for (let a of areas) {
-      if (Object.hasOwn(entry, a)) {
-        return {
-          subListName: AREAS[a],
-          subListData: entry[a],
-        };
-      }
+  const areas = Object.keys(AREAS) as (keyof typeof AREAS)[];
+  let subListName = null;
+  let subListData: Region[keyof typeof AREAS] | null = null;
+
+  for (const a of areas) {
+    if (Object.hasOwn(entry, a)) {
+      subListName = AREAS[a];
+      subListData = entry[a];
     }
-    return { subListName: null, subListData: null };
-  }, [entry]);
+  }
 
   if (!subListName || !subListData?.length) {
     return <p className="ml-5 text-lg">{entry.name}</p>;
