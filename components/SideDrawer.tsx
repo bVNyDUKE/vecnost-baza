@@ -1,7 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { Transition } from "@headlessui/react";
 import { ReactNode } from "react";
+
+function useMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true, // client snapshot
+    () => false // server snapshot
+  );
+}
 
 const ClientPortal = ({
   children,
@@ -10,13 +18,7 @@ const ClientPortal = ({
   children: ReactNode;
   show: boolean;
 }) => {
-  const ref = useRef<Element | undefined>();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    ref.current = document.querySelector("body") as Element;
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   //Prevent the body from scrolling when modal is open
   useEffect(() => {
@@ -30,7 +32,9 @@ const ClientPortal = ({
     };
   }, [show]);
 
-  return mounted && ref.current ? createPortal(children, ref.current) : null;
+  if (!mounted) return null;
+
+  return createPortal(children, document.body);
 };
 
 export default function SideDrawer({
