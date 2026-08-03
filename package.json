@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "update-types": "npx openapi-typescript \"$(grep NEXT_PUBLIC_SUPABASE_URL  .env.local | cut -d '=' -f2)/rest/v1/?apikey=$(grep NEXT_PUBLIC_SUPABASE_ANON_KEY .env.local | cut -d '=' -f2)\" --version=2 --output types/database/index.ts"
   },
   "dependencies": {
@@ -28,9 +28,9 @@
     "@types/node": "^17.0.42",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "eslint": "^9.19.0",
-    "eslint-config-next": "^15.1.6",
-    "eslint-config-prettier": "^10.0.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.0",
+    "eslint-config-prettier": "^10.1.8",
     "postcss": "^8.4.12",
     "prettier": "^2.6.2",
     "prettier-plugin-tailwindcss": "^0.1.10",
