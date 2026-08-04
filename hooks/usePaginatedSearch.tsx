@@ -59,14 +59,10 @@ export const usePaginatedSearch = () => {
 
   const handlePageChange = useCallback(
     (page: number) => {
-      router.push(
-        {
-          pathname: "/pretraga",
-          query: { ...router.query, page: page },
-        },
-        "",
-        { shallow: true, scroll: true }
-      );
+      router.push({
+        pathname: "/pretraga",
+        query: { ...router.query, page: page },
+      });
     },
     [router]
   );

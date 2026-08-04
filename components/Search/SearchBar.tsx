@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { RegionData } from "../../types";
 import { Magnifier, AdjustmentsIcon } from "../Icons";
 import OptionDropdown from "../OptionsDropdown";
+import { ParsedUrlQuery } from "node:querystring";
 
 const AcceptedFilters = {
   opstina: "opstina",
@@ -23,83 +24,47 @@ interface SearchBarProps {
   icon?: React.ReactNode;
 }
 
-function useInitialName() {
-  const fallback = "";
-  const router = useRouter();
-  const [initialized, setInitialized] = useState(false);
-  const [value, setValue] = useState(fallback);
-
-  const validateName = (name: unknown) => {
-    return (
-      name !== undefined &&
-      typeof name === "string" &&
-      name !== "" &&
-      name !== "all"
-    );
-  };
-
-  if (!initialized && router.isReady) {
-    const q = router.query["ime"];
-    const queryValue = validateName(q) ? (q as string) : fallback;
-
-    setValue(queryValue);
-    setInitialized(true);
-  }
-
-  return [value, setValue] as const;
-}
-
-function useInitialFilters() {
-  const router = useRouter();
-  const [initialized, setInitialized] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [initialFilters, setInitialFilters] = useState<
-    Record<typeof filterList[number], string | null>
-  >({
+function initializeFilters(query: ParsedUrlQuery) {
+  const initialFilters: Record<typeof filterList[number], string | null> = {
     opstina: null,
     groblje: null,
     okrug: null,
-  });
+  };
 
-  if (!initialized && router.isReady) {
-    const filterFromQuery = { ...initialFilters };
-    let queryHasFilters = false;
-
-    for (const filter of Object.keys(initialFilters)) {
-      const q = router.query[filter];
-      if (q && typeof q === "string") {
-        filterFromQuery[filter as keyof typeof initialFilters] = q;
-        queryHasFilters = true;
-      }
+  for (const filter of filterList) {
+    const q = query[filter];
+    if (q && typeof q === "string") {
+      initialFilters[filter as keyof typeof initialFilters] = q;
     }
-
-    if (queryHasFilters) {
-      setInitialFilters(filterFromQuery);
-      setShowFilters(true);
-    }
-
-    setInitialized(true);
   }
-
-  return [
-    initialFilters,
-    setInitialFilters,
-    showFilters,
-    setShowFilters,
-  ] as const;
+  return initialFilters;
 }
 
-//TODO: add two states, the initial state derived from router.query
-//and the current page state, search on initial state via router.push, local state is just for UI
+function initializeFiltersShown(query: ParsedUrlQuery) {
+  for (const filter of filterList) {
+    const q = query[filter];
+    if (q && typeof q === "string") {
+      return true;
+    }
+  }
+  return false;
+}
+
 export default function SearchBar({
   options,
   icon = <Magnifier />,
 }: SearchBarProps) {
   const router = useRouter();
 
-  const [selectedFilters, setSelectedFilters, filtersShown, setFiltersShown] =
-    useInitialFilters();
-  const [searchInput, setSearchInput] = useInitialName();
+  const [selectedFilters, setSelectedFilters] = useState(() =>
+    initializeFilters(router.query)
+  );
+  const [filtersShown, setFiltersShown] = useState(() =>
+    initializeFiltersShown(router.query)
+  );
+  const [searchInput, setSearchInput] = useState(() =>
+    typeof router.query.ime === "string" ? router.query.ime : ""
+  );
 
   const availableFilters = useMemo((): AvailableFilters => {
     const dropdownOptions = Object.create(AcceptedFilters);
@@ -132,19 +97,15 @@ export default function SearchBar({
   const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const ime = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
-    router.push(
-      {
-        pathname: "/pretraga",
-        query: {
-          ime,
-          ...(selectedFilters.groblje && { groblje: selectedFilters.groblje }),
-          ...(selectedFilters.opstina && { opstina: selectedFilters.opstina }),
-          ...(selectedFilters.okrug && { okrug: selectedFilters.okrug }),
-        },
+    router.push({
+      pathname: "/pretraga",
+      query: {
+        ime,
+        ...(selectedFilters.groblje && { groblje: selectedFilters.groblje }),
+        ...(selectedFilters.opstina && { opstina: selectedFilters.opstina }),
+        ...(selectedFilters.okrug && { okrug: selectedFilters.okrug }),
       },
-      "",
-      { shallow: true }
-    );
+    });
   };
 
   return (
