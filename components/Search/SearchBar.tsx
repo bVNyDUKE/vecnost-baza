@@ -1,5 +1,4 @@
-import { useEffect, useState, SubmitEvent, useMemo } from "react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useState, SubmitEvent, useMemo } from "react";
 import { useRouter } from "next/router";
 import { RegionData } from "../../types";
 import { Magnifier, AdjustmentsIcon } from "../Icons";
@@ -24,19 +23,83 @@ interface SearchBarProps {
   icon?: React.ReactNode;
 }
 
-export default function SearchBar({
-  options,
-  icon = <Magnifier />,
-}: SearchBarProps) {
-  const [parent] = useAutoAnimate<HTMLDivElement>();
-  const [filtersShown, setFiltersShown] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
+function useInitialName() {
+  const fallback = "";
+  const router = useRouter();
+  const [initialized, setInitialized] = useState(false);
+  const [value, setValue] = useState(fallback);
+
+  const validateName = (name: unknown) => {
+    return (
+      name !== undefined &&
+      typeof name === "string" &&
+      name !== "" &&
+      name !== "all"
+    );
+  };
+
+  if (!initialized && router.isReady) {
+    const q = router.query["ime"];
+    const queryValue = validateName(q) ? (q as string) : fallback;
+
+    setValue(queryValue);
+    setInitialized(true);
+  }
+
+  return [value, setValue] as const;
+}
+
+function useInitialFilters() {
+  const router = useRouter();
+  const [initialized, setInitialized] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [initialFilters, setInitialFilters] = useState<
+    Record<typeof filterList[number], string | null>
+  >({
     opstina: null,
     groblje: null,
     okrug: null,
   });
-  const [searchInput, setSearchInput] = useState("");
+
+  if (!initialized && router.isReady) {
+    const filterFromQuery = { ...initialFilters };
+    let queryHasFilters = false;
+
+    for (const filter of Object.keys(initialFilters)) {
+      const q = router.query[filter];
+      if (q && typeof q === "string") {
+        filterFromQuery[filter as keyof typeof initialFilters] = q;
+        queryHasFilters = true;
+      }
+    }
+
+    if (queryHasFilters) {
+      setInitialFilters(filterFromQuery);
+      setShowFilters(true);
+    }
+
+    setInitialized(true);
+  }
+
+  return [
+    initialFilters,
+    setInitialFilters,
+    showFilters,
+    setShowFilters,
+  ] as const;
+}
+
+//TODO: add two states, the initial state derived from router.query
+//and the current page state, search on initial state via router.push, local state is just for UI
+export default function SearchBar({
+  options,
+  icon = <Magnifier />,
+}: SearchBarProps) {
   const router = useRouter();
+
+  const [selectedFilters, setSelectedFilters, filtersShown, setFiltersShown] =
+    useInitialFilters();
+  const [searchInput, setSearchInput] = useInitialName();
 
   const availableFilters = useMemo((): AvailableFilters => {
     const dropdownOptions = Object.create(AcceptedFilters);
@@ -66,28 +129,6 @@ export default function SearchBar({
     return dropdownOptions;
   }, [options, selectedFilters]);
 
-  useEffect(() => {
-    filterList.forEach((filter) => {
-      if (router.query[filter] && typeof router.query[filter] === "string") {
-        setSelectedFilters((prev) => ({
-          ...prev,
-          [filter]: router.query[filter],
-        }));
-        setFiltersShown(true);
-      }
-    });
-
-    const { ime } = router.query;
-    if (
-      ime !== undefined &&
-      typeof ime === "string" &&
-      ime !== "" &&
-      ime !== "all"
-    ) {
-      setSearchInput(ime);
-    }
-  }, [router.query]);
-
   const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const ime = searchInput.replace(/dj/g, "đ").replace(/Dj/g, "Đ");
@@ -107,7 +148,7 @@ export default function SearchBar({
   };
 
   return (
-    <div ref={parent} className="m-auto max-w-3xl px-5">
+    <div className="m-auto max-w-3xl px-5">
       <form onSubmit={(e) => handleSearch(e)}>
         <div className="flex items-center justify-center border border-gray-300">
           <div className="flex h-16 w-full shrink items-center space-x-8 hover:shadow-md">
