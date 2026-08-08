@@ -48,7 +48,7 @@ function Home() {
         <Image
           src={img}
           alt="Vecnost logo"
-          className="hover:pointer mx-auto object-contain"
+          className="hover:pointer mx-auto object-contain w-auto h-auto"
           width={60}
           height={70}
           placeholder="blur"
