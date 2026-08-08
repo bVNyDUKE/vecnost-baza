@@ -35,7 +35,7 @@ export const useHashModal = () => {
           setIsOpen(false);
         }
       },
-      { signal: controller.signal }
+      { signal: controller.signal },
     );
 
     return () => controller.abort();
