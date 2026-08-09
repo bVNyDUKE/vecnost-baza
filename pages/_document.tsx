@@ -5,11 +5,7 @@ class MyDocument extends Document {
     return (
       <Html lang="sr" className="h-screen">
         <Head>
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="true"
-          />
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
             rel="preload"
