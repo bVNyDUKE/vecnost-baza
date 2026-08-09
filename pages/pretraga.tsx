@@ -14,7 +14,7 @@ export const getServerSideProps = (async ({ query }) => {
     throw new Error(`no region data found for search: ${regionError}`);
 
   const { ime, okrug, opstina, groblje, page = 1 } = query;
-  const pageNumber = +page;
+  const pageNumber = Math.max(0, Math.min(+page, 100));
 
   if (ime === undefined || ime === "") {
     return { props: { options: regionData } };
@@ -27,9 +27,8 @@ export const getServerSideProps = (async ({ query }) => {
       "id, ime, prezime, rodjenje, smrt, groblje!inner(id, name, opstina!inner(id, name, okrug!inner(id,name)))",
       {
         count: "exact",
-      }
+      },
     )
-    .limit(10)
     .range(from, from + 9);
 
   if (ime && typeof ime === "string" && ime !== "all") {
@@ -51,10 +50,11 @@ export const getServerSideProps = (async ({ query }) => {
 
   const { data: results, count, error } = await searchQuery;
   if (error) {
-    throw new Error(`error searching ${error}`);
+    console.error(`error searching ${JSON.stringify(error)}`);
+    return { props: { options: regionData } };
   }
 
-    return { props: { options: regionData, results, count } };
+  return { props: { options: regionData, results, count } };
 }) satisfies GetServerSideProps;
 
 export default function Search({
