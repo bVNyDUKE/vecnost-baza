@@ -10,7 +10,6 @@
     "update-types": "npx openapi-typescript \"$(grep NEXT_PUBLIC_SUPABASE_URL  .env.local | cut -d '=' -f2)/rest/v1/?apikey=$(grep NEXT_PUBLIC_SUPABASE_ANON_KEY .env.local | cut -d '=' -f2)\" --version=2 --output types/database/index.ts"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^1.0.0-beta.3",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@googlemaps/markerclusterer": "^2.5.3",
     "@googlemaps/react-wrapper": "^1.1.42",

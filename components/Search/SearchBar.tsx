@@ -25,7 +25,7 @@ interface SearchBarProps {
 }
 
 function initializeFilters(query: ParsedUrlQuery) {
-  const initialFilters: Record<typeof filterList[number], string | null> = {
+  const initialFilters: Record<(typeof filterList)[number], string | null> = {
     opstina: null,
     groblje: null,
     okrug: null,
@@ -40,16 +40,6 @@ function initializeFilters(query: ParsedUrlQuery) {
   return initialFilters;
 }
 
-function initializeFiltersShown(query: ParsedUrlQuery) {
-  for (const filter of filterList) {
-    const q = query[filter];
-    if (q && typeof q === "string") {
-      return true;
-    }
-  }
-  return false;
-}
-
 export default function SearchBar({
   options,
   icon = <Magnifier />,
@@ -57,13 +47,10 @@ export default function SearchBar({
   const router = useRouter();
 
   const [selectedFilters, setSelectedFilters] = useState(() =>
-    initializeFilters(router.query)
-  );
-  const [filtersShown, setFiltersShown] = useState(() =>
-    initializeFiltersShown(router.query)
+    initializeFilters(router.query),
   );
   const [searchInput, setSearchInput] = useState(() =>
-    typeof router.query.ime === "string" ? router.query.ime : ""
+    typeof router.query.ime === "string" ? router.query.ime : "",
   );
 
   const availableFilters = useMemo((): AvailableFilters => {
@@ -130,41 +117,28 @@ export default function SearchBar({
             >
               {icon}
             </button>
-            <button
-              className="flex h-full w-10 items-center justify-center hover:shadow-md"
-              onClick={() => setFiltersShown(!filtersShown)}
-              type="button"
-            >
-              <AdjustmentsIcon
-                className={`h-5 w-5 ${filtersShown ? "text-gray-400" : ""}`}
-              />
-            </button>
           </div>
         </div>
       </form>
-      {filtersShown && (
-        <div className="mb-10">
-          <div className="flex h-10 items-center justify-between">
-            {filterList.map((name) => (
-              <OptionDropdown
-                key={name}
-                label={name}
-                choice={selectedFilters[name]}
-                options={availableFilters[name]}
-                setChoice={(choice: string) =>
-                  setSelectedFilters((prev) => ({
-                    ...prev,
-                    [name]: choice,
-                  }))
-                }
-                clearChoice={() =>
-                  setSelectedFilters((prev) => ({ ...prev, [name]: null }))
-                }
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="flex h-10 items-center justify-center">
+        {filterList.map((name) => (
+          <OptionDropdown
+            key={name}
+            label={name}
+            choice={selectedFilters[name]}
+            options={availableFilters[name]}
+            setChoice={(choice: string) =>
+              setSelectedFilters((prev) => ({
+                ...prev,
+                [name]: choice,
+              }))
+            }
+            clearChoice={() =>
+              setSelectedFilters((prev) => ({ ...prev, [name]: null }))
+            }
+          />
+        ))}
+      </div>
     </div>
   );
 }
