@@ -14,11 +14,11 @@ import { GenGraph } from "../components/Graphs/GenGraph";
 import { OkrugGraph } from "../components/Graphs/OkrugGraph";
 import { NamesGraph } from "../components/Graphs/NamesGraph";
 import { LastnameGraph } from "../components/Graphs/LastnamesGraph";
-import Icons from "../components/Icons";
 import MapContainer from "../components/Map/MapContainer";
 import SideDrawer from "../components/SideDrawer";
 import { useHashModal } from "../hooks/useHashModal";
 import { useMounted } from "../hooks/useMounted";
+import { Cross, Spinner } from "../components/Icons";
 
 export async function getStaticProps() {
   const [{ data: personsPerOkrug }, { data: genData }] = await Promise.all([
@@ -116,7 +116,7 @@ export default function Statistika({
       </Transition>
       <SideDrawer show={isOpen}>
         <div className="absolute z-10 w-full border-y bg-white py-2">
-          <Icons.Cross
+          <Cross
             onClick={closeModal}
             className="shadow-xs absolute top-3 right-2 h-5 w-5 border text-gray-500"
           />
@@ -153,7 +153,7 @@ export default function Statistika({
             </div>
           ) : (
             <div className="mt-20 flex items-center justify-center">
-              <Icons.Spinner height="h-20" width="w-20" />
+              <Spinner height="h-20" width="w-20" />
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 import { useState, SubmitEvent, useMemo } from "react";
 import { useRouter } from "next/router";
 import { RegionData } from "../../types";
-import { Magnifier, AdjustmentsIcon } from "../Icons";
+import { Magnifier } from "../Icons";
 import OptionDropdown from "../OptionsDropdown";
 import { ParsedUrlQuery } from "node:querystring";
 
