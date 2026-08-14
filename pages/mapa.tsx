@@ -8,19 +8,29 @@ import {
 } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { supabase } from "../lib/supabaseClient";
-import { IGraveLocations, IMapProps } from "../types";
+import { database } from "../lib/db";
+import { InferGetStaticPropsType } from "next";
 
 export async function getStaticProps() {
-  const { data } = await supabase
-    .from<IGraveLocations>("groblje")
-    .select("id, name, position")
-    .not("position", "is", null);
+  const db = database();
+  const groblja = db.prepare(`SELECT * from groblja`).all();
+
+  const data = groblja.map((val) => ({
+    id: val.id as number,
+    name: val.name as string,
+    position: JSON.parse(val.position as string) as google.maps.LatLngLiteral,
+  }));
 
   return { props: { data }, revalidate: 60 * 60 * 24 };
 }
 
-const Map = ({ children, ...props }: IMapProps) => {
+type MapsPageProps = InferGetStaticPropsType<typeof getStaticProps>;
+export interface MapProps extends google.maps.MapOptions {
+  locations: MapsPageProps["data"];
+  children?: React.ReactNode;
+}
+
+const Map = ({ children, locations, ...props }: MapProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>();
 
@@ -37,7 +47,7 @@ const Map = ({ children, ...props }: IMapProps) => {
         content: "",
       });
 
-      const markers = props.locations.map((location, i) => {
+      const markers = locations.map((location, i) => {
         const label = ++i;
         const marker = new google.maps.marker.AdvancedMarkerElement({
           map: newMap,
@@ -61,7 +71,7 @@ const Map = ({ children, ...props }: IMapProps) => {
       new MarkerClusterer({ map: newMap, markers });
       setMap(newMap);
     }
-  }, [ref, map, props.center, props.zoom, props.locations]);
+  }, [ref, map, props.center, props.zoom, locations]);
 
   return (
     <>
@@ -82,7 +92,7 @@ const LoadingScreen = ({ status }: { status: Status }) => (
   </div>
 );
 
-export default function MapPage({ data }: { data: IGraveLocations[] }) {
+export default function MapPage({ data }: MapsPageProps) {
   const center = { lat: 44.628924, lng: 20.643159 };
   const zoom = 7;
 

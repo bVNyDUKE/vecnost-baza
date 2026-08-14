@@ -49,17 +49,6 @@ export interface IPerson {
   };
 }
 
-export interface IGraveLocations {
-  id: number;
-  name: string;
-  position: google.maps.LatLngLiteral;
-}
-
-export interface IMapProps extends google.maps.MapOptions {
-  locations: IGraveLocations[];
-  children?: React.ReactNode;
-}
-
 type Groblje = {
   id: string;
   name: string;
