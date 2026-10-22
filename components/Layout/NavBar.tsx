@@ -9,7 +9,7 @@ export default function NavBar() {
   const [showNav, setShowNav] = useState(false);
 
   return (
-    <nav>
+    <nav className="font-serif">
       <div className="mb-10 hidden bg-white drop-shadow-md sm:block">
         <div className="container mx-auto items-center justify-between py-1.5 sm:flex">
           <Link passHref href="/">
@@ -22,14 +22,14 @@ export default function NavBar() {
                 style={{ width: "60px" }}
               />
               <div
-                className="text-2xl font-semibold sm:text-2xl "
+                className="text-2xl sm:text-2xl "
                 style={{ lineHeight: "0.85" }}
               >
                 Baza <br /> Podataka
               </div>
             </div>
           </Link>
-          <div className="flex basis-96 items-center justify-between space-x-2 text-xl font-semibold">
+          <div className="flex basis-96 items-center justify-between space-x-2 text-xl font-medium">
             <Link href="/pretraga">Pretraga</Link>
             <Link href="/statistika">Statistika</Link>
             <Link href="/indeks">Indeks</Link>
@@ -51,7 +51,7 @@ export default function NavBar() {
           leaveFrom="opacity-100"
           leaveTo="opacity-0 "
         >
-          <div className="mx-auto w-full items-center justify-between space-x-2 px-2 font-bold">
+          <div className="mx-auto w-full items-center justify-between space-x-2 px-2 font-medium">
             <Link href="/">Početna</Link>
             <Link href="/pretraga">Pretraga</Link>
             <Link href="/statistika">Statistika</Link>
