@@ -31,7 +31,4 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
-  html {
-    scrollbar-gutter: stable;
-  }
 }

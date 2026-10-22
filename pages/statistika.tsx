@@ -15,7 +15,7 @@ import { OkrugGraph } from "../components/Graphs/OkrugGraph";
 import { NamesGraph } from "../components/Graphs/NamesGraph";
 import { LastnameGraph } from "../components/Graphs/LastnamesGraph";
 import MapContainer from "../components/Map/MapContainer";
-import SideDrawer from "../components/SideDrawer";
+import { SideDrawer } from "../components/SideDrawer";
 import { useHashModal } from "../hooks/useHashModal";
 import { useMounted } from "../hooks/useMounted";
 import { Cross, Spinner } from "../components/Icons";
@@ -114,7 +114,7 @@ export default function Statistika({
           />
         </div>
       </Transition>
-      <SideDrawer show={isOpen}>
+      <SideDrawer show={isOpen} onClose={closeModal}>
         <div className="absolute z-10 w-full border-y bg-white py-2">
           <Cross
             onClick={closeModal}

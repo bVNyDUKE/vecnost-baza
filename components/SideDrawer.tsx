@@ -1,58 +1,27 @@
-import { useEffect } from "react";
-import { createPortal } from "react-dom";
-import { Transition } from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import type { ReactNode } from "react";
 
-import { useMounted } from "../hooks/useMounted";
-
-const ClientPortal = ({
-  children,
+export const SideDrawer = ({
   show,
+  onClose,
+  children,
 }: {
-  children: ReactNode;
   show: boolean;
+  onClose: () => void;
+  children: ReactNode;
 }) => {
-  const mounted = useMounted();
-
-  //Prevent the body from scrolling when modal is open
-  useEffect(() => {
-    if (show) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.removeAttribute("style");
-    }
-    return () => {
-      document.body.removeAttribute("style");
-    };
-  }, [show]);
-
-  if (!mounted) return null;
-
-  return createPortal(children, document.body);
-};
-
-export default function SideDrawer({
-  show,
-  children,
-}: {
-  show: boolean;
-  children: ReactNode;
-}) {
   return (
-    <ClientPortal show={show}>
-      <Transition
-        show={show}
-        enter="transition delay-150 duration-500 ease-in-out"
-        enterFrom="-translate-x-full opacity-0"
-        enterTo="translate-x-0 opacity-100"
-        leave="transition duration-500 delay-150 ease-in-out"
-        leaveFrom="translate-x-0 opacity-100"
-        leaveTo="-translate-x-full opacity-0"
+    <Dialog open={show} onClose={onClose} className="relative z-50">
+      <DialogBackdrop
+        transition
+        className="fixed inset-0 bg-black/30 transition-opacity duration-300 ease-out data-closed:opacity-0 data-leave:duration-200 data-leave:ease-in motion-reduce:transition-none"
+      />
+      <DialogPanel
+        transition
+        className="fixed inset-y-0 left-0 right-0 overflow-y-auto overscroll-contain bg-white text-gray-700 shadow-md transition-transform duration-300 ease-out data-closed:-translate-x-full data-leave:duration-200 data-leave:ease-in motion-reduce:transition-none lg:right-auto lg:w-1/2"
       >
-        <div className="fixed top-0 bottom-0 left-0 right-5 z-50 bg-white text-gray-700 lg:w-1/2">
-          <div className="h-screen overflow-auto shadow-md">{children}</div>
-        </div>
-      </Transition>
-    </ClientPortal>
+        {children}
+      </DialogPanel>
+    </Dialog>
   );
-}
+};
