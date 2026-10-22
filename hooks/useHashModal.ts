@@ -1,27 +1,27 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useHashModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openModal = useCallback(() => {
+  const openModal = () => {
     if (window.location.hash !== "#open") {
       window.location.hash = "#open";
     }
-  }, []);
+  };
 
-  const closeModal = useCallback(() => {
+  const closeModal = () => {
     if (window.location.hash === "#open") {
       window.location.hash = "";
     }
-  }, []);
+  };
 
-  const toggleModal = useCallback(() => {
+  const toggleModal = () => {
     if (window.location.hash === "#open") {
       closeModal();
     } else {
       openModal();
     }
-  }, [closeModal, openModal]);
+  };
 
   useEffect(() => {
     const controller = new AbortController();
